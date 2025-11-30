@@ -8,7 +8,7 @@
 #define DHTPIN 14
 #define BUZZER_PIN 13     
 #define RED_LED 21
-#define YELLOW_LED 5
+#define YELLOW_LED 19
 #define GREEN_LED 18
 #define MQ135_PIN 34      
 #define RELAY_PIN 26       
