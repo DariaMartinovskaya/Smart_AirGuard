@@ -12,6 +12,12 @@
 #define GREEN_LED 18
 #define MQ135_PIN 34      
 #define RELAY_PIN 26       
+#define PIR_PIN 32         // PIR датчик на пине D32
+
+// ✅ ДОБАВЛЕНО: 4-пиновый RGB LED
+#define RGB_RED 27        // Красный канал
+#define RGB_GREEN 25      // Зеленый канал
+#define RGB_BLUE 33       // Синий канал (для движения)
 
 // Константы
 #define DHTTYPE DHT22
@@ -24,6 +30,11 @@
 #define HIGH_TEMP_THRESHOLD 35
 #define HIGH_HUMIDITY_THRESHOLD 90
 
+// Тайминг для PIR
+#define PIR_DEBOUNCE_TIME 2000  // Время стабилизации датчика (2 секунды)
+#define MOTION_TIMEOUT 10000    // Таймаут обнаружения движения (10 секунд)
+#define BLINK_INTERVAL 500      // Интервал мигания синего LED при движении
+
 // Объекты
 DHT dht(DHTPIN, DHTTYPE);
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire);
@@ -35,12 +46,20 @@ int gasLevel = 0;
 bool gasAlert = false;
 bool tempAlert = false;
 bool humidityAlert = false;
+bool motionDetected = false;    // состояние датчика движения
+unsigned long lastMotionTime = 0; // время последнего обнаружения движения
+unsigned long pirReadyTime = 0;   // время готовности PIR
+unsigned long lastBlinkTime = 0;  // время последнего мигания
+bool blueLedState = false;        // состояние синего LED
 
 // Прототипы функций
 void readSensors();
 void checkConditions();
 void displayData();
 void toneAlert();
+void checkMotion();
+void updateRGBLed();             // ✅ ДОБАВЛЕНО: управление RGB LED
+void setRGBColor(bool red, bool green, bool blue); // ✅ ДОБАВЛЕНО: установка цвета
 
 void setup() {
   Serial.begin(115200);
@@ -55,6 +74,12 @@ void setup() {
   pinMode(GREEN_LED, OUTPUT);
   pinMode(RELAY_PIN, OUTPUT);
   pinMode(MQ135_PIN, INPUT);
+  pinMode(PIR_PIN, INPUT);
+  
+  // ✅ ДОБАВЛЕНО: инициализация пинов RGB LED
+  pinMode(RGB_RED, OUTPUT);
+  pinMode(RGB_GREEN, OUTPUT);
+  pinMode(RGB_BLUE, OUTPUT);
   
   // Выключить все при старте
   digitalWrite(BUZZER_PIN, LOW);
@@ -63,8 +88,17 @@ void setup() {
   digitalWrite(GREEN_LED, LOW);
   digitalWrite(RELAY_PIN, HIGH);
   
+  // ✅ ДОБАВЛЕНО: выключить RGB LED
+  setRGBColor(false, false, false);
+  
   // Инициализация датчиков
   dht.begin();
+  
+  // Инициализация времени PIR
+  pirReadyTime = millis() + PIR_DEBOUNCE_TIME;
+  Serial.print("PIR initializing (wait ");
+  Serial.print(PIR_DEBOUNCE_TIME / 1000);
+  Serial.println(" seconds)...");
   
   // Инициализация дисплея с проверкой
   Serial.println("Initializing OLED...");
@@ -84,17 +118,36 @@ void setup() {
   display.setTextSize(1);
   display.setCursor(0,0);
   display.println("System Starting...");
+  display.println("PIR initializing");
   display.display();
-  delay(2000);
+  delay(PIR_DEBOUNCE_TIME); // Ждем стабилизации PIR
+  
+  // ✅ ДОБАВЛЕНО: тест RGB LED
+  Serial.println("Testing RGB LED...");
+  setRGBColor(true, false, false); // Красный
+  delay(300);
+  setRGBColor(false, true, false); // Зеленый
+  delay(300);
+  setRGBColor(false, false, true); // Синий
+  delay(300);
+  setRGBColor(false, false, false); // Выключить
+  delay(300);
+  
+  // ✅ ГАРАНТИРОВАННОЕ ВЫКЛЮЧЕНИЕ СИНЕГО LED
+  blueLedState = false;
+  setRGBColor(false, false, false);
+  Serial.println("Blue LED: OFF (default state)");
   
   Serial.println("System initialized");
 }
 
 void loop() {
   readSensors();
+  checkMotion();
+  updateRGBLed();    // ✅ ДОБАВЛЕНО: обновление RGB LED
   checkConditions();
   displayData();
-  delay(2000);
+  delay(100); // Уменьшили задержку для более плавного мигания
 }
 
 void readSensors() {
@@ -110,7 +163,76 @@ void readSensors() {
   
   Serial.print("Temp: "); Serial.print(temperature);
   Serial.print("C, Humidity: "); Serial.print(humidity);
-  Serial.print("%, Gas: "); Serial.println(gasLevel);
+  Serial.print("%, Gas: "); Serial.print(gasLevel);
+  Serial.print(", Motion: "); Serial.println(motionDetected ? "YES" : "NO");
+  Serial.print("Blue LED state: "); Serial.println(blueLedState ? "ON" : "OFF");
+}
+
+void checkMotion() {
+  // Проверяем, готов ли PIR (прошло ли время инициализации)
+  if (millis() < pirReadyTime) {
+    return; // PIR еще не готов
+  }
+  
+  int pirState = digitalRead(PIR_PIN);
+  
+  if (pirState == HIGH) {
+    // Движение обнаружено
+    if (!motionDetected) {
+      motionDetected = true;
+      lastMotionTime = millis();
+      lastBlinkTime = millis(); // Сбрасываем таймер мигания
+      Serial.println("Motion detected!");
+    } else {
+      lastMotionTime = millis(); // Обновляем время последнего движения
+    }
+  } else {
+    // Нет движения в данный момент
+    // Проверяем таймаут движения
+    if (motionDetected && (millis() - lastMotionTime > MOTION_TIMEOUT)) {
+      motionDetected = false;
+      blueLedState = false; // ✅ ЯВНО сбрасываем состояние
+      setRGBColor(false, false, false); // ✅ Гарантированно выключаем синий
+      Serial.println("Motion timeout - Blue LED turned OFF");
+    }
+  }
+}
+
+void updateRGBLed() {
+  if (motionDetected) {
+    // ✅ Мигание синим при обнаружении движения
+    if (millis() - lastBlinkTime >= BLINK_INTERVAL) {
+      blueLedState = !blueLedState;
+      setRGBColor(false, false, blueLedState);
+      lastBlinkTime = millis();
+    }
+  } else {
+    // ✅ Если движения нет - ВСЕГДА выключаем синий LED
+    // Это гарантирует, что синий LED не горит когда не должен
+    if (blueLedState) {
+      blueLedState = false;
+      setRGBColor(false, false, false);
+    }
+    // ✅ Дополнительная защита: периодически проверяем и выключаем
+    static unsigned long lastCheckTime = 0;
+    if (millis() - lastCheckTime > 1000) {
+      // Раз в секунду проверяем и гарантируем выключение
+      digitalWrite(RGB_BLUE, LOW);
+      lastCheckTime = millis();
+    }
+  }
+}
+
+// ✅ ДОБАВЛЕНО: функция установки цвета RGB LED
+void setRGBColor(bool red, bool green, bool blue) {
+  digitalWrite(RGB_RED, red ? HIGH : LOW);
+  digitalWrite(RGB_GREEN, green ? HIGH : LOW);
+  digitalWrite(RGB_BLUE, blue ? HIGH : LOW);
+  
+  // Отладочный вывод
+  if (blue) {
+    Serial.println("setRGBColor: Blue ON");
+  }
 }
 
 void checkConditions() {
@@ -124,6 +246,7 @@ void checkConditions() {
   digitalWrite(BUZZER_PIN, LOW);
   digitalWrite(RELAY_PIN, HIGH);
   
+  // Приоритет: газ > температура > влажность
   if (gasLevel > DANGEROUS_GAS) {
     gasAlert = true;
     digitalWrite(RED_LED, HIGH);
@@ -170,25 +293,41 @@ void displayData() {
   display.print("Gas Level: ");
   display.println(gasLevel);
   
+  display.print("Motion: ");
+  display.println(motionDetected ? "DETECTED" : "NONE");
+  
   display.println("-------------------");
   
+  // Отображение предупреждений
   if (gasAlert) {
-    display.setTextColor(SSD1306_WHITE);
+    display.setTextColor(SSD1306_WHITE, SSD1306_BLACK);
     display.println("! GAS DANGER !");
   }
   if (tempAlert) {
-    display.setTextColor(SSD1306_WHITE);
+    display.setTextColor(SSD1306_WHITE, SSD1306_BLACK);
     display.println("! TEMP ALERT !");
   }
   if (humidityAlert) {
-    display.setTextColor(SSD1306_WHITE);
+    display.setTextColor(SSD1306_WHITE, SSD1306_BLACK);
     display.println("! HUMID HIGH !");
   }
   
-  display.setTextColor(SSD1306_WHITE);
+  // ✅ ИЗМЕНЕНО: вместо "MOTION ACTIVE" показываем состояние вентилятора
+  // Вентилятор включается только при обнаружении газа
+  
   display.print("Fan: ");
   display.println(digitalRead(RELAY_PIN) == LOW ? "ON" : "OFF");
   
+  // Отображение времени с последнего движения
+  if (motionDetected) {
+    display.print("Last motion: ");
+    display.print((millis() - lastMotionTime) / 1000);
+    display.println("s ago");
+  }
+  
+  // ✅ ДОБАВЛЕНО: индикация состояния синего LED
+  display.print("Blue LED: ");
+  display.println(blueLedState ? "ON" : "OFF");
+  
   display.display();
-  Serial.println("✅ Data sent to OLED"); // Отладочное сообщение
 }
