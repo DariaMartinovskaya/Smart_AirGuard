@@ -1,10 +1,23 @@
 #include <Arduino.h>
+#include <WiFi.h>
+#include <HTTPClient.h>
 #include <Wire.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 #include <DHT.h>
 
-// ИСПРАВЛЕННЫЕ пины - БЕЗОПАСНЫЕ
+// ---------------- WIFI + THINGSPEAK -----------------
+const char *ssid = "Alex";
+const char *pass = "Sacha3232";
+String apiKey = "6QOIQZ7YFHAG6231";  
+const char* server = "api.thingspeak.com";
+
+WiFiClient client;
+HTTPClient http;
+
+unsigned long lastThingSpeakUpdate = 0;
+const unsigned long THINGSPEAK_DELAY = 15000; // 15 секунд между отправками
+
 #define DHTPIN 14
 #define BUZZER_PIN 13     
 #define RED_LED 21
@@ -12,12 +25,11 @@
 #define GREEN_LED 18
 #define MQ135_PIN 34      
 #define RELAY_PIN 26       
-#define PIR_PIN 32         // PIR датчик на пине D32
+#define PIR_PIN 32         
 
-// ✅ ДОБАВЛЕНО: 4-пиновый RGB LED
-#define RGB_RED 27        // Красный канал
-#define RGB_GREEN 25      // Зеленый канал
-#define RGB_BLUE 33       // Синий канал (для движения)
+#define RGB_RED 27       
+#define RGB_GREEN 25      
+#define RGB_BLUE 33       // Blue channel (for motion)
 
 // Константы
 #define DHTTYPE DHT22
@@ -54,18 +66,31 @@ bool blueLedState = false;        // состояние синего LED
 
 // Прототипы функций
 void readSensors();
+void sendToThingSpeak();
+void checkMotion();
 void checkConditions();
 void displayData();
+void updateRGBLed();
+void setRGBColor(bool red, bool green, bool blue);
 void toneAlert();
-void checkMotion();
-void updateRGBLed();             // ✅ ДОБАВЛЕНО: управление RGB LED
-void setRGBColor(bool red, bool green, bool blue); // ✅ ДОБАВЛЕНО: установка цвета
 
 void setup() {
   Serial.begin(115200);
-  
-  // ✅ ЯВНО инициализируем I2C с указанием пинов
-  Wire.begin(23, 22); // SDA=23, SCL=22
+
+  // WiFi
+  WiFi.begin(ssid, pass);
+  Serial.print("Connecting to WiFi ");
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+
+  Serial.println("\nWiFi connected!");
+  Serial.print("IP Address: ");
+  Serial.println(WiFi.localIP());
+
+  // I2C
+  Wire.begin(23, 22);
   
   // Инициализация пинов
   pinMode(BUZZER_PIN, OUTPUT);
@@ -80,6 +105,18 @@ void setup() {
   pinMode(RGB_RED, OUTPUT);
   pinMode(RGB_GREEN, OUTPUT);
   pinMode(RGB_BLUE, OUTPUT);
+
+  digitalWrite(RELAY_PIN, HIGH);
+  setRGBColor(false, false, false);
+
+  dht.begin();
+  pirReadyTime = millis() + PIR_DEBOUNCE_TIME;
+
+  // OLED
+  if (!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
+    Serial.println("OLED ERROR!");
+    while (1);
+  }
   
   // Выключить все при старте
   digitalWrite(BUZZER_PIN, LOW);
@@ -139,6 +176,7 @@ void setup() {
   Serial.println("Blue LED: OFF (default state)");
   
   Serial.println("System initialized");
+  Serial.println("Ready to send data to ThingSpeak");
 }
 
 void loop() {
@@ -147,6 +185,13 @@ void loop() {
   updateRGBLed();    // ✅ ДОБАВЛЕНО: обновление RGB LED
   checkConditions();
   displayData();
+  
+  // Отправка данных в ThingSpeak каждые 15 секунд
+  if (millis() - lastThingSpeakUpdate >= THINGSPEAK_DELAY) {
+    sendToThingSpeak();
+    lastThingSpeakUpdate = millis();
+  }
+  
   delay(100); // Уменьшили задержку для более плавного мигания
 }
 
@@ -166,6 +211,54 @@ void readSensors() {
   Serial.print("%, Gas: "); Serial.print(gasLevel);
   Serial.print(", Motion: "); Serial.println(motionDetected ? "YES" : "NO");
   Serial.print("Blue LED state: "); Serial.println(blueLedState ? "ON" : "OFF");
+}
+
+// ✅ ДОБАВЛЕНА ФУНКЦИЯ: отправка данных в ThingSpeak
+void sendToThingSpeak() {
+  if (WiFi.status() == WL_CONNECTED) {
+    // Правильный URL для ThingSpeak
+    String url = "http://" + String(server) + "/update";
+    url += "?api_key=" + apiKey;
+    url += "&field1=" + String(temperature);
+    url += "&field2=" + String(humidity);
+    url += "&field3=" + String(gasLevel);
+    url += "&field4=" + String(motionDetected ? 1 : 0);
+    url += "&field5=" + String(gasAlert ? 1 : 0);
+    url += "&field6=" + String(tempAlert ? 1 : 0);
+    url += "&field7=" + String(humidityAlert ? 1 : 0);
+    url += "&field8=" + String(digitalRead(RELAY_PIN) == LOW ? 1 : 0);
+    
+    Serial.print("Sending to ThingSpeak: ");
+    Serial.println(url);  // ← ДОБАВЬТЕ для отладки
+    
+    http.begin(client, url);
+    int httpCode = http.GET();
+    
+    if (httpCode > 0) {
+      Serial.print("ThingSpeak HTTP code: ");
+      Serial.println(httpCode);
+      
+      if (httpCode == HTTP_CODE_OK) {
+        String payload = http.getString();
+        Serial.print("Response: ");
+        Serial.println(payload);
+        
+        // ThingSpeak возвращает номер записи (entry_id)
+        if (payload.toInt() > 0) {
+          Serial.println("✅ Data sent successfully!");
+        } else {
+          Serial.println("❌ ThingSpeak returned 0 - check API key!");
+        }
+      }
+    } else {
+      Serial.print("❌ Error: ");
+      Serial.println(http.errorToString(httpCode).c_str());
+    }
+    
+    http.end();
+  } else {
+    Serial.println("❌ WiFi disconnected!");
+  }
 }
 
 void checkMotion() {
@@ -328,6 +421,11 @@ void displayData() {
   // ✅ ДОБАВЛЕНО: индикация состояния синего LED
   display.print("Blue LED: ");
   display.println(blueLedState ? "ON" : "OFF");
+  
+  // ✅ ДОБАВЛЕНО: показываем время до следующей отправки в ThingSpeak
+  display.print("TS: ");
+  display.print(max(0, (int)(THINGSPEAK_DELAY - (millis() - lastThingSpeakUpdate)) / 1000));
+  display.println("s");
   
   display.display();
 }
