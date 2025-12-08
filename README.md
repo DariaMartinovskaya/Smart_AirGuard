@@ -5,7 +5,6 @@
 ![Smart AirGuard System](https://img.shields.io/badge/Platform-ESP32-blue)
 ![Telegram Bot](https://img.shields.io/badge/Telegram-Bot-blue)
 ![ThingSpeak](https://img.shields.io/badge/Cloud-ThingSpeak-orange)
-![License](https://img.shields.io/badge/License-MIT-green)
 
 *A comprehensive IoT-based environmental monitoring and alert system with real-time notifications*
 
@@ -23,9 +22,6 @@
 - [Telegram Bot Commands](#-telegram-bot-commands)
 - [ThingSpeak Integration](#thingspeak-integration)
 - [Alert System](#-alert-system)
-- [Troubleshooting](#-troubleshooting)
-- [Contributing](#-contributing)
-- [License](#-license)
 
 ## 🎯 Overview
 
@@ -298,7 +294,3 @@ The OLED display shows:
 - Time until next ThingSpeak update
 - Time until next Telegram check
 - Fan status
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
