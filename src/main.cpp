@@ -369,9 +369,10 @@ void setRGBColor(bool red, bool green, bool blue) {
 
 void checkConditions() {
   // Save previous states for comparison
-  lastGasAlert = gasAlert;
-  lastTempAlert = tempAlert;
-  lastHumidityAlert = humidityAlert;
+  bool prevGasAlert = lastGasAlert;
+  bool prevTempAlert = lastTempAlert;
+  bool prevHumidityAlert = lastHumidityAlert;
+  bool prevMotionState = lastMotionState;
 
   gasAlert = false;
   tempAlert = false;
@@ -392,6 +393,7 @@ void checkConditions() {
     Serial.println("DANGER! High gas concentration!");
 
     // Send Telegram alert on each activation (including cooldown)
+    // Send immediately on first detection, then every ALERT_COOLDOWN
     if (millis() - lastGasAlertTime > ALERT_COOLDOWN) {
       sendTelegramAlert("🚨 *WARNING! Danger gas concentration level!* 🚨\n\n" +
                        String("Gas level: ") + gasLevel + "\n" +
@@ -399,12 +401,17 @@ void checkConditions() {
                        "Fan: Turned ON automatically");
       lastGasAlertTime = millis();
     }
-  } else if (lastGasAlert) {
-    // Gas is ok again
-    sendTelegramAlert("✅ *Gas level returned to normal*\n\n" +
-                     String("Current gas level: ") + gasLevel + "\n" +
-                     "Fan: Turned OFF");
-    lastGasAlertTime = millis();
+  } else {
+    // Gas is normal
+    digitalWrite(RELAY_PIN, HIGH);
+    
+    // Send "returned to normal" message only if gas was previously in alert state
+    if (prevGasAlert) {
+      sendTelegramAlert("✅ *Gas level returned to normal*\n\n" +
+                       String("Current gas level: ") + gasLevel + "\n" +
+                       "Fan: Turned OFF");
+      // Don't update lastGasAlertTime here to allow immediate gas alert if it goes high again
+    }
   }
   
   if (temperature < LOW_TEMP_THRESHOLD || temperature > HIGH_TEMP_THRESHOLD) {
@@ -420,13 +427,14 @@ void checkConditions() {
                        " - " + String(HIGH_TEMP_THRESHOLD) + "°C");
       lastTempAlertTime = millis();
     }
-  } else if (lastTempAlert) {
-    // Temp is ok again
-    sendTelegramAlert("✅ *Temperature returned to normal*\n\n" +
-                     String("Current temperature: ") + temperature + "°C\n" +
-                     "Normal range: " + String(LOW_TEMP_THRESHOLD) + 
-                     " - " + String(HIGH_TEMP_THRESHOLD) + "°C");
-    lastTempAlertTime = millis();
+  } else {
+    // Temperature is normal - send "returned to normal" only if it was previously alert
+    if (prevTempAlert) {
+      sendTelegramAlert("✅ *Temperature returned to normal*\n\n" +
+                       String("Current temperature: ") + temperature + "°C\n" +
+                       "Normal range: " + String(LOW_TEMP_THRESHOLD) + 
+                       " - " + String(HIGH_TEMP_THRESHOLD) + "°C");
+    }
   }
   
   if (humidity > HIGH_HUMIDITY_THRESHOLD) {
@@ -441,16 +449,17 @@ void checkConditions() {
                        "Threshold: " + String(HIGH_HUMIDITY_THRESHOLD) + "%");
       lastHumidityAlertTime = millis();
     }
-  } else if (lastHumidityAlert) {
-    // Humidity is ok again
-    sendTelegramAlert("✅ *Humidity returned to normal*\n\n" +
-                     String("Current humidity: ") + humidity + "%\n" +
-                     "Threshold: " + String(HIGH_HUMIDITY_THRESHOLD) + "%");
-    lastHumidityAlertTime = millis();
+  } else {
+    // Humidity is normal - send "returned to normal" only if it was previously alert
+    if (prevHumidityAlert) {
+      sendTelegramAlert("✅ *Humidity returned to normal*\n\n" +
+                       String("Current humidity: ") + humidity + "%\n" +
+                       "Threshold: " + String(HIGH_HUMIDITY_THRESHOLD) + "%");
+    }
   }
 
   // Motion detected alert
-  if (motionDetected && !lastMotionState) {
+  if (motionDetected && !prevMotionState) {
     // Send when motion is detected (no cooldown for motion)
     sendTelegramAlert("🚶 *Motion detected!*\n\n" +
                      String("Time: ") + String(millis() / 1000) + " seconds\n" +
@@ -459,7 +468,7 @@ void checkConditions() {
   }
   
   // Motion stopped alert (optionally)
-  if (!motionDetected && lastMotionState && (millis() - lastMotionAlertTime > 5000)) {
+  if (!motionDetected && prevMotionState && (millis() - lastMotionAlertTime > 5000)) {
     // Send when the movement has stopped (after 5 seconds)
     sendTelegramAlert("✅ *Motion stopped*\n\n" +
                      String("Motion duration: ") + 
@@ -467,6 +476,10 @@ void checkConditions() {
                      "PIR Sensor: INACTIVE");
   }
   
+  // Update states for next loop
+  lastGasAlert = gasAlert;
+  lastTempAlert = tempAlert;
+  lastHumidityAlert = humidityAlert;
   lastMotionState = motionDetected;
 }
 
