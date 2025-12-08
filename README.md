@@ -132,6 +132,8 @@ Smart AirGuard is an intelligent environmental monitoring system built on ESP32 
 | GPIO 18 | LED | Green | Humidity Alert |
 | GPIO 26 | Relay | Control | Fan ON/OFF |
 
+![Scheme]()
+
 ### **Power Connections**
 - **3.3V**: DHT22, OLED, PIR sensor
 - **5V**: MQ-135, Buzzer, LEDs (via resistors), Relay module
