@@ -391,7 +391,7 @@ void checkConditions() {
     toneAlert();
     Serial.println("DANGER! High gas concentration!");
 
-    // Send Telegram alert при каждом срабатывании (с учетом кулдауна)
+    // Send Telegram alert on each activation (including cooldown)
     if (millis() - lastGasAlertTime > ALERT_COOLDOWN) {
       sendTelegramAlert("🚨 *WARNING! Danger gas concentration level!* 🚨\n\n" +
                        String("Gas level: ") + gasLevel + "\n" +
@@ -400,7 +400,7 @@ void checkConditions() {
       lastGasAlertTime = millis();
     }
   } else if (lastGasAlert) {
-    // Газ вернулся в норму
+    // Gas is ok again
     sendTelegramAlert("✅ *Gas level returned to normal*\n\n" +
                      String("Current gas level: ") + gasLevel + "\n" +
                      "Fan: Turned OFF");
@@ -412,7 +412,7 @@ void checkConditions() {
     digitalWrite(YELLOW_LED, HIGH);
     Serial.println("Temperature alert!");
 
-    // Send Telegram alert при каждом срабатывании
+    // Send Telegram alert on each activation
     if (millis() - lastTempAlertTime > ALERT_COOLDOWN) {
       sendTelegramAlert("🌡️ *Temperature out of normal range!*\n\n" +
                        String("Current temperature: ") + temperature + "°C\n" +
@@ -421,7 +421,7 @@ void checkConditions() {
       lastTempAlertTime = millis();
     }
   } else if (lastTempAlert) {
-    // Температура вернулась в норму
+    // Temp is ok again
     sendTelegramAlert("✅ *Temperature returned to normal*\n\n" +
                      String("Current temperature: ") + temperature + "°C\n" +
                      "Normal range: " + String(LOW_TEMP_THRESHOLD) + 
@@ -434,7 +434,7 @@ void checkConditions() {
     digitalWrite(GREEN_LED, HIGH);
     Serial.println("High humidity alert!");
   
-    // Send Telegram alert при каждом срабатывании
+    // Send Telegram alert on each activation
     if (millis() - lastHumidityAlertTime > ALERT_COOLDOWN) {
       sendTelegramAlert("💧 *High humidity!*\n\n" +
                        String("Current humidity: ") + humidity + "%\n" +
@@ -442,7 +442,7 @@ void checkConditions() {
       lastHumidityAlertTime = millis();
     }
   } else if (lastHumidityAlert) {
-    // Влажность вернулась в норму
+    // Humidity is ok again
     sendTelegramAlert("✅ *Humidity returned to normal*\n\n" +
                      String("Current humidity: ") + humidity + "%\n" +
                      "Threshold: " + String(HIGH_HUMIDITY_THRESHOLD) + "%");
@@ -451,16 +451,16 @@ void checkConditions() {
 
   // Motion detected alert
   if (motionDetected && !lastMotionState) {
-    // Отправляем при обнаружении движения (без кулдауна для движения)
+    // Send when motion is detected (no cooldown for motion)
     sendTelegramAlert("🚶 *Motion detected!*\n\n" +
-                     String("Time: ") + String(millis() / 1000) + " sec\n" +
+                     String("Time: ") + String(millis() / 1000) + " seconds\n" +
                      "PIR Sensor: ACTIVE");
     lastMotionAlertTime = millis();
   }
   
-  // Motion stopped alert (опционально)
+  // Motion stopped alert (optionally)
   if (!motionDetected && lastMotionState && (millis() - lastMotionAlertTime > 5000)) {
-    // Отправляем когда движение прекратилось (через 5 секунд)
+    // Send when the movement has stopped (after 5 seconds)
     sendTelegramAlert("✅ *Motion stopped*\n\n" +
                      String("Motion duration: ") + 
                      String((millis() - lastMotionAlertTime) / 1000) + " seconds\n" +
@@ -643,7 +643,7 @@ void handleTelegramMessages() {
         if (motionDetected) {
           alertsMsg += "🚶 *Motion detected*\n";
           alertsMsg += "   Time since last: " + 
-                      String((millis() - lastMotionTime) / 1000) + " сек";
+                      String((millis() - lastMotionTime) / 1000) + " seconds";
         }
         
         bot.sendMessage(chatId, alertsMsg, "Markdown");
@@ -672,7 +672,7 @@ void sendTelegramAlert(String message) {
   
   String alertMsg = "⚠️ *SYSTEM ALERT* ⚠️\n\n";
   alertMsg += message;
-  alertMsg += "\n\n🕐 Time: " + String(millis() / 1000) + " сек";
+  alertMsg += "\n\n🕐 Time: " + String(millis() / 1000) + " seconds";
   alertMsg += "\n📍 System: Smart AirGuard";
   
   bot.sendMessage(chatId, alertMsg, "Markdown");
@@ -687,13 +687,13 @@ void sendStatus(String chat_id) {
                String(WiFi.RSSI()) + " dBm)\n";
   statusMsg += "📡 IP: " + WiFi.localIP().toString() + "\n";
   statusMsg += "🔄 Last ThingSpeak update: " + 
-               String((millis() - lastThingSpeakUpdate) / 1000) + " сек назад\n\n";
+               String((millis() - lastThingSpeakUpdate) / 1000) + " seconds ago\n\n";
   
   statusMsg += "🚦 *States:*\n";
   statusMsg += "• Gas: " + String(gasAlert ? "🔴 DANGEROUS" : "✅ Ok") + "\n";
   statusMsg += "• Temperature: " + String(tempAlert ? "🟡 Warning" : "✅ Ok") + "\n";
   statusMsg += "• Humidity: " + String(humidityAlert ? "🟢 High" : "✅ Ok") + "\n";
-  statusMsg += "• Motion: " + String(motionDetected ? "🔵 Detected" : "⚫ Нет") + "\n";
+  statusMsg += "• Motion: " + String(motionDetected ? "🔵 Detected" : "⚫ No") + "\n";
   statusMsg += "• Fan: " + String(digitalRead(RELAY_PIN) == LOW ? "🌀 ON" : "⭕ OFF") + "\n\n";
   
   statusMsg += "📈 *ThingSpeak:*\n";
@@ -742,12 +742,12 @@ String getUptime() {
   hours %= 24;
   
   if (days > 0) {
-    return String(days) + "д " + String(hours) + "ч " + String(minutes) + "м";
+    return String(days) + "d " + String(hours) + "h " + String(minutes) + "min";
   } else if (hours > 0) {
-    return String(hours) + "ч " + String(minutes) + "м " + String(seconds) + "с";
+    return String(hours) + "h " + String(minutes) + "min " + String(seconds) + "sec";
   } else if (minutes > 0) {
-    return String(minutes) + "м " + String(seconds) + "с";
+    return String(minutes) + "min " + String(seconds) + "sec";
   } else {
-    return String(seconds) + "с";
+    return String(seconds) + "sec";
   }
 }
