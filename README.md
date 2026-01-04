@@ -31,6 +31,8 @@ The system uses an ESP32 microcontroller as its core, enabling real-time data pr
 
 Overall, Smart AirGuard is a cost-effective, scalable, and reliable solution that combines real-time monitoring, automated risk mitigation, and cloud-based communication to improve air quality and safety in enclosed environments.
 
+![Project](project.png)
+
 ## Features
 
 ### 📊 **Multi-Sensor Monitoring**
