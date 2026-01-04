@@ -10,7 +10,7 @@
 
 </div>
 
-## 📋 Table of Contents
+## Table of Contents
 - [Overview](#-overview)
 - [Features](#-features)
 - [System Architecture](#-system-architecture)
@@ -21,7 +21,7 @@
 - [ThingSpeak Integration](#thingspeak-integration)
 - [Alert System](#-alert-system)
 
-## 🎯 Overview
+## Overview
 
 Smart AirGuard is an IoT-based environmental monitoring and safety system designed for enclosed automotive and indoor environments. The system continuously monitors air quality, temperature, humidity, and motion using a set of low-cost sensors, including the MQ-135 gas sensor, DHT22 temperature and humidity sensor, and a PIR motion sensor. Visual feedback is provided through RGB and status LEDs, while a local OLED display presents real-time sensor readings.
 
@@ -31,7 +31,7 @@ The system uses an ESP32 microcontroller as its core, enabling real-time data pr
 
 Overall, Smart AirGuard is a cost-effective, scalable, and reliable solution that combines real-time monitoring, automated risk mitigation, and cloud-based communication to improve air quality and safety in enclosed environments.
 
-## ✨ Features
+## Features
 
 ### 📊 **Multi-Sensor Monitoring**
 - **Air Quality**: MQ-135 gas sensor for detecting harmful gases
@@ -59,7 +59,7 @@ Overall, Smart AirGuard is a cost-effective, scalable, and reliable solution tha
 - Alert configuration and monitoring
 - System health monitoring
 
-## 🏗️ System Architecture
+## System Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -95,7 +95,7 @@ Overall, Smart AirGuard is a cost-effective, scalable, and reliable solution tha
 └─────────────────────────────────────────────────────────────┘
 ```
 
-## 🔧 Hardware Requirements
+## Hardware Requirements
 
 ### **Main Components**
 | Component | Quantity | Purpose |
@@ -116,7 +116,7 @@ Overall, Smart AirGuard is a cost-effective, scalable, and reliable solution tha
 - **Input**: 5V DC via USB or external power supply
 - **Current**: ~500mA (with all peripherals active)
 
-## 🔌 Wiring Diagram
+## Wiring Diagram
 
 ### **ESP32 Pin Configuration**
 
@@ -146,7 +146,7 @@ Overall, Smart AirGuard is a cost-effective, scalable, and reliable solution tha
 - **5V**: MQ-135, Buzzer, LEDs, Relay module
 - **GND**: All components
 
-## 📦 Software Dependencies
+## Software Dependencies
 
 ### **Arduino Libraries Required**
 ```cpp
@@ -216,7 +216,7 @@ Widgets created in ThingSpeak to visualize:
 
 ![ThingSpeak](ThingSpeak.png)
 
-#### 📊 Weekly Gas Level Analytics
+#### Weekly Gas Level Analytics
 This module analyzes gas concentration data collected by the Smart AirGuard system and stored on ThingSpeak.
 
 What It Does:
