@@ -182,6 +182,9 @@ Overall, Smart AirGuard is a cost-effective, scalable, and reliable solution tha
 | `/alerts` | Active alerts | Gas, temperature, humidity alerts |
 | `/id` | Show your Chat ID | Unique identifier for notifications |
 
+### **TelegramBot layout**
+![TelegramBot](TelegramBot.png)
+
 ### **Automatic Alerts**
 The system automatically sends alerts for:
 - 🚨 **Gas**: Level > 400 ppm
