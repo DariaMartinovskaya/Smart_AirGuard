@@ -214,7 +214,9 @@ Widgets created in ThingSpeak to visualize:
 - Alert status indicators
 - Weekly Gas Level Analytics
 
-#### Weekly Gas Level Analytics
+![ThingSpeak](ThingSpeak.png)
+
+#### 📊 Weekly Gas Level Analytics
 This module analyzes gas concentration data collected by the Smart AirGuard system and stored on ThingSpeak.
 
 What It Does:
@@ -222,8 +224,10 @@ What It Does:
 - Retrieves gas level and alert data for the last 7 days
 - Handles UTC → local (Portugal) timezone conversion
 - Processes data on a daily basis
+
+![Analytics](Analytics1.png)
   
-📊 Key Metrics
+Key Metrics
 
 Daily mean, maximum, and minimum gas levels
 
