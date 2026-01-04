@@ -138,6 +138,9 @@ Overall, Smart AirGuard is a cost-effective, scalable, and reliable solution tha
 
 ![Scheme](AirGuard_scheme.png)
 
+### **Real physical board**
+![Physics](physics.png)
+
 ### **Power Connections**
 - **3.3V**: DHT22, OLED, PIR sensor
 - **5V**: MQ-135, Buzzer, LEDs, Relay module
