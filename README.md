@@ -252,7 +252,7 @@ Distribution plots with safety thresholds (warning & danger levels)
 3. **NOTICE** (Green LED + Telegram)
    - High humidity detected
    
-4. **INFO** (Telegram only)
+4. **INFO** (RGB LED (Blue) + Telegram)
    - Motion detected/stopped
 
 ### **Alert Cooldown Mechanism**
