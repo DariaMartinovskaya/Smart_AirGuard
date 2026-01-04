@@ -17,8 +17,6 @@
 - [Hardware Requirements](#-hardware-requirements)
 - [Wiring Diagram](#-wiring-diagram)
 - [Software Dependencies](#-software-dependencies)
-- [Installation & Setup](#-installation--setup)
-- [Configuration](#-configuration)
 - [Telegram Bot Commands](#-telegram-bot-commands)
 - [ThingSpeak Integration](#thingspeak-integration)
 - [Alert System](#-alert-system)
@@ -142,7 +140,7 @@ Overall, Smart AirGuard is a cost-effective, scalable, and reliable solution tha
 
 ### **Power Connections**
 - **3.3V**: DHT22, OLED, PIR sensor
-- **5V**: MQ-135, Buzzer, LEDs (via resistors), Relay module
+- **5V**: MQ-135, Buzzer, LEDs, Relay module
 - **GND**: All components
 
 ## 📦 Software Dependencies
@@ -170,67 +168,6 @@ Overall, Smart AirGuard is a cost-effective, scalable, and reliable solution tha
    - `DHT sensor library`
    - `Universal Telegram Bot`
    - `ArduinoJson`
-
-## 🚀 Installation & Setup
-
-### **Step 1: Hardware Assembly**
-1. Connect all sensors according to the wiring diagram
-2. Ensure proper power connections
-3. Double-check all ground connections
-
-### **Step 2: Software Configuration**
-1. Clone this repository
-2. Open `SmartAirGuard.ino` in Arduino IDE
-3. Configure your settings:
-
-### **Step 3: Network Configuration**
-```cpp
-// WiFi Credentials
-const char *ssid = "YOUR_WIFI_SSID";
-const char *pass = "YOUR_WIFI_PASSWORD";
-
-// ThingSpeak Configuration
-String apiKey = "YOUR_THINGSPEAK_API_KEY";
-const char* server = "api.thingspeak.com";
-
-// Telegram Bot Token
-#define BOT_TOKEN "YOUR_TELEGRAM_BOT_TOKEN"
-```
-
-### **Step 4: Threshold Configuration**
-```cpp
-// Alert Thresholds
-#define DANGEROUS_GAS 400        // ppm
-#define LOW_TEMP_THRESHOLD 10    // °C
-#define HIGH_TEMP_THRESHOLD 35   // °C
-#define HIGH_HUMIDITY_THRESHOLD 90  // %
-
-// Timing Configuration
-#define THINGSPEAK_DELAY 15000   // 15 seconds
-#define ALERT_COOLDOWN 30000     // 30 seconds
-#define MOTION_TIMEOUT 10000     // 10 seconds
-```
-
-## ⚙️ Configuration
-
-### **Telegram Bot Setup**
-1. Create a bot via [@BotFather](https://t.me/botfather)
-2. Get your bot token
-3. Update `BOT_TOKEN` in the code
-4. Start the system and send `/start` to your bot
-
-### **ThingSpeak Setup**
-1. Create a [ThingSpeak](https://thingspeak.com) account
-2. Create a new channel with 8 fields:
-   - Field 1: Temperature
-   - Field 2: Humidity
-   - Field 3: Gas Level
-   - Field 4: Motion Detected
-   - Field 5: Gas Alert
-   - Field 6: Temperature Alert
-   - Field 7: Humidity Alert
-   - Field 8: Fan Status
-3. Copy your Write API Key
 
 ## 🤖 Telegram Bot Commands
 
@@ -264,11 +201,40 @@ The system automatically sends alerts for:
 | 8 | Fan Status | Binary | 1 = ON, 0 = OFF |
 
 ### **Dashboard Configuration**
-Create widgets in ThingSpeak to visualize:
+Widgets created in ThingSpeak to visualize:
 - Temperature & Humidity graphs
 - Gas level history
 - Motion detection timeline
 - Alert status indicators
+- Weekly Gas Level Analytics
+
+#### Weekly Gas Level Analytics
+This module analyzes gas concentration data collected by the Smart AirGuard system and stored on ThingSpeak.
+
+What It Does:
+
+- Retrieves gas level and alert data for the last 7 days
+- Handles UTC → local (Portugal) timezone conversion
+- Processes data on a daily basis
+  
+📊 Key Metrics
+
+Daily mean, maximum, and minimum gas levels
+
+Alert count per day
+
+Detection of days with missing data
+
+📉 Visualizations
+
+Daily gas level time-series comparison
+
+Bar charts of daily statistics
+
+Alert frequency per day
+
+Distribution plots with safety thresholds (warning & danger levels)
+
 
 ## 🚨 Alert System
 
