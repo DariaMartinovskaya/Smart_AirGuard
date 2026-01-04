@@ -275,6 +275,4 @@ The OLED display shows:
 - Alert status indicators
 - Motion detection status
 - Blue LED state (motion)
-- Time until next ThingSpeak update
-- Time until next Telegram check
 - Fan status
