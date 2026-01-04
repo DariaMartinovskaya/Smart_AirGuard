@@ -1,4 +1,4 @@
-# Smart AirGuard - IoT Environmental Monitoring System
+# Smart AirGuard - IoT Monitoring System
 
 <div align="center">
 
@@ -6,7 +6,7 @@
 ![Telegram Bot](https://img.shields.io/badge/Telegram-Bot-blue)
 ![ThingSpeak](https://img.shields.io/badge/Cloud-ThingSpeak-orange)
 
-*A comprehensive IoT-based environmental monitoring and alert system with real-time notifications*
+*A comprehensive IoT-based air quality monitoring and alert system with real-time notifications*
 
 </div>
 
@@ -25,7 +25,13 @@
 
 ## 🎯 Overview
 
-Smart AirGuard is an intelligent environmental monitoring system built on ESP32 that continuously tracks air quality, temperature, humidity, and motion. It provides real-time alerts via Telegram and visual indicators when environmental parameters exceed safe thresholds.
+Smart AirGuard is an IoT-based environmental monitoring and safety system designed for enclosed automotive and indoor environments. The system continuously monitors air quality, temperature, humidity, and motion using a set of low-cost sensors, including the MQ-135 gas sensor, DHT22 temperature and humidity sensor, and a PIR motion sensor. Visual feedback is provided through RGB and status LEDs, while a local OLED display presents real-time sensor readings.
+
+To ensure user safety, Smart AirGuard implements an intelligent alert and automation mechanism. When critical thresholds are exceeded — such as dangerous gas levels (>400 ppm), extreme temperature conditions, high humidity, or detected motion — the system sends instant notifications via a Telegram bot. For severe gas events, an audible buzzer alarm is triggered and an exhaust fan is automatically activated to reduce gas concentration.
+
+The system uses an ESP32 microcontroller as its core, enabling real-time data processing, wireless communication, and cloud integration. Sensor data is periodically uploaded to the ThingSpeak cloud platform for remote monitoring and historical analysis. Two-way communication through Telegram allows users to remotely check system status and request live sensor data.
+
+Overall, Smart AirGuard is a cost-effective, scalable, and reliable solution that combines real-time monitoring, automated risk mitigation, and cloud-based communication to improve air quality and safety in enclosed environments.
 
 ## ✨ Features
 
