@@ -11,15 +11,18 @@
 </div>
 
 ## Table of Contents
-- [Overview](#-overview)
-- [Features](#-features)
-- [System Architecture](#-system-architecture)
-- [Hardware Requirements](#-hardware-requirements)
-- [Wiring Diagram](#-wiring-diagram)
-- [Software Dependencies](#-software-dependencies)
-- [Telegram Bot Commands](#-telegram-bot-commands)
+- [Overview](#overview)
+- [Features](#features)
+- [System Architecture](#system-architecture)
+- [Hardware Requirements](#hardware-requirements)
+- [Wiring Diagram](#wiring-diagram)
+- [Software Dependencies](#software-dependencies)
+- [Telegram Bot Commands](#telegram-bot-commands)
 - [ThingSpeak Integration](#thingspeak-integration)
-- [Alert System](#-alert-system)
+- [Node-RED & Remote Monitoring](#node-red--remote-monitoring)
+- [Alert System](#alert-system)
+- [Local Display Information](#local-display-information)
+
 
 ## Overview
 
@@ -247,6 +250,27 @@ Alert frequency per day
 
 Distribution plots with safety thresholds (warning & danger levels)
 
+## 🤖 Node-RED & Remote Monitoring
+
+To simplify automation, visualization, and integration with multiple services, Smart AirGuard uses Node‑RED, a flow-based programming tool for IoT. Node‑RED allows you to visually connect sensors, alerts, cloud services, and Telegram notifications without writing complex code, making development and testing much faster and more intuitive.
+
+For remote access and real-time monitoring from anywhere, the system can be connected to the internet using ngrok, which creates a secure public URL to the local Node‑RED instance. This allows users and developers to:
+
+- Access the Node‑RED dashboard remotely from any device (phone, tablet, or laptop).
+
+- Test automation flows and alerts without being physically near the device.
+
+- Integrate with cloud services and APIs (like ThingSpeak or Telegram) seamlessly.
+
+### Benefits of Node‑RED + ngrok for Smart AirGuard:
+
+Remote Monitoring: View and control the system from anywhere.
+
+Flexible Automation: Easily change flows for alerts, data logging, or device control.
+
+Safe Testing Environment: Experiment with IoT flows without affecting the core ESP32 code.
+
+Rapid Development: Visual programming speeds up prototyping and debugging.
 
 ## 🚨 Alert System
 
