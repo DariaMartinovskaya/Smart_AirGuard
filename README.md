@@ -254,7 +254,9 @@ Distribution plots with safety thresholds (warning & danger levels)
 
 To simplify automation, visualization, and integration with multiple services, Smart AirGuard uses Node‑RED, a flow-based programming tool for IoT. Node‑RED allows you to visually connect sensors, alerts, cloud services, and Telegram notifications without writing complex code, making development and testing much faster and more intuitive.
 
-For remote access and real-time monitoring from anywhere, the system can be connected to the internet using ngrok, which creates a secure public URL to the local Node‑RED instance. This allows users and developers to:
+For remote access and real-time monitoring from anywhere, the system can be connected to the internet using ngrok, which creates a secure public URL to the local Node‑RED instance. 
+
+This allows users and developers to:
 
 - Access the Node‑RED dashboard remotely from any device (phone, tablet, or laptop).
 
