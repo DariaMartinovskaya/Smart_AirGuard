@@ -197,7 +197,27 @@ The system automatically sends alerts for:
 - 💧 **Humidity**: Above 90%
 - 🚶 **Motion**: When detected
 
-## 📊 ThingSpeak Integration
+## Cloud Platforms and Data Management
+
+Smart AirGuard employs a **multi-platform cloud architecture** to balance real-time system responsiveness with long-term environmental data analysis. 
+
+The system integrates **Adafruit IO**, **ThingSpeak**, and **Node-RED**, each addressing different functional and research requirements.
+
+### 📊 ThingSpeak Integration
+
+ThingSpeak is employed as the **data logging and analytical platform**. Sensor data is uploaded at fixed intervals and stored for long-term evaluation.
+
+Its role within Smart AirGuard includes:
+
+- Persistent storage of environmental sensor data
+
+- Time-series visualization over extended periods
+
+- Statistical analysis of gas concentration (mean, minimum, maximum)
+
+- Weekly trend analysis and detection of missing or anomalous data
+
+ThingSpeak supports MATLAB-based analytics, making it appropriate for **research-oriented post-processing**, while its higher latency limits its use in real-time control scenarios.
 
 ### **Data Fields Mapping**
 | Field | Data | Type | Description |
@@ -211,7 +231,7 @@ The system automatically sends alerts for:
 | 7 | Humidity Alert | Binary | 1 = Alert, 0 = Normal |
 | 8 | Fan Status | Binary | 1 = ON, 0 = OFF |
 
-### **Dashboard Configuration**
+#### **Dashboard Configuration**
 Widgets created in ThingSpeak to visualize:
 - Temperature & Humidity graphs
 - Gas level history
@@ -232,47 +252,69 @@ What It Does:
 
 ![Analytics](Analytics1.png)
   
-Key Metrics
+- Key Metrics
 
-Daily mean, maximum, and minimum gas levels
+- Daily mean, maximum, and minimum gas levels
 
-Alert count per day
+- Alert count per day
 
-Detection of days with missing data
+- Detection of days with missing data
 
 📉 Visualizations
 
-Daily gas level time-series comparison
+- Daily gas level time-series comparison
 
-Bar charts of daily statistics
+- Bar charts of daily statistics
 
-Alert frequency per day
+- Alert frequency per day
 
-Distribution plots with safety thresholds (warning & danger levels)
+- Distribution plots with safety thresholds (warning & danger levels)
 
-## 🤖 Node-RED & Remote Monitoring
+## 🤖 Adafruit IO Integration
 
-To simplify automation, visualization, and integration with multiple services, Smart AirGuard uses Node‑RED, a flow-based programming tool for IoT. Node‑RED allows you to visually connect sensors, alerts, cloud services, and Telegram notifications without writing complex code, making development and testing much faster and more intuitive.
+Adafruit IO is used as the **primary real-time communication layer** of the Smart AirGuard system. It provides low-latency, MQTT-based data exchange between the ESP32 device and external services.
 
-For remote access and real-time monitoring from anywhere, the system can be connected to the internet using ngrok, which creates a secure public URL to the local Node‑RED instance. 
+In this project, Adafruit IO is responsible for:
 
-This allows users and developers to:
+- Real-time streaming of sensor data (temperature, humidity, gas concentration, motion)
 
-- Access the Node‑RED dashboard remotely from any device (phone, tablet, or laptop).
+- Bidirectional communication for actuator control (fan ON/OFF)
 
-- Test automation flows and alerts without being physically near the device.
+- Instant synchronization between the ESP32 and external dashboards
 
-- Integrate with cloud services and APIs (like ThingSpeak or Telegram) seamlessly.
+- Event-driven data delivery suitable for automation workflows
 
-### Benefits of Node‑RED + ngrok for Smart AirGuard:
+Due to its low latency and native MQTT support, Adafruit IO is well suited for **interactive monitoring and immediate response**, but it is not optimized for long-term analytical processing.
 
-Remote Monitoring: View and control the system from anywhere.
+## Comparative Use of Adafruit IO and ThingSpeak
 
-Flexible Automation: Easily change flows for alerts, data logging, or device control.
+The simultaneous use of Adafruit IO and ThingSpeak is a deliberate architectural decision, as the platforms serve complementary purposes.
 
-Safe Testing Environment: Experiment with IoT flows without affecting the core ESP32 code.
+| Aspect | Adafruit IO | ThingSpeak |
+|------|------------|------------|
+| Primary Function | Real-time messaging and control | Data logging and analytics |
+| Communication Model | MQTT (event-based) | HTTP (periodic uploads) |
+| Latency | Low | High |
+| Actuator Control | Supported | Not suitable |
+| Long-term Analysis | Limited | Extensive |
 
-Rapid Development: Visual programming speeds up prototyping and debugging.
+By combining both platforms, Smart AirGuard achieves **fast safety responses** while preserving **rich historical datasets** for analytical evaluation.
+
+## Node-RED Integration and Research Layer
+
+Node-RED is used as an **integration, automation, and experimentation layer** within the Smart AirGuard architecture. It subscribes to real-time MQTT data streams from Adafruit IO and enables flexible data processing without modifying the ESP32 firmware.
+
+Node-RED enables:
+
+- Data aggregation and preprocessing
+
+- Custom dashboards for visualization and manual control
+
+- Rule-based automation and conditional logic
+
+- Rapid prototyping of alternative alert and control strategies
+
+Importantly, Node-RED is treated as a **research environment**, allowing experimental logic (e.g., threshold tuning, filtering techniques, sensor correlation analysis) to be evaluated independently of the embedded system.
 
 ## 🚨 Alert System
 
