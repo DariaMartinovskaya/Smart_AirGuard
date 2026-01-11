@@ -17,12 +17,14 @@
 - [Hardware Requirements](#hardware-requirements)
 - [Wiring Diagram](#wiring-diagram)
 - [Software Dependencies](#software-dependencies)
-- [Telegram Bot Commands](#telegram-bot-commands)
-- [ThingSpeak Integration](#thingspeak-integration)
-- [Node-RED & Remote Monitoring](#node-red--remote-monitoring)
-- [Alert System](#alert-system)
-- [Local Display Information](#local-display-information)
-
+- [Telegram Bot Commands](#-telegram-bot-commands)
+- [Cloud Platforms and Data Management](#cloud-platforms-and-data-management)
+  - [ThingSpeak Integration](#-thingspeak-integration)
+  - [Adafruit IO Integration](#-adafruit-io-integration)
+  - [Comparative Use of Adafruit IO and ThingSpeak](#comparative-use-of-adafruit-io-and-thingspeak)
+  - [Node-RED Integration and Research Layer](#node-red-integration-and-research-layer)
+- [Alert System](#-alert-system)
+- [Local Display Information](#-local-display-information)
 
 ## Overview
 
