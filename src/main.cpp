@@ -8,6 +8,8 @@
 #include <UniversalTelegramBot.h>
 #include <ArduinoJson.h>
 #include <WiFiClientSecure.h>
+#include "Adafruit_MQTT.h"
+#include "Adafruit_MQTT_Client.h"
 
 // ---------------- WIFI + THINGSPEAK -----------------
 const char *ssid = "Alex";
@@ -18,18 +20,61 @@ const char* server = "api.thingspeak.com";
 // ---------------- TELEGRAM BOT -----------------
 #define BOT_TOKEN "8159417350:AAFVaCa_djh0A81HtL3QTT7Ww9rcLwBU4Yg"  
 
-String chatId = "";  
-bool chatIdFound = false;
+// ---------------- ADAFRUIT IO (MQTT) -----------------
+#define AIO_SERVER   "io.adafruit.com"
+#define AIO_PORT     1883
+#define AIO_USERNAME "DaryaMartsinouskaya"
+#define AIO_KEY      "aio_ifUO96Y9NtBKT4XwAXSKWC3qZ9SR"
 
-WiFiClient client;
-WiFiClientSecure secured_client;
-HTTPClient http;
-UniversalTelegramBot bot(BOT_TOKEN, secured_client);
+// ---------------- OBJECTS -----------------
+WiFiClientSecure telegramClient; // For Telegram
+WiFiClient mqttClient;           // For Adafruit IO (MQTT)
+HTTPClient http;                 // For ThingSpeak
+UniversalTelegramBot bot(BOT_TOKEN, telegramClient);
 
+// ---------------- MQTT -----------------
+Adafruit_MQTT_Client mqtt(
+  &mqttClient,
+  AIO_SERVER,
+  AIO_PORT,
+  AIO_USERNAME,
+  AIO_KEY
+);
+
+Adafruit_MQTT_Publish feedTemp   = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "/feeds/temperature");
+Adafruit_MQTT_Publish feedHum    = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "/feeds/humidity");
+Adafruit_MQTT_Publish feedGas    = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "/feeds/gas");
+Adafruit_MQTT_Publish feedMotion = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "/feeds/motion");
+Adafruit_MQTT_Publish feedFan    = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "/feeds/fan");
+Adafruit_MQTT_Subscribe feedFanControl = Adafruit_MQTT_Subscribe(&mqtt, AIO_USERNAME "/feeds/fan");
+
+// ---------------- TIMERS -----------------
 unsigned long lastThingSpeakUpdate = 0;
-const unsigned long THINGSPEAK_DELAY = 15000;
+const unsigned long THINGSPEAK_DELAY = 15000; // 15 secs
+
 unsigned long lastTelegramCheck = 0;
-const unsigned long TELEGRAM_DELAY = 1000;
+const unsigned long TELEGRAM_DELAY = 1000; // 1 sec
+
+unsigned long lastMQTTUpdate = 0; 
+
+float lastSentTemp = -100;        // Impossible starting value
+float lastSentHum = -100;         // Impossible starting value
+int lastSentGas = -1;             // Impossible starting value
+bool lastSentMotion = false;
+bool lastSentFan = false;
+unsigned long lastForceSend = 0;  // Forced sending once a minute
+const unsigned long FORCE_SEND_INTERVAL = 60000; // 60 secs
+
+bool fanManualOverride = false;   // true = manual config from Node-RED
+bool fanDesiredState = false;     // Intended fan status (for mannual regime)
+bool gasEmergency = false;        // true = gas emergency
+bool gasEmergencyActive = false;  // true = now is emergency
+bool manualBeforeEmergency = false; // condition is saved before emergency
+bool desiredStateBeforeEmergency = false;
+unsigned long lastFanToggleTime = 0;
+const unsigned long FAN_DEBOUNCE = 1000; 
+unsigned long gasNormalizedTime = 0;
+const unsigned long GAS_NORMAL_DELAY = 10000; // 10 secs after gas level normalization 
 
 unsigned long lastGasAlertTime = 0;
 unsigned long lastTempAlertTime = 0;
@@ -37,68 +82,76 @@ unsigned long lastHumidityAlertTime = 0;
 unsigned long lastMotionAlertTime = 0;
 const unsigned long ALERT_COOLDOWN = 30000;
 
+// ---------------- PINS -----------------
 #define DHTPIN 14
 #define BUZZER_PIN 13     
 #define RED_LED 21
 #define YELLOW_LED 19
 #define GREEN_LED 18
-#define MQ135_PIN 34      
+#define MQ135_PIN 34
 #define RELAY_PIN 26       
 #define PIR_PIN 32         
 
 #define RGB_RED 27       
 #define RGB_GREEN 25      
-#define RGB_BLUE 33       // Blue channel (for motion)
+#define RGB_BLUE 33
 
 #define DHTTYPE DHT22
 #define SCREEN_WIDTH 128
 #define SCREEN_HEIGHT 64
 
-// 
 #define DANGEROUS_GAS 400
 #define LOW_TEMP_THRESHOLD 10
 #define HIGH_TEMP_THRESHOLD 35
 #define HIGH_HUMIDITY_THRESHOLD 90
 
-// Timing for PIR
-#define PIR_DEBOUNCE_TIME 2000  // Sensor stabilisation time (2 secs)
-#define MOTION_TIMEOUT 10000    // Motion detection timeout (10 seconds)
-#define BLINK_INTERVAL 500      // Blue LED blinking interval during motion
+#define PIR_DEBOUNCE_TIME 2000
+#define MOTION_TIMEOUT 10000
+#define BLINK_INTERVAL 500
 
-// Objects
+// ---------------- OBJECTS -----------------
 DHT dht(DHTPIN, DHTTYPE);
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire);
 
-// Variables
+// ---------------- VARIABLES -----------------
+String chatId = "";  
+bool chatIdFound = false;
+
 float temperature = 0;
 float humidity = 0;
 int gasLevel = 0;
+
 bool gasAlert = false;
 bool tempAlert = false;
 bool humidityAlert = false;
-bool motionDetected = false;    // Motion sensor state
-unsigned long lastMotionTime = 0; // Time of last detected motion
-unsigned long pirReadyTime = 0;   // PIR readiness time
-unsigned long lastBlinkTime = 0;  // Time of last LED blink
-bool blueLedState = false;        // Blue LED state
+bool motionDetected = false;
 
-// Flags for tracking changes
+unsigned long lastMotionTime = 0;
+unsigned long pirReadyTime = 0;
+unsigned long lastBlinkTime = 0;
+bool blueLedState = false;
+
+// Flags
 bool lastGasAlert = false;
 bool lastTempAlert = false;
 bool lastHumidityAlert = false;
 bool lastMotionState = false;  
 
-// Function prototypes
+// ---------------- FUNCTION PROTOTYPES -----------------
 void readSensors();
 void sendToThingSpeak();
+void sendToAdafruitIO();
 void checkMotion();
 void checkConditions();
 void displayData();
 void updateRGBLed();
 void setRGBColor(bool red, bool green, bool blue);
-void toneAlert();
+void toneAlertNonBlocking();
+void MQTT_connect();
+void handleMQTTCommands();
+void updateFanState(); 
 
-// Telegram function prototypes
+// Telegram functions
 void setupTelegram();
 void handleTelegramMessages();
 void sendTelegramAlert(String message);
@@ -109,22 +162,18 @@ String getUptime();
 void setup() {
   Serial.begin(115200);
 
-  // WiFi
   WiFi.begin(ssid, pass);
   Serial.print("Connecting to WiFi ");
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.print(".");
   }
-
   Serial.println("\nWiFi connected!");
   Serial.print("IP Address: ");
   Serial.println(WiFi.localIP());
 
-  // I2C
   Wire.begin(23, 22);
-  
-  // Pins initialization
+
   pinMode(BUZZER_PIN, OUTPUT);
   pinMode(RED_LED, OUTPUT);
   pinMode(YELLOW_LED, OUTPUT);
@@ -133,55 +182,21 @@ void setup() {
   pinMode(MQ135_PIN, INPUT);
   pinMode(PIR_PIN, INPUT);
   
-  // RGB LED pins initialization
   pinMode(RGB_RED, OUTPUT);
   pinMode(RGB_GREEN, OUTPUT);
   pinMode(RGB_BLUE, OUTPUT);
 
-  digitalWrite(RELAY_PIN, HIGH);
+  digitalWrite(RELAY_PIN, HIGH); // HIGH = OFF (active LOW level)
   setRGBColor(false, false, false);
 
   dht.begin();
   pirReadyTime = millis() + PIR_DEBOUNCE_TIME;
 
-  // OLED
   if (!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
     Serial.println("OLED ERROR!");
     while (1);
   }
-  
-  // Turn everything off at startup
-  digitalWrite(BUZZER_PIN, LOW);
-  digitalWrite(RED_LED, LOW);
-  digitalWrite(YELLOW_LED, LOW);
-  digitalWrite(GREEN_LED, LOW);
-  digitalWrite(RELAY_PIN, HIGH);
-  
-  // Turn RGB LED on
-  setRGBColor(false, false, false);
-  
-  // Sensors initialization
-  dht.begin();
-  
-  // PIR timing initialization
-  pirReadyTime = millis() + PIR_DEBOUNCE_TIME;
-  Serial.print("PIR initializing (wait ");
-  Serial.print(PIR_DEBOUNCE_TIME / 1000);
-  Serial.println(" seconds)...");
-  
-  // Display initialization with check
-  Serial.println("Initializing OLED...");
-  if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
-    Serial.println("❌ OLED NOT FOUND! Check:");
-    Serial.println("- SDA -> GPIO 23");
-    Serial.println("- SCL -> GPIO 22"); 
-    Serial.println("- VCC -> 3.3V");
-    Serial.println("- GND -> GND");
-    while(1); // Stop if OLED is not found
-  }
-  
-  Serial.println("✅ OLED initialized!");
-  
+
   display.clearDisplay();
   display.setTextColor(SSD1306_WHITE);
   display.setTextSize(1);
@@ -189,29 +204,22 @@ void setup() {
   display.println("System Starting...");
   display.println("PIR initializing");
   display.display();
-  delay(PIR_DEBOUNCE_TIME); // Waiting for PIR is stabilized
-  
-  // RGB LED Test
-  Serial.println("Testing RGB LED...");
-  setRGBColor(true, false, false); // Red
-  delay(300);
-  setRGBColor(false, true, false); // Green
-  delay(300);
-  setRGBColor(false, false, true); // Blue
-  delay(300);
-  setRGBColor(false, false, false); // Turn off
-  delay(300);
-  
-  // FORCED BLUE LED TURN-OFF
-  blueLedState = false;
-  setRGBColor(false, false, false);
-  Serial.println("Blue LED: OFF (default state)");
-  
-  Serial.println("System initialized");
-  Serial.println("Ready to send data to ThingSpeak");
+  delay(PIR_DEBOUNCE_TIME);
 
-   // Telegram bot set up
-  setupTelegram();
+  // RGB test
+  setRGBColor(true, false, false); delay(300);
+  setRGBColor(false, true, false); delay(300);
+  setRGBColor(false, false, true); delay(300);
+  setRGBColor(false, false, false);
+  
+  // Setup Telegram & clients
+  telegramClient.setInsecure();  // Telegram
+  setupTelegram();               
+
+  mqtt.subscribe(&feedFanControl);
+  
+  Serial.println("System ready! Fan control: Automatic (gas sensor)");
+  Serial.println("RELAY_PIN: HIGH = OFF, LOW = ON");
 }
 
 void loop() {
@@ -219,23 +227,29 @@ void loop() {
   checkMotion();
   updateRGBLed();    
   checkConditions();
+  updateFanState(); 
   displayData();
   
-  // Sending data to ThingSpeak every 15 seconds
   if (millis() - lastThingSpeakUpdate >= THINGSPEAK_DELAY) {
     sendToThingSpeak();
     lastThingSpeakUpdate = millis();
   }
   
-  // Checking Telegram messages
   if (millis() - lastTelegramCheck >= TELEGRAM_DELAY) {
     handleTelegramMessages();
     lastTelegramCheck = millis();
   }
   
-  delay(100); 
+  sendToAdafruitIO();
+  
+  // Handle MQTT commands from Node-RED
+  handleMQTTCommands();
+  
+  toneAlertNonBlocking(); // non-blocking buzzer
+  delay(100);
 }
 
+// ---------------- SENSOR FUNCTIONS -----------------
 void readSensors() {
   temperature = dht.readTemperature();
   humidity = dht.readHumidity();
@@ -251,12 +265,105 @@ void readSensors() {
   Serial.print("C, Humidity: "); Serial.print(humidity);
   Serial.print("%, Gas: "); Serial.print(gasLevel);
   Serial.print(", Motion: "); Serial.println(motionDetected ? "YES" : "NO");
-  Serial.print("Blue LED state: "); Serial.println(blueLedState ? "ON" : "OFF");
+  Serial.print("Fan Override: "); Serial.println(fanManualOverride ? "MANUAL" : "AUTO");
+  Serial.print("Fan Desired: "); Serial.println(fanDesiredState ? "ON" : "OFF");
+  Serial.print("Gas Emergency Active: "); Serial.println(gasEmergencyActive ? "YES" : "NO");
+  Serial.print("Manual Before: "); Serial.println(manualBeforeEmergency ? "YES" : "NO");
+  Serial.print("Relay PIN: "); Serial.println(digitalRead(RELAY_PIN) == LOW ? "LOW (ON)" : "HIGH (OFF)");
 }
 
-// Sending data to ThingSpeak
+void updateFanState() {
+  bool shouldFanBeOn = false;
+  
+// ============= PRIORITY 1: GAS EMERGENCY =============
+// Gas has the highest priority - we turn on the fan ALWAYS at a dangerous level
+  if (gasLevel > DANGEROUS_GAS) {
+    shouldFanBeOn = true;
+    gasEmergency = true;
+    
+// Save the state before the crash, if this is the beginning of the crash
+    if (!gasEmergencyActive) {
+      gasEmergencyActive = true;
+      manualBeforeEmergency = fanManualOverride;
+      desiredStateBeforeEmergency = fanDesiredState;
+      Serial.println("⚠️ GAS EMERGENCY STARTED! Saving current state.");
+      Serial.print("Saved state - Manual: ");
+      Serial.print(manualBeforeEmergency ? "YES" : "NO");
+      Serial.print(", Desired: ");
+      Serial.println(desiredStateBeforeEmergency ? "ON" : "OFF");
+    }
+    
+    // If there was manual mode and the fan was off, we send a warning
+    if (fanManualOverride && !fanDesiredState) {
+      static unsigned long lastGasOverrideWarning = 0;
+      if (millis() - lastGasOverrideWarning > 60000) { // Once a minute
+        Serial.println("⚠️ GAS EMERGENCY: Overriding manual OFF to ON!");
+        if (chatIdFound) {
+          bot.sendMessage(chatId, "⚠️ *GAS EMERGENCY OVERRIDE!*\n\n🚨 Dangerous gas level detected: " + 
+                          String(gasLevel) + "\n🌀 Fan forced ON for safety!\n⚙️ Manual control will be restored when gas normalizes", "Markdown");
+        }
+        lastGasOverrideWarning = millis();
+      }
+    }
+  } 
+  else {
+    // gas is normal
+    if (gasEmergencyActive) {
+      // Save time of normalization
+      if (gasNormalizedTime == 0) {
+        gasNormalizedTime = millis();
+        Serial.println("✅ Gas normalized. Waiting " + String(GAS_NORMAL_DELAY/1000) + " seconds before restoring control...");
+      }
+      
+      if (millis() - gasNormalizedTime >= GAS_NORMAL_DELAY) {
+        gasEmergency = false;
+        gasEmergencyActive = false;
+        
+        fanManualOverride = manualBeforeEmergency;
+        fanDesiredState = desiredStateBeforeEmergency;
+        
+        Serial.println("✅ Gas emergency ended. Restoring control to user.");
+        Serial.print("Restored state - Manual: ");
+        Serial.print(fanManualOverride ? "YES" : "NO");
+        Serial.print(", Desired: ");
+        Serial.println(fanDesiredState ? "ON" : "OFF");
+        
+        if (chatIdFound) {
+          String modeMsg = fanManualOverride ? 
+            (fanDesiredState ? "Manual ON" : "Manual OFF") : "Automatic mode";
+          bot.sendMessage(chatId, "✅ *Gas emergency ended!*\n\n🌀 Fan control restored\n⚙️ Mode: " + modeMsg + 
+                          "\n📊 Gas level: " + String(gasLevel), "Markdown");
+        }
+        
+        gasNormalizedTime = 0;
+      }
+    } else {
+      gasEmergency = false;
+    }
+    
+    // ============ PRIORITY 2: MANUAL ============
+    if (fanManualOverride && !gasEmergency) {
+      shouldFanBeOn = fanDesiredState;
+    } 
+    // ============ PRIORITY 3: AUTO ============
+    else if (!gasEmergency) {
+      shouldFanBeOn = false; // In automatic mode without gas - off
+    }
+  }
+  
+  // Apply the state to the relay (LOW = on, HIGH = off)
+  if (shouldFanBeOn) {
+    digitalWrite(RELAY_PIN, LOW);
+  } else {
+    digitalWrite(RELAY_PIN, HIGH);
+  }
+}
+
+// ---------------- THINGSPEAK -----------------
 void sendToThingSpeak() {
   if (WiFi.status() == WL_CONNECTED) {
+    WiFiClient clientTS;
+    HTTPClient httpTS;
     String url = "http://" + String(server) + "/update";
     url += "?api_key=" + apiKey;
     url += "&field1=" + String(temperature);
@@ -267,65 +374,211 @@ void sendToThingSpeak() {
     url += "&field6=" + String(tempAlert ? 1 : 0);
     url += "&field7=" + String(humidityAlert ? 1 : 0);
     url += "&field8=" + String(digitalRead(RELAY_PIN) == LOW ? 1 : 0);
-    
-    Serial.print("Sending to ThingSpeak: ");
-    Serial.println(url);  // ← To be added for debugging
-    
-    http.begin(client, url);
-    int httpCode = http.GET();
-    
+
+    Serial.print("Sending to ThingSpeak: "); Serial.println(url);
+    httpTS.begin(clientTS, url);
+    int httpCode = httpTS.GET();
     if (httpCode > 0) {
-      Serial.print("ThingSpeak HTTP code: ");
-      Serial.println(httpCode);
-      
+      Serial.print("ThingSpeak HTTP code: "); Serial.println(httpCode);
       if (httpCode == HTTP_CODE_OK) {
-        String payload = http.getString();
-        Serial.print("Response: ");
-        Serial.println(payload);
-        
-        // ThingSpeak return item number (entry_id)
-        if (payload.toInt() > 0) {
-          Serial.println("✅ Data sent successfully!");
-        } else {
-          Serial.println("❌ ThingSpeak returned 0 - check API key!");
-        }
+        String payload = httpTS.getString();
+        Serial.print("Response: "); Serial.println(payload);
       }
     } else {
-      Serial.print("❌ Error: ");
-      Serial.println(http.errorToString(httpCode).c_str());
+      Serial.print("❌ Error: "); Serial.println(httpTS.errorToString(httpCode).c_str());
     }
-    
-    http.end();
+    httpTS.end();
   } else {
     Serial.println("❌ WiFi disconnected!");
   }
 }
 
-void checkMotion() {
-  // Check if PIR is ready 
-  if (millis() < pirReadyTime) {
-    return; // PIR is not ready yet
+// ---------------- ADAFRUIT IO (MQTT) -----------------
+void MQTT_connect() {
+  int8_t ret;
+  
+  if (mqtt.connected()) {
+    return;
   }
   
+  Serial.print("Connecting to Adafruit IO... ");
+  
+  uint8_t retries = 3;
+  while ((ret = mqtt.connect()) != 0) {
+    Serial.println(mqtt.connectErrorString(ret));
+    Serial.println("Retrying MQTT connection in 5 seconds...");
+    mqtt.disconnect();
+    delay(5000);
+    retries--;
+    if (retries == 0) {
+      Serial.println("MQTT connection failed!");
+      return;
+    }
+  }
+  
+  Serial.println("Adafruit IO connected!");
+}
+
+void sendToAdafruitIO() {
+  MQTT_connect();
+  
+  if (!mqtt.ping()) {
+    Serial.println("MQTT ping failed, reconnecting...");
+    mqtt.disconnect();
+    MQTT_connect();
+  }
+  
+  bool changed = false;
+  
+  // The temperature is only sent if it has changed by more than 0.5°C.
+  if (abs(temperature - lastSentTemp) > 0.5) {
+    if (feedTemp.publish(temperature)) {
+      Serial.print("[MQTT] Temp changed: "); Serial.println(temperature);
+      lastSentTemp = temperature;
+      changed = true;
+      lastMQTTUpdate = millis();
+    }
+  }
+  
+  // Humidity data is only sent if it has changed by more than 1%.
+  if (abs(humidity - lastSentHum) > 1.0) {
+    if (feedHum.publish(humidity)) {
+      Serial.print("[MQTT] Hum changed: "); Serial.println(humidity);
+      lastSentHum = humidity;
+      changed = true;
+      lastMQTTUpdate = millis();
+    }
+  }
+  
+  // Gas is only sent if the change is more than 10 units.
+  if (abs(gasLevel - lastSentGas) > 10) {
+    if (feedGas.publish(gasLevel)) {
+      Serial.print("[MQTT] Gas changed: "); Serial.println(gasLevel);
+      lastSentGas = gasLevel;
+      changed = true;
+      lastMQTTUpdate = millis();
+    }
+  }
+  
+  // The movement is sent only if the status has changed.
+  if (motionDetected != lastSentMotion) {
+    String motionStr = motionDetected ? "DETECTED" : "NO MOTION";
+    if (feedMotion.publish(motionStr.c_str())) {
+      Serial.print("[MQTT] Motion changed: "); Serial.println(motionStr);
+      lastSentMotion = motionDetected;
+      changed = true;
+      lastMQTTUpdate = millis();
+    }
+  }
+  
+  // The fan status is sent only if the status has changed.
+  bool currentFan = (digitalRead(RELAY_PIN) == LOW);
+  if (currentFan != lastSentFan) {
+    String fanStr = currentFan ? "ON" : "OFF";
+    if (feedFan.publish(fanStr.c_str())) {
+      Serial.print("[MQTT] Fan changed: "); Serial.println(fanStr);
+      lastSentFan = currentFan;
+      changed = true;
+      lastMQTTUpdate = millis();
+    }
+  }
+  
+// If nothing has changed, send the minimum data every 60 seconds
+// to maintain the connection and ensure Node-RED has fresh data
+  if (!changed && (millis() - lastForceSend > FORCE_SEND_INTERVAL)) {
+    // Temperature is sent as an indicator of operation.
+    if (feedTemp.publish(temperature)) {
+      Serial.print("[MQTT] Force update sent (temp): "); Serial.println(temperature);
+      lastForceSend = millis();
+      lastMQTTUpdate = millis();
+    }
+  }
+}
+
+// ---------------- MQTT COMMAND HANDLER -----------------
+void handleMQTTCommands() {
+  Adafruit_MQTT_Subscribe *subscription;
+  
+  // Check for incoming MQTT messages with 0 timeout (non-blocking)
+  while ((subscription = mqtt.readSubscription(0))) {
+    if (subscription == &feedFanControl) {
+      if (millis() - lastFanToggleTime < FAN_DEBOUNCE) {
+        return;
+      }
+      
+      String fanCommand = (char *)feedFanControl.lastread;
+      Serial.print("Fan control received from MQTT: ");
+      Serial.println(fanCommand);
+      
+      if (fanCommand == "ON") {
+        fanManualOverride = true; // Turning into manual regime
+        fanDesiredState = true;   // Fan is turn on
+        lastFanToggleTime = millis();
+        Serial.println("✅ Fan turned ON from Node-RED (Manual mode)");
+        
+        feedFan.publish("ON");
+        
+        if (chatIdFound) {
+          bot.sendMessage(chatId, "✅ Fan turned ON from Node-RED\n🔄 Mode: Manual control", "");
+        }
+      } 
+      else if (fanCommand == "OFF") {
+        if (gasLevel > DANGEROUS_GAS) {
+          Serial.println("⚠️ Cannot turn fan OFF - GAS EMERGENCY!");
+          
+          feedFan.publish("ON");
+          
+          if (chatIdFound) {
+            bot.sendMessage(chatId, "⚠️ *GAS EMERGENCY!*\n\n🚨 Cannot turn fan OFF\n🌀 Fan forced ON for safety\n⚙️ Gas level: " + 
+                            String(gasLevel), "Markdown");
+          }
+          return;
+        }
+        
+        fanManualOverride = true; // Keep manual regime
+        fanDesiredState = false;  // Fan is turn off
+        lastFanToggleTime = millis();
+        Serial.println("✅ Fan turned OFF from Node-RED (Manual mode)");
+        
+        feedFan.publish("OFF");
+        
+        if (chatIdFound) {
+          bot.sendMessage(chatId, "✅ Fan turned OFF from Node-RED\n🔄 Mode: Manual control", "");
+        }
+      } 
+      else if (fanCommand == "AUTO") {
+        // Special command to return to automatic mode
+        fanManualOverride = false; // Returning to automatic mode
+        lastFanToggleTime = millis();
+        Serial.println("🔄 Fan control switched to AUTO mode (gas sensor)");
+        
+        if (chatIdFound) {
+          bot.sendMessage(chatId, "🔄 Fan control switched to AUTO mode\n⚙️ Gas sensor will control fan", "");
+        }
+      }
+    }
+  }
+}
+
+// ---------------- MOTION -----------------
+void checkMotion() {
+  if (millis() < pirReadyTime) return;
   int pirState = digitalRead(PIR_PIN);
   
   if (pirState == HIGH) {
-    // Motion detected
     if (!motionDetected) {
       motionDetected = true;
       lastMotionTime = millis();
-      lastBlinkTime = millis(); // Reset the blink timer
+      lastBlinkTime = millis();
       Serial.println("Motion detected!");
     } else {
-      lastMotionTime = millis(); // Update the time of the last motion
+      lastMotionTime = millis();
     }
   } else {
-    // No motion at the moment
-    // Check motion timeout
     if (motionDetected && (millis() - lastMotionTime > MOTION_TIMEOUT)) {
       motionDetected = false;
-      blueLedState = false; // Explicitly reset the state
-      setRGBColor(false, false, false); // Ensure the blue LED is turned off
+      blueLedState = false;
+      setRGBColor(false, false, false);
       Serial.println("Motion timeout - Blue LED turned OFF");
     }
   }
@@ -333,225 +586,164 @@ void checkMotion() {
 
 void updateRGBLed() {
   if (motionDetected) {
-    // Blink blue LED when motion is detected
     if (millis() - lastBlinkTime >= BLINK_INTERVAL) {
       blueLedState = !blueLedState;
       setRGBColor(false, false, blueLedState);
       lastBlinkTime = millis();
     }
-  } else {
-    // If no motion - ALWAYS turn off the blue LED
-    if (blueLedState) {
-      blueLedState = false;
-      setRGBColor(false, false, false);
-    }
-    // Extra protection: periodically check and turn off
-    static unsigned long lastCheckTime = 0;
-    if (millis() - lastCheckTime > 1000) {
-      // Check once per second and ensure it is turned off
-      digitalWrite(RGB_BLUE, LOW);
-      lastCheckTime = millis();
-    }
+  } else if (blueLedState) {
+    blueLedState = false;
+    setRGBColor(false, false, false);
   }
 }
 
-// Function to set RGB LED color
 void setRGBColor(bool red, bool green, bool blue) {
   digitalWrite(RGB_RED, red ? HIGH : LOW);
   digitalWrite(RGB_GREEN, green ? HIGH : LOW);
   digitalWrite(RGB_BLUE, blue ? HIGH : LOW);
-  
-  // Debug output
-  if (blue) {
-    Serial.println("setRGBColor: Blue ON");
+  if (blue) Serial.println("setRGBColor: Blue ON");
+}
+
+// ---------------- ALERTS -----------------
+unsigned long lastBuzzerTime = 0;
+const unsigned long BUZZER_DURATION = 1000;
+bool buzzerActive = false;
+
+void toneAlertNonBlocking() {
+  // The siren operates in the presence of dangerous gas regardless of the mode
+  if (gasLevel > DANGEROUS_GAS) {
+    if (!buzzerActive) {
+      digitalWrite(BUZZER_PIN, HIGH);
+      lastBuzzerTime = millis();
+      buzzerActive = true;
+    } else if (millis() - lastBuzzerTime >= BUZZER_DURATION) {
+      digitalWrite(BUZZER_PIN, LOW);
+      buzzerActive = false;
+    }
+  } else {
+    digitalWrite(BUZZER_PIN, LOW);
+    buzzerActive = false;
   }
 }
 
+// ---------------- CONDITIONS -----------------
 void checkConditions() {
-  // Save previous states for comparison
   bool prevGasAlert = lastGasAlert;
   bool prevTempAlert = lastTempAlert;
   bool prevHumidityAlert = lastHumidityAlert;
   bool prevMotionState = lastMotionState;
 
   gasAlert = false;
-  tempAlert = false;
-  humidityAlert = false;
   
   digitalWrite(RED_LED, LOW);
   digitalWrite(YELLOW_LED, LOW);
   digitalWrite(GREEN_LED, LOW);
-  digitalWrite(BUZZER_PIN, LOW);
-  digitalWrite(RELAY_PIN, HIGH);
-  
-  // Priority: gas > temperature > humidity
+
   if (gasLevel > DANGEROUS_GAS) {
     gasAlert = true;
     digitalWrite(RED_LED, HIGH);
-    digitalWrite(RELAY_PIN, LOW);
-    toneAlert();
-    Serial.println("DANGER! High gas concentration!");
-
-    // Send Telegram alert on each activation (including cooldown)
-    // Send immediately on first detection, then every ALERT_COOLDOWN
     if (millis() - lastGasAlertTime > ALERT_COOLDOWN) {
-      sendTelegramAlert("🚨 *WARNING! Danger gas concentration level!* 🚨\n\n" +
-                       String("Gas level: ") + gasLevel + "\n" +
-                       "Danger threshold: " + String(DANGEROUS_GAS) + "\n" +
-                       "Fan: Turned ON automatically");
+      String alertMsg = "🚨 *WARNING! Danger gas concentration level!* 🚨\n";
+      alertMsg += "Gas level: " + String(gasLevel) + "\n";
+      alertMsg += "Fan: " + String(digitalRead(RELAY_PIN) == LOW ? "ON (forced)" : "ERROR!") + "\n";
+      if (fanManualOverride) {
+        alertMsg += "⚠️ Manual control overridden for safety!";
+      }
+      sendTelegramAlert(alertMsg);
       lastGasAlertTime = millis();
     }
-  } else {
-    // Gas is normal
-    digitalWrite(RELAY_PIN, HIGH);
-    
-    // Send "returned to normal" message only if gas was previously in alert state
-    if (prevGasAlert) {
-      sendTelegramAlert("✅ *Gas level returned to normal*\n\n" +
-                       String("Current gas level: ") + gasLevel + "\n" +
-                       "Fan: Turned OFF");
-      // Don't update lastGasAlertTime here to allow immediate gas alert if it goes high again
-    }
+  } else if (prevGasAlert && !gasEmergencyActive) {
+    sendTelegramAlert("✅ Gas level returned to normal\nCurrent: " + String(gasLevel));
   }
-  
+
   if (temperature < LOW_TEMP_THRESHOLD || temperature > HIGH_TEMP_THRESHOLD) {
     tempAlert = true;
     digitalWrite(YELLOW_LED, HIGH);
-    Serial.println("Temperature alert!");
-
-    // Send Telegram alert on each activation
     if (millis() - lastTempAlertTime > ALERT_COOLDOWN) {
-      sendTelegramAlert("🌡️ *Temperature out of normal range!*\n\n" +
-                       String("Current temperature: ") + temperature + "°C\n" +
-                       "Normal range: " + String(LOW_TEMP_THRESHOLD) + 
-                       " - " + String(HIGH_TEMP_THRESHOLD) + "°C");
+      sendTelegramAlert("🌡️ *Temperature out of range!* " + String(temperature) + "°C");
       lastTempAlertTime = millis();
     }
-  } else {
-    // Temperature is normal - send "returned to normal" only if it was previously alert
-    if (prevTempAlert) {
-      sendTelegramAlert("✅ *Temperature returned to normal*\n\n" +
-                       String("Current temperature: ") + temperature + "°C\n" +
-                       "Normal range: " + String(LOW_TEMP_THRESHOLD) + 
-                       " - " + String(HIGH_TEMP_THRESHOLD) + "°C");
-    }
+  } else if (prevTempAlert) {
+    sendTelegramAlert("✅ Temperature returned to normal: " + String(temperature) + "°C");
   }
-  
+
   if (humidity > HIGH_HUMIDITY_THRESHOLD) {
     humidityAlert = true;
     digitalWrite(GREEN_LED, HIGH);
-    Serial.println("High humidity alert!");
-  
-    // Send Telegram alert on each activation
     if (millis() - lastHumidityAlertTime > ALERT_COOLDOWN) {
-      sendTelegramAlert("💧 *High humidity!*\n\n" +
-                       String("Current humidity: ") + humidity + "%\n" +
-                       "Threshold: " + String(HIGH_HUMIDITY_THRESHOLD) + "%");
+      sendTelegramAlert("💧 *High humidity!* " + String(humidity) + "%");
       lastHumidityAlertTime = millis();
     }
-  } else {
-    // Humidity is normal - send "returned to normal" only if it was previously alert
-    if (prevHumidityAlert) {
-      sendTelegramAlert("✅ *Humidity returned to normal*\n\n" +
-                       String("Current humidity: ") + humidity + "%\n" +
-                       "Threshold: " + String(HIGH_HUMIDITY_THRESHOLD) + "%");
-    }
+  } else if (prevHumidityAlert) {
+    sendTelegramAlert("✅ Humidity returned to normal: " + String(humidity) + "%");
   }
 
-  // Motion detected alert
   if (motionDetected && !prevMotionState) {
-    // Send when motion is detected (no cooldown for motion)
-    sendTelegramAlert("🚶 *Motion detected!*\n\n" +
-                     String("Time: ") + String(millis() / 1000) + " seconds\n" +
-                     "PIR Sensor: ACTIVE");
+    sendTelegramAlert("🚶 *Motion detected!*");
     lastMotionAlertTime = millis();
+  } else if (!motionDetected && prevMotionState && (millis() - lastMotionAlertTime > 5000)) {
+    sendTelegramAlert("✅ *Motion stopped*");
   }
-  
-  // Motion stopped alert (optionally)
-  if (!motionDetected && prevMotionState && (millis() - lastMotionAlertTime > 5000)) {
-    // Send when the movement has stopped (after 5 seconds)
-    sendTelegramAlert("✅ *Motion stopped*\n\n" +
-                     String("Motion duration: ") + 
-                     String((millis() - lastMotionAlertTime) / 1000) + " seconds\n" +
-                     "PIR Sensor: INACTIVE");
-  }
-  
-  // Update states for next loop
+
   lastGasAlert = gasAlert;
   lastTempAlert = tempAlert;
   lastHumidityAlert = humidityAlert;
   lastMotionState = motionDetected;
 }
 
-void toneAlert() {
-  digitalWrite(BUZZER_PIN, HIGH);
-  delay(1000);
-  digitalWrite(BUZZER_PIN, LOW);
-}
-
+// ---------------- DISPLAY -----------------
 void displayData() {
   display.clearDisplay();
   display.setCursor(0,0);
-  
   display.setTextSize(1);
+  
   display.println("ENVIRONMENT MONITOR");
   display.println("-------------------");
-  
-  display.print("Temp: ");
-  display.print(temperature, 1);
-  display.println(" C");
-  
-  display.print("Humidity: ");
-  display.print(humidity, 1);
-  display.println(" %");
-  
-  display.print("Gas Level: ");
-  display.println(gasLevel);
-  
-  display.print("Motion: ");
-  display.println(motionDetected ? "DETECTED" : "NONE");
-  
+  display.print("Temp: "); display.print(temperature, 1); display.println(" C");
+  display.print("Humidity: "); display.print(humidity, 1); display.println(" %");
+  display.print("Gas Level: "); display.println(gasLevel);
+  display.print("Motion: "); display.println(motionDetected ? "DETECTED" : "NONE");
   display.println("-------------------");
   
-  // Alerts display
-  if (gasAlert) {
-    display.setTextColor(SSD1306_WHITE, SSD1306_BLACK);
-    display.println("! GAS DANGER !");
-  }
-  if (tempAlert) {
-    display.setTextColor(SSD1306_WHITE, SSD1306_BLACK);
-    display.println("! TEMP ALERT !");
-  }
-  if (humidityAlert) {
-    display.setTextColor(SSD1306_WHITE, SSD1306_BLACK);
-    display.println("! HUMID HIGH !");
+  display.print("Fan Mode: ");
+  if (gasEmergencyActive) {
+    display.println("GAS EMERGENCY!");
+    display.print("Gas norm in: ");
+    if (gasNormalizedTime > 0) {
+      int secondsLeft = GAS_NORMAL_DELAY - (millis() - gasNormalizedTime);
+      display.print(max(0, secondsLeft / 1000));
+      display.println("s");
+    } else {
+      display.println("--");
+    }
+  } else {
+    display.println(fanManualOverride ? "MANUAL" : "AUTO");
   }
   
-  // Fan turns on only when gas is detected
+  if (gasLevel > DANGEROUS_GAS) display.println("! GAS DANGER !");
+  if (tempAlert) display.println("! TEMP ALERT !");
+  if (humidityAlert) display.println("! HUMID HIGH !");
   
-  display.print("Fan: ");
-  display.println(digitalRead(RELAY_PIN) == LOW ? "ON" : "OFF");
+  display.print("Fan: "); display.println(digitalRead(RELAY_PIN) == LOW ? "ON" : "OFF");
   
-  // Display time since last motion
   if (motionDetected) {
     display.print("Last motion: ");
     display.print((millis() - lastMotionTime) / 1000);
     display.println("s ago");
   }
   
-  // Blue LED status indication
-  display.print("Blue LED: ");
-  display.println(blueLedState ? "ON" : "OFF");
+  display.print("Blue LED: "); display.println(blueLedState ? "ON" : "OFF");
   
-  // Display time until next ThingSpeak update
-  display.print("TS: ");
-  display.print(max(0, (int)(THINGSPEAK_DELAY - (millis() - lastThingSpeakUpdate)) / 1000));
-  display.println("s");
+  display.print("TS: "); display.print(max(0, (int)(THINGSPEAK_DELAY - (millis() - lastThingSpeakUpdate)) / 1000)); display.println("s");
+  display.print("TG: "); display.print(max(0, (int)(TELEGRAM_DELAY - (millis() - lastTelegramCheck)) / 1000)); display.println("s");
   
-  // Display time until next Telegram check
-  display.print("TG: ");
-  display.print(max(0, (int)(TELEGRAM_DELAY - (millis() - lastTelegramCheck)) / 1000));
-  display.println("s");
+  display.print("MQTT last: ");
+  if (lastMQTTUpdate == 0) {
+    display.println("Never");
+  } else {
+    display.print((millis() - lastMQTTUpdate) / 1000);
+    display.println("s ago");
+  }
   
   display.display();
 }
@@ -560,8 +752,6 @@ void displayData() {
 
 void setupTelegram() {
   Serial.println("Setting up Telegram Bot...");
-  
-  secured_client.setInsecure();
   
   Serial.println("🤖 Telegram Bot is ready!");
   Serial.println("📱 Send any message to the bot @Smart_AirGuard_bot");
@@ -601,7 +791,11 @@ void handleTelegramMessages() {
         welcomeMsg += "/status - Current status\n";
         welcomeMsg += "/sensors - Sensors data\n";
         welcomeMsg += "/alerts - Active alerts\n";
-        welcomeMsg += "/help - Commands info";
+        welcomeMsg += "/fan_on - Turn fan ON (manual)\n";
+        welcomeMsg += "/fan_off - Turn fan OFF (manual)*\n";
+        welcomeMsg += "/fan_auto - Auto mode (gas sensor)\n";
+        welcomeMsg += "/help - Commands info\n\n";
+        welcomeMsg += "*⚠️ Note: During gas emergencies, fan control will be restored after 10 seconds of normal gas levels";
         
         bot.sendMessage(chatId, welcomeMsg, "Markdown");
       }
@@ -612,13 +806,20 @@ void handleTelegramMessages() {
         helpMsg += "/status - Current system status\n";
         helpMsg += "/sensors - Sensors data\n";
         helpMsg += "/alerts - Active alerts\n";
+        helpMsg += "/fan_on - Turn fan ON (manual mode)\n";
+        helpMsg += "/fan_off - Turn fan OFF (manual mode)*\n";
+        helpMsg += "/fan_auto - Switch to AUTO mode (gas sensor)\n";
         helpMsg += "/id - Show your Chat ID\n";
         helpMsg += "/help - This help message\n\n";
         helpMsg += "📊 *Automatic alerts:*\n";
-        helpMsg += "• Gas level > 400\n";
+        helpMsg += "• Gas level > 400 (HIGHEST priority)\n";
         helpMsg += "• Temperature outside 10-35°C\n";
         helpMsg += "• Humidity > 90%\n";
-        helpMsg += "• Motion detected";
+        helpMsg += "• Motion detected\n\n";
+        helpMsg += "*⚠️ Safety features:*\n";
+        helpMsg += "• During gas emergencies, fan turns ON automatically\n";
+        helpMsg += "• Manual control restored after 10s of normal gas\n";
+        helpMsg += "• Cannot turn fan OFF during gas emergency";
         
         bot.sendMessage(chatId, helpMsg, "Markdown");
       }
@@ -631,12 +832,12 @@ void handleTelegramMessages() {
       else if (text == "/alerts") {
         String alertsMsg = "🚨 *Active alerts*\n\n";
         
-        if (gasAlert || tempAlert || humidityAlert) {
-          if (gasAlert) {
+        if (gasLevel > DANGEROUS_GAS || tempAlert || humidityAlert) {
+          if (gasLevel > DANGEROUS_GAS) {
             alertsMsg += "🔴 *GAS: DANGEROUS LEVEL!*\n";
             alertsMsg += "   Level: " + String(gasLevel) + "\n";
             alertsMsg += "   Threshold: " + String(DANGEROUS_GAS) + "\n";
-            alertsMsg += "   Fan: " + String(digitalRead(RELAY_PIN) == LOW ? "ON" : "OFF") + "\n\n";
+            alertsMsg += "   Fan: " + String(digitalRead(RELAY_PIN) == LOW ? "ON (forced)" : "ERROR!") + "\n\n";
           }
           if (tempAlert) {
             alertsMsg += "🟡 *TEMPERATURE OUT OF RANGE*\n";
@@ -659,7 +860,38 @@ void handleTelegramMessages() {
                       String((millis() - lastMotionTime) / 1000) + " seconds";
         }
         
+        alertsMsg += "\n\n⚙️ *Fan control mode:* ";
+        if (gasEmergencyActive) {
+          alertsMsg += "GAS EMERGENCY (forced ON)\n";
+          if (gasNormalizedTime > 0) {
+            int secondsLeft = GAS_NORMAL_DELAY - (millis() - gasNormalizedTime);
+            alertsMsg += "   Control restored in: " + String(max(0, secondsLeft / 1000)) + " seconds";
+          }
+        } else {
+          alertsMsg += String(fanManualOverride ? "MANUAL" : "AUTO");
+        }
+        
         bot.sendMessage(chatId, alertsMsg, "Markdown");
+      }
+      else if (text == "/fan_on") {
+        fanManualOverride = true;
+        fanDesiredState = true;
+        bot.sendMessage(chatId, "✅ *Fan turned ON*\n🔄 Mode: Manual control", "Markdown");
+      }
+      else if (text == "/fan_off") {
+        // Проверяем газ перед выключением
+        if (gasLevel > DANGEROUS_GAS) {
+          bot.sendMessage(chatId, "⚠️ *GAS EMERGENCY!*\n\n🚨 Cannot turn fan OFF\n🌀 Fan must stay ON for safety\n⚙️ Gas level: " + 
+                          String(gasLevel), "Markdown");
+        } else {
+          fanManualOverride = true;
+          fanDesiredState = false;
+          bot.sendMessage(chatId, "✅ *Fan turned OFF*\n🔄 Mode: Manual control", "Markdown");
+        }
+      }
+      else if (text == "/fan_auto") {
+        fanManualOverride = false;
+        bot.sendMessage(chatId, "🔄 *Fan control switched to AUTO mode*\n⚙️ Gas sensor will control fan", "Markdown");
       }
       else if (text == "/id") {
         String idMsg = "📱 *Your Chat ID:*\n\n";
@@ -685,7 +917,7 @@ void sendTelegramAlert(String message) {
   
   String alertMsg = "⚠️ *SYSTEM ALERT* ⚠️\n\n";
   alertMsg += message;
-  alertMsg += "\n\n🕐 Time: " + String(millis() / 1000) + " seconds";
+  alertMsg += "\n\n🕐 Uptime: " + getUptime();
   alertMsg += "\n📍 System: Smart AirGuard";
   
   bot.sendMessage(chatId, alertMsg, "Markdown");
@@ -700,18 +932,36 @@ void sendStatus(String chat_id) {
                String(WiFi.RSSI()) + " dBm)\n";
   statusMsg += "📡 IP: " + WiFi.localIP().toString() + "\n";
   statusMsg += "🔄 Last ThingSpeak update: " + 
-               String((millis() - lastThingSpeakUpdate) / 1000) + " seconds ago\n\n";
+               String((millis() - lastThingSpeakUpdate) / 1000) + " seconds ago\n";
+  statusMsg += "📡 MQTT Status: " + String(mqtt.connected() ? "✅ Connected" : "❌ Disconnected") + "\n\n";
   
   statusMsg += "🚦 *States:*\n";
-  statusMsg += "• Gas: " + String(gasAlert ? "🔴 DANGEROUS" : "✅ Ok") + "\n";
-  statusMsg += "• Temperature: " + String(tempAlert ? "🟡 Warning" : "✅ Ok") + "\n";
-  statusMsg += "• Humidity: " + String(humidityAlert ? "🟢 High" : "✅ Ok") + "\n";
+  statusMsg += "• Gas level: " + String(gasLevel) + " (" + 
+               (gasLevel > DANGEROUS_GAS ? "🔴 DANGEROUS" : "✅ Ok") + ")\n";
+  statusMsg += "• Temperature: " + String(temperature, 1) + "°C (" + 
+               (tempAlert ? "🟡 Warning" : "✅ Ok") + ")\n";
+  statusMsg += "• Humidity: " + String(humidity, 1) + "% (" + 
+               (humidityAlert ? "🟢 High" : "✅ Ok") + ")\n";
   statusMsg += "• Motion: " + String(motionDetected ? "🔵 Detected" : "⚫ No") + "\n";
-  statusMsg += "• Fan: " + String(digitalRead(RELAY_PIN) == LOW ? "🌀 ON" : "⭕ OFF") + "\n\n";
+  statusMsg += "• Fan: " + String(digitalRead(RELAY_PIN) == LOW ? "🌀 ON" : "⭕ OFF") + "\n";
+  statusMsg += "• Fan mode: ";
+  if (gasEmergencyActive) {
+    statusMsg += "🔴 GAS EMERGENCY (forced ON)";
+    if (gasNormalizedTime > 0) {
+      int secondsLeft = GAS_NORMAL_DELAY - (millis() - gasNormalizedTime);
+      statusMsg += "\n   Control restored in: " + String(max(0, secondsLeft / 1000)) + " seconds";
+    }
+  } else {
+    statusMsg += String(fanManualOverride ? "🔄 MANUAL" : "⚙️ AUTO");
+  }
+  statusMsg += "\n\n";
   
-  statusMsg += "📈 *ThingSpeak:*\n";
-  statusMsg += "• Sending every " + String(THINGSPEAK_DELAY / 1000) + " seconds\n";
-  statusMsg += "• API Key: " + apiKey.substring(0, 8) + "...";
+  statusMsg += "📈 *Cloud services:*\n";
+  statusMsg += "• ThingSpeak: Every " + String(THINGSPEAK_DELAY / 1000) + " seconds\n";
+  statusMsg += "• Adafruit IO: On value change (or every 60 sec)\n";
+  statusMsg += "• Telegram: Real-time alerts\n\n";
+  
+  statusMsg += "⚠️ *Safety note:* During gas emergencies (>400), fan turns ON automatically. Control restored 10 seconds after gas normalizes.";
   
   bot.sendMessage(chat_id, statusMsg, "Markdown");
 }
@@ -722,7 +972,19 @@ void sendSensorData(String chat_id) {
   sensorMsg += "🌡️ Temperature: *" + String(temperature, 1) + "°C*\n";
   sensorMsg += "💧 Humidity: *" + String(humidity, 1) + "%*\n";
   sensorMsg += "⚠️ Gas level: *" + String(gasLevel) + "*\n";
-  sensorMsg += "🚶 Motion: *" + String(motionDetected ? "Yes" : "No") + "*\n\n";
+  sensorMsg += "🚶 Motion: *" + String(motionDetected ? "Yes" : "No") + "*\n";
+  sensorMsg += "🌀 Fan: *" + String(digitalRead(RELAY_PIN) == LOW ? "ON" : "OFF") + "*\n";
+  sensorMsg += "⚙️ Fan mode: *";
+  if (gasEmergencyActive) {
+    sensorMsg += "GAS EMERGENCY (forced ON)";
+    if (gasNormalizedTime > 0) {
+      int secondsLeft = GAS_NORMAL_DELAY - (millis() - gasNormalizedTime);
+      sensorMsg += " - restoring in " + String(max(0, secondsLeft / 1000)) + "s";
+    }
+  } else {
+    sensorMsg += String(fanManualOverride ? "Manual" : "Auto");
+  }
+  sensorMsg += "*\n\n";
   
   sensorMsg += "📊 *Thresholds:*\n";
   sensorMsg += "• Dangerous gas level: > " + String(DANGEROUS_GAS) + "\n";
@@ -758,9 +1020,7 @@ String getUptime() {
     return String(days) + "d " + String(hours) + "h " + String(minutes) + "min";
   } else if (hours > 0) {
     return String(hours) + "h " + String(minutes) + "min " + String(seconds) + "sec";
-  } else if (minutes > 0) {
-    return String(minutes) + "min " + String(seconds) + "sec";
   } else {
-    return String(seconds) + "sec";
+    return String(minutes) + "min " + String(seconds) + "sec";
   }
 }
