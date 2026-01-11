@@ -28,13 +28,17 @@
 
 ## Overview
 
-Smart AirGuard is an IoT-based environmental monitoring and safety system designed for enclosed automotive and indoor environments. The system continuously monitors air quality, temperature, humidity, and motion using a set of low-cost sensors, including the MQ-135 gas sensor, DHT22 temperature and humidity sensor, and a PIR motion sensor. Visual feedback is provided through RGB and status LEDs, while a local OLED display presents real-time sensor readings.
+## Overview
 
-To ensure user safety, Smart AirGuard implements an intelligent alert and automation mechanism. When critical thresholds are exceeded — such as dangerous gas levels (>400 ppm), extreme temperature conditions, high humidity, or detected motion — the system sends instant notifications via a Telegram bot. For severe gas events, an audible buzzer alarm is triggered and an exhaust fan is automatically activated to reduce gas concentration.
+Smart AirGuard is an IoT-based environmental monitoring and safety system designed for enclosed automotive and indoor environments. The system continuously monitors air quality, temperature, humidity, and motion using low-cost sensors, including an MQ-135 gas sensor, a DHT22 temperature and humidity sensor, and a PIR motion sensor. Local visual feedback is provided through RGB and status LEDs, while a compact OLED display presents real-time sensor readings directly on the device.
 
-The system uses an ESP32 microcontroller as its core, enabling real-time data processing, wireless communication, and cloud integration. Sensor data is periodically uploaded to the ThingSpeak cloud platform for remote monitoring and historical analysis. Two-way communication through Telegram allows users to remotely check system status and request live sensor data.
+The system implements an intelligent alert and automation mechanism to ensure user safety. When predefined thresholds are exceeded—such as elevated gas concentration (>400 ppm), abnormal temperature ranges, high humidity, or detected motion—Smart AirGuard generates immediate notifications via a Telegram bot. In critical gas scenarios, the system additionally activates an audible buzzer and automatically controls a ventilation fan to mitigate hazardous conditions.
 
-Overall, Smart AirGuard is a cost-effective, scalable, and reliable solution that combines real-time monitoring, automated risk mitigation, and cloud-based communication to improve air quality and safety in enclosed environments.
+At the core of the system is an ESP32 microcontroller, responsible for real-time data acquisition, local decision-making, and wireless communication. For cloud integration, Smart AirGuard adopts a multi-platform approach. Adafruit IO is used as the primary real-time communication layer, enabling low-latency data streaming and remote actuator control. ThingSpeak is employed for periodic data logging, long-term storage, and statistical analysis of environmental parameters.
+
+To support flexibility and experimentation, Node-RED is integrated as an intermediate automation and research layer. It enables data aggregation, custom visualization, and rapid prototyping of alternative alerting and control strategies without modifying the embedded firmware. This architecture allows Smart AirGuard to combine immediate safety responses with long-term data-driven analysis and experimental evaluation.
+
+Overall, Smart AirGuard represents a scalable and modular IoT solution that integrates real-time monitoring, automated risk mitigation, cloud-based analytics, and a research-oriented software layer to enhance air quality monitoring and system extensibility.
 
 ![Project](project.png)
 
