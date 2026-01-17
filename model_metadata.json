@@ -1,0 +1,16 @@
+{
+  "model_type": "LinearRegression",
+  "training_date": "2026-01-17T18:33:32.665948",
+  "features": [
+    "temperature",
+    "humidity",
+    "current_gas",
+    "motion",
+    "hour",
+    "gas_trend"
+  ],
+  "performance": {
+    "mae": 87.00655594593351
+  },
+  "n_samples": 5000
+}
