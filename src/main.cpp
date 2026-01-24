@@ -450,8 +450,8 @@ void sendToAdafruitIO() {
     }
   }
   
-  // Gas is only sent if the change is more than 10 units.
-  if (abs(gasLevel - lastSentGas) > 10) {
+  // Gas is only sent if the change is more than 50 units.
+  if (abs(gasLevel - lastSentGas) > 50) {
     if (feedGas.publish(gasLevel)) {
       Serial.print("[MQTT] Gas changed: "); Serial.println(gasLevel);
       lastSentGas = gasLevel;
