@@ -28,8 +28,6 @@
 
 ## Overview
 
-## Overview
-
 Smart AirGuard is an IoT-based environmental monitoring and safety system designed for enclosed automotive and indoor environments. The system continuously monitors air quality, temperature, humidity, and motion using low-cost sensors, including an MQ-135 gas sensor, a DHT22 temperature and humidity sensor, and a PIR motion sensor. Local visual feedback is provided through RGB and status LEDs, while a compact OLED display presents real-time sensor readings directly on the device.
 
 The system implements an intelligent alert and automation mechanism to ensure user safety. When predefined thresholds are exceeded — such as elevated gas concentration (>400 ppm), abnormal temperature ranges, high humidity, or detected motion—Smart AirGuard generates immediate notifications via a Telegram bot. In critical gas scenarios, the system additionally activates an audible buzzer and automatically controls a ventilation fan to mitigate hazardous conditions.
