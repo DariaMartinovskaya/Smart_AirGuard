@@ -320,6 +320,18 @@ Node-RED enables:
 
 Importantly, Node-RED is treated as a **research environment**, allowing experimental logic (e.g., threshold tuning, filtering techniques, sensor correlation analysis) to be evaluated independently of the embedded system.
 
+The Node-RED flow implements:
+
+- MQTT integration with Adafruit IO for sensor data
+
+- Data normalization and routing to dashboard elements
+
+- Predictive module with buffer and forecasting logic
+
+- Test mode controller for scenario-based validation
+
+- LED status monitoring for gas, temperature, and humidity alerts
+
 ## 🚨 Alert System
 
 ### **Priority Levels**
