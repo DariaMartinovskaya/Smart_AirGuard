@@ -308,6 +308,8 @@ By combining both platforms, Smart AirGuard achieves **fast safety responses** w
 
 Node-RED is used as an **integration, automation, and experimentation layer** within the Smart AirGuard architecture. It subscribes to real-time MQTT data streams from Adafruit IO and enables flexible data processing without modifying the ESP32 firmware.
 
+![Nodescheme](nodescheme.png)
+
 Node-RED enables:
 
 - Data aggregation and preprocessing
@@ -324,13 +326,27 @@ The Node-RED flow implements:
 
 - MQTT integration with Adafruit IO for sensor data
 
+![Nodeinfo](nodeinfo.png)
+
 - Data normalization and routing to dashboard elements
 
 - Predictive module with buffer and forecasting logic
 
+![Nodeml](nodeml.png)
+
+- Remote fan control
+
+![Nodefancontrol](nodefancontrol.png)
+
 - Test mode controller for scenario-based validation
 
+![Nodetestpanel](nodetestpanel.png)
+
 - LED status monitoring for gas, temperature, and humidity alerts
+
+![Nodegauges](nodegauges.png)
+
+![Nodegraphs](nodegraphs.png)
 
 ## 🚨 Alert System
 
