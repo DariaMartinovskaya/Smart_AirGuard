@@ -1,0 +1,3552 @@
+[
+    {
+        "id": "6a706e8962cb8ed4",
+        "type": "tab",
+        "label": "Smart AirGuard Data",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "600e568946eb4104",
+        "type": "tab",
+        "label": "Fan control",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "7fe3eb7c02d1e040",
+        "type": "tab",
+        "label": "Predictive module ML",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "ce431305f614f611",
+        "type": "tab",
+        "label": "System testing and validation module",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "917a5983e20ab019",
+        "type": "ui_base",
+        "theme": {
+            "name": "theme-light",
+            "lightTheme": {
+                "default": "#0094CE",
+                "baseColor": "#0094CE",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": true,
+                "reset": false
+            },
+            "darkTheme": {
+                "default": "#097479",
+                "baseColor": "#097479",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": false
+            },
+            "customTheme": {
+                "name": "Untitled Theme 1",
+                "default": "#4B7930",
+                "baseColor": "#4B7930",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+            },
+            "themeState": {
+                "base-color": {
+                    "default": "#0094CE",
+                    "value": "#0094CE",
+                    "edited": false
+                },
+                "page-titlebar-backgroundColor": {
+                    "value": "#0094CE",
+                    "edited": false
+                },
+                "page-backgroundColor": {
+                    "value": "#fafafa",
+                    "edited": false
+                },
+                "page-sidebar-backgroundColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "group-textColor": {
+                    "value": "#1bbfff",
+                    "edited": false
+                },
+                "group-borderColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "group-backgroundColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "widget-textColor": {
+                    "value": "#111111",
+                    "edited": false
+                },
+                "widget-backgroundColor": {
+                    "value": "#0094ce",
+                    "edited": false
+                },
+                "widget-borderColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "base-font": {
+                    "value": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+                }
+            },
+            "angularTheme": {
+                "primary": "indigo",
+                "accents": "blue",
+                "warn": "red",
+                "background": "grey",
+                "palette": "light"
+            }
+        },
+        "site": {
+            "name": "Node-RED Dashboard",
+            "hideToolbar": "false",
+            "allowSwipe": "false",
+            "lockMenu": "false",
+            "allowTempTheme": "true",
+            "dateFormat": "DD/MM/YYYY",
+            "sizes": {
+                "sx": 48,
+                "sy": 48,
+                "gx": 6,
+                "gy": 6,
+                "cx": 6,
+                "cy": 6,
+                "px": 0,
+                "py": 0
+            }
+        }
+    },
+    {
+        "id": "adafruit-io",
+        "type": "mqtt-broker",
+        "name": "Adafruit IO",
+        "broker": "io.adafruit.com",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "dashboard-tab",
+        "type": "ui_tab",
+        "name": "Dashboard",
+        "icon": "dashboard",
+        "order": 1,
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "charts-tab",
+        "type": "ui_tab",
+        "name": "Charts",
+        "icon": "timeline",
+        "order": 2,
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "data-tab",
+        "type": "ui_tab",
+        "name": "Data",
+        "icon": "table_chart",
+        "order": 3,
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "control-tab",
+        "type": "ui_tab",
+        "name": "Control",
+        "icon": "settings",
+        "order": 4,
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "adafruit-broker",
+        "type": "mqtt-broker",
+        "name": "Adafruit IO",
+        "broker": "io.adafruit.com",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "sensors-group",
+        "type": "ui_group",
+        "name": "Sensors",
+        "tab": "dashboard-tab",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "status-group",
+        "type": "ui_group",
+        "name": "Status",
+        "tab": "dashboard-tab",
+        "order": 2,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "charts-group",
+        "type": "ui_group",
+        "name": "Charts",
+        "tab": "charts-tab",
+        "order": 1,
+        "disp": true,
+        "width": "12",
+        "collapse": false
+    },
+    {
+        "id": "data-group",
+        "type": "ui_group",
+        "name": "Data",
+        "tab": "data-tab",
+        "order": 1,
+        "disp": true,
+        "width": "12",
+        "collapse": false
+    },
+    {
+        "id": "control-group",
+        "type": "ui_group",
+        "name": "Control",
+        "tab": "control-tab",
+        "order": 1,
+        "disp": true,
+        "width": "12",
+        "collapse": false
+    },
+    {
+        "id": "a60c4d5dd3cc9c66",
+        "type": "ui_group",
+        "name": "LED Indicators",
+        "tab": "dashboard-tab",
+        "order": 3,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "fbb60ff3546b7c38",
+        "type": "ui_tab",
+        "name": "ML Prediction",
+        "icon": "insights",
+        "order": 5,
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "b4574a793b61949f",
+        "type": "ui_group",
+        "name": "ML & Prediction",
+        "tab": "fbb60ff3546b7c38",
+        "order": 1,
+        "disp": true,
+        "width": "12",
+        "collapse": false
+    },
+    {
+        "id": "3f2c89b415cd142c",
+        "type": "ui_tab",
+        "name": "Testing Panel",
+        "icon": "play_arrow",
+        "order": 9,
+        "disabled": false,
+        "hidden": false,
+        "info": "Панель тестирования: запуск тестовых сценариев, инъекции данных и проверка всех компонентов системы"
+    },
+    {
+        "id": "eb5e613d0ee9fd74",
+        "type": "ui_group",
+        "name": "Test Scenarios",
+        "tab": "3f2c89b415cd142c",
+        "order": 2,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "4853ddd63a3ce875",
+        "type": "ui_group",
+        "name": "LEDs Testing",
+        "tab": "3f2c89b415cd142c",
+        "order": 3,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "adafruit-io-fixed",
+        "type": "mqtt-broker",
+        "name": "Adafruit IO Fixed",
+        "broker": "io.adafruit.com",
+        "port": "1883",
+        "clientid": "NodeRED_Darya_001",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "30",
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "853dd5ae1b5a59e6",
+        "type": "ui_tab",
+        "name": "Dashboard",
+        "icon": "dashboard",
+        "order": 1
+    },
+    {
+        "id": "88da9de14d2e4b51",
+        "type": "ui_tab",
+        "name": "Dashboard",
+        "icon": "dashboard",
+        "order": 1,
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "7b33ccef8f7e83b7",
+        "type": "ui_tab",
+        "name": "Dashboard",
+        "icon": "dashboard",
+        "order": 1,
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "d518b7692366d1e2",
+        "type": "ui_tab",
+        "name": "Smart AirGuard",
+        "icon": "dashboard",
+        "order": 1
+    },
+    {
+        "id": "33990f11634fb945",
+        "type": "ui_tab",
+        "name": "ESP32 Sensors",
+        "icon": "dashboard",
+        "order": 1,
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "76c1e908e35145de",
+        "type": "mqtt-broker",
+        "name": "Adafruit IO",
+        "broker": "io.adafruit.com",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthQos": "0",
+        "willQos": "0",
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "c91e19265faf3db2",
+        "type": "ui_tab",
+        "name": "Dashboard",
+        "icon": "dashboard",
+        "order": 1
+    },
+    {
+        "id": "3736df61c635396d",
+        "type": "ui_tab",
+        "name": "Charts",
+        "icon": "timeline",
+        "order": 2
+    },
+    {
+        "id": "46bed0acebdf8a05",
+        "type": "ui_tab",
+        "name": "Data",
+        "icon": "table_chart",
+        "order": 3
+    },
+    {
+        "id": "36e0fd49ad356148",
+        "type": "ui_tab",
+        "name": "Control",
+        "icon": "settings",
+        "order": 4
+    },
+    {
+        "id": "53e93a6961e3b8d8",
+        "type": "ui_group",
+        "name": "Sensors",
+        "tab": "c91e19265faf3db2",
+        "order": 1,
+        "width": "6"
+    },
+    {
+        "id": "f8b42df5f75ab45d",
+        "type": "ui_group",
+        "name": "Status",
+        "tab": "c91e19265faf3db2",
+        "order": 2,
+        "width": "6"
+    },
+    {
+        "id": "92f424ca7e743c50",
+        "type": "ui_group",
+        "name": "Charts",
+        "tab": "3736df61c635396d",
+        "order": 1,
+        "width": "12"
+    },
+    {
+        "id": "458289ae2e8983ca",
+        "type": "ui_group",
+        "name": "Data",
+        "tab": "46bed0acebdf8a05",
+        "order": 1,
+        "width": "12"
+    },
+    {
+        "id": "4b3920176407188c",
+        "type": "ui_group",
+        "name": "Control",
+        "tab": "36e0fd49ad356148",
+        "order": 1,
+        "width": "12"
+    },
+    {
+        "id": "bc6edee112ebc258",
+        "type": "mqtt-broker",
+        "name": "Local MQTT",
+        "broker": "192.168.1.100",
+        "port": "1883",
+        "clientid": "",
+        "usetls": false,
+        "compatmode": true,
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": ""
+    },
+    {
+        "id": "7a56d5cfba66f54d",
+        "type": "ui_group",
+        "name": "Sensors",
+        "tab": "d518b7692366d1e2",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "d19208514a2a6b67",
+        "type": "ui_group",
+        "name": "Environment Sensors",
+        "tab": "88da9de14d2e4b51",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "9c2c925cb92fe0ab",
+        "type": "ui_group",
+        "name": "Sensors",
+        "tab": "7b33ccef8f7e83b7",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "6e0da0868cc48152",
+        "type": "ui_tab",
+        "name": "ML Final System",
+        "icon": "model_training",
+        "order": 10,
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "9452f5e53de3a494",
+        "type": "ui_group",
+        "name": "ML Final Dashboard",
+        "tab": "6e0da0868cc48152",
+        "order": 1,
+        "disp": true,
+        "width": "12",
+        "collapse": false
+    },
+    {
+        "id": "f0525180bedc73e3",
+        "type": "ui_tab",
+        "name": "ML Final Dashboard",
+        "icon": "model_training",
+        "order": 5
+    },
+    {
+        "id": "8c0b60535e080beb",
+        "type": "ui_group",
+        "name": "ML Final Dashboard",
+        "tab": "f0525180bedc73e3",
+        "order": 1,
+        "disp": true,
+        "width": "12",
+        "collapse": false
+    },
+    {
+        "id": "7648cd879fd8c79b",
+        "type": "ui_group",
+        "name": "ML Final Dashboard",
+        "tab": "6e0da0868cc48152",
+        "order": 1,
+        "disp": true,
+        "width": "12"
+    },
+    {
+        "id": "260ff8fb5f077889",
+        "type": "ui_tab",
+        "name": "ML Final Dashboard",
+        "icon": "model_training",
+        "order": 5
+    },
+    {
+        "id": "48b2e580ab3b98e0",
+        "type": "ui_group",
+        "name": "ML Final Dashboard",
+        "tab": "260ff8fb5f077889",
+        "order": 1,
+        "disp": true,
+        "width": "12",
+        "collapse": false
+    },
+    {
+        "id": "8935d562de9dce99",
+        "type": "ui_tab",
+        "name": "ML Monitoring",
+        "icon": "analytics",
+        "order": 7,
+        "disabled": false,
+        "hidden": false,
+        "info": "Адаптивная ML-модель: онлайн-обучение, мониторинг точности и анализ важности признаков"
+    },
+    {
+        "id": "da05527b0de8e772",
+        "type": "ui_tab",
+        "name": "Research Metrics",
+        "icon": "science",
+        "order": 8,
+        "disabled": false,
+        "hidden": false,
+        "info": "Научные метрики: сравнительный анализ моделей, эксперименты и результаты исследований"
+    },
+    {
+        "id": "c179db207ca03132",
+        "type": "ui_group",
+        "name": "ML Final Dashboard",
+        "tab": "6e0da0868cc48152",
+        "order": 1,
+        "disp": true,
+        "width": "12",
+        "collapse": false
+    },
+    {
+        "id": "9f122fb16f71be3a",
+        "type": "ui_group",
+        "name": "Adaptive Model Monitoring",
+        "tab": "8935d562de9dce99",
+        "order": 1,
+        "disp": true,
+        "width": "12",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "4ddaea3a57c2a8a3",
+        "type": "ui_group",
+        "name": "Research Metrics",
+        "tab": "da05527b0de8e772",
+        "order": 1,
+        "disp": true,
+        "width": "12",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "de5e6040b0a6ad95",
+        "type": "ui_tab",
+        "name": "ML Monitoring",
+        "icon": "analytics",
+        "order": 7,
+        "disabled": false,
+        "hidden": false,
+        "info": "Адаптивная ML-модель: онлайн-обучение, мониторинг точности и анализ важности признаков"
+    },
+    {
+        "id": "23b357da654710e1",
+        "type": "ui_tab",
+        "name": "Research Metrics",
+        "icon": "science",
+        "order": 8,
+        "disabled": false,
+        "hidden": false,
+        "info": "Научные метрики: сравнительный анализ моделей, эксперименты и результаты исследований"
+    },
+    {
+        "id": "780fd58c36f80e1f",
+        "type": "ui_group",
+        "name": "ML Final Dashboard",
+        "tab": "6e0da0868cc48152",
+        "order": 1,
+        "disp": true,
+        "width": "12",
+        "collapse": false
+    },
+    {
+        "id": "c504949e8dfbe4cb",
+        "type": "ui_group",
+        "name": "Adaptive Model Monitoring",
+        "tab": "de5e6040b0a6ad95",
+        "order": 1,
+        "disp": true,
+        "width": "12",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "4e68732e44fdaeb9",
+        "type": "ui_group",
+        "name": "Research Metrics",
+        "tab": "23b357da654710e1",
+        "order": 1,
+        "disp": true,
+        "width": "12",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "02a4fccbc75b7ecc",
+        "type": "ui_group",
+        "name": "Testing Panel",
+        "tab": "3f2c89b415cd142c",
+        "order": 1,
+        "disp": true,
+        "width": "12",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "d1f00eab6ce5c3ef",
+        "type": "ui_group",
+        "name": "System Testing Panel",
+        "tab": "3f2c89b415cd142c",
+        "order": 1,
+        "disp": true,
+        "width": "12",
+        "collapse": false,
+        "className": "testing-panel"
+    },
+    {
+        "id": "48dabf58da5c3262",
+        "type": "ui_group",
+        "name": "Test Results",
+        "tab": "3f2c89b415cd142c",
+        "order": 4,
+        "disp": true,
+        "width": "12",
+        "collapse": false
+    },
+    {
+        "id": "daf7b16b0ca99fa5",
+        "type": "ui_tab",
+        "name": "ML Prediction",
+        "icon": "insights",
+        "order": 5
+    },
+    {
+        "id": "07506cced54473a6",
+        "type": "ui_tab",
+        "name": "Testing Panel",
+        "icon": "play_arrow",
+        "order": 6,
+        "disabled": false,
+        "hidden": false,
+        "info": "Панель тестирования: запуск тестовых сценариев, инъекции данных и проверка всех компонентов системы"
+    },
+    {
+        "id": "4aba2a0bebcce771",
+        "type": "ui_group",
+        "name": "LED Indicators",
+        "tab": "c91e19265faf3db2",
+        "order": 3,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "ec8ae6aa06bfb510",
+        "type": "ui_group",
+        "name": "ML & Prediction",
+        "tab": "daf7b16b0ca99fa5",
+        "order": 1,
+        "disp": true,
+        "width": "12",
+        "collapse": false
+    },
+    {
+        "id": "8609c486e9acda69",
+        "type": "ui_group",
+        "name": "Test Scenarios",
+        "tab": "07506cced54473a6",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "c4e0506ed29c0c2d",
+        "type": "ui_group",
+        "name": "Physical Device Testing",
+        "tab": "07506cced54473a6",
+        "order": 2,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "2788e8949a004ed9",
+        "type": "ui_group",
+        "name": "Test Results",
+        "tab": "07506cced54473a6",
+        "order": 3,
+        "disp": true,
+        "width": "12",
+        "collapse": false
+    },
+    {
+        "id": "d52e2d1b06d2ec50",
+        "type": "ui_group",
+        "name": "Test Mode Control",
+        "tab": "07506cced54473a6",
+        "order": 4,
+        "disp": true,
+        "width": "12",
+        "collapse": false
+    },
+    {
+        "id": "f241e839922f08ec",
+        "type": "ui_tab",
+        "name": "Testing Panel",
+        "icon": "play_arrow",
+        "order": 5,
+        "disabled": false,
+        "hidden": false,
+        "info": "Панель тестирования: запуск тестовых сценариев, инъекции данных и проверка всех компонентов системы"
+    },
+    {
+        "id": "c1917ec695c02e2e",
+        "type": "ui_tab",
+        "name": "ML Prediction",
+        "icon": "insights",
+        "order": 6,
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "e33ad23c5da27a0e",
+        "type": "ui_group",
+        "name": "LED Indicators",
+        "tab": "c91e19265faf3db2",
+        "order": 3,
+        "width": "6"
+    },
+    {
+        "id": "53f900c76c5d0535",
+        "type": "ui_group",
+        "name": "ML & Prediction",
+        "tab": "c1917ec695c02e2e",
+        "order": 1,
+        "width": "12"
+    },
+    {
+        "id": "bd75f3fc2bddc66c",
+        "type": "ui_group",
+        "name": "Test Scenarios",
+        "tab": "f241e839922f08ec",
+        "order": 1,
+        "width": "6"
+    },
+    {
+        "id": "ee0328d95390f182",
+        "type": "ui_group",
+        "name": "Physical Device Testing",
+        "tab": "f241e839922f08ec",
+        "order": 2,
+        "width": "6"
+    },
+    {
+        "id": "a1731fe7761b7a70",
+        "type": "ui_group",
+        "name": "Test Results",
+        "tab": "f241e839922f08ec",
+        "order": 3,
+        "width": "12"
+    },
+    {
+        "id": "44eab6a41cc96a74",
+        "type": "ui_group",
+        "name": "Test Mode Control",
+        "tab": "f241e839922f08ec",
+        "order": 4,
+        "width": "12"
+    },
+    {
+        "id": "d84bc1d6ae5b8fe5",
+        "type": "ui_tab",
+        "name": "Testing Panel",
+        "icon": "play_arrow",
+        "order": 5,
+        "disabled": false,
+        "hidden": false,
+        "info": "Панель тестирования: запуск тестовых сценариев, инъекции данных и проверка всех компонентов системы"
+    },
+    {
+        "id": "5bb65280b7e33810",
+        "type": "ui_tab",
+        "name": "ML Prediction",
+        "icon": "insights",
+        "order": 6,
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "6834a98cad68954e",
+        "type": "ui_group",
+        "name": "LED Indicators",
+        "tab": "c91e19265faf3db2",
+        "order": 3,
+        "width": "6"
+    },
+    {
+        "id": "e8c0e7c8feca11bb",
+        "type": "ui_group",
+        "name": "ML & Prediction",
+        "tab": "5bb65280b7e33810",
+        "order": 1,
+        "width": "12"
+    },
+    {
+        "id": "a736fc7d0f6607e8",
+        "type": "ui_group",
+        "name": "Test Scenarios",
+        "tab": "d84bc1d6ae5b8fe5",
+        "order": 1,
+        "width": "6"
+    },
+    {
+        "id": "24c848f4ead2d348",
+        "type": "ui_group",
+        "name": "Physical Device Testing",
+        "tab": "d84bc1d6ae5b8fe5",
+        "order": 2,
+        "width": "6"
+    },
+    {
+        "id": "da28412e24169581",
+        "type": "ui_group",
+        "name": "Test Results",
+        "tab": "d84bc1d6ae5b8fe5",
+        "order": 3,
+        "width": "12"
+    },
+    {
+        "id": "e06b5a8474e49331",
+        "type": "ui_group",
+        "name": "Test Mode Control",
+        "tab": "d84bc1d6ae5b8fe5",
+        "order": 4,
+        "width": "12"
+    },
+    {
+        "id": "7ad731ba4d1bbfc4",
+        "type": "ui_group",
+        "name": "System Testing",
+        "tab": "36e0fd49ad356148",
+        "order": 2,
+        "disp": true,
+        "width": "12",
+        "collapse": false,
+        "className": "testing-panel"
+    },
+    {
+        "id": "2ea4ca455d1f40a7",
+        "type": "ui_group",
+        "name": "Device Testing",
+        "tab": "36e0fd49ad356148",
+        "order": 3,
+        "disp": true,
+        "width": "12",
+        "collapse": false,
+        "className": "device-testing"
+    },
+    {
+        "id": "bed2e656fbbf1f7e",
+        "type": "ui_group",
+        "name": "Report Generation",
+        "tab": "da05527b0de8e772",
+        "order": 2,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "75e97eb77ff280ab",
+        "type": "ui_tab",
+        "name": "Reports & Export",
+        "icon": "picture_as_pdf",
+        "order": 9,
+        "disabled": false,
+        "hidden": false,
+        "info": "Генерация научных отчетов PDF, экспорт данных для диссертации"
+    },
+    {
+        "id": "f07a0347f33c3b8f",
+        "type": "ui_group",
+        "name": "Report Generation",
+        "tab": "75e97eb77ff280ab",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": "reports-panel"
+    },
+    {
+        "id": "42a4989f07b1706d",
+        "type": "ui_group",
+        "name": "Report Generation Panel",
+        "tab": "75e97eb77ff280ab",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": "reports-panel"
+    },
+    {
+        "id": "087bea831bf5d9fa",
+        "type": "ui_group",
+        "name": "Report History",
+        "tab": "75e97eb77ff280ab",
+        "order": 2,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "2659f6b4e5428618",
+        "type": "function",
+        "z": "6a706e8962cb8ed4",
+        "name": "Temperature",
+        "func": "// Преобразуем в число\nif (typeof msg.payload === 'string') {\n    msg.payload = parseFloat(msg.payload);\n    if (isNaN(msg.payload)) {\n        msg.payload = 0;\n    }\n} else if (typeof msg.payload === 'number') {\n    // Уже число, ничего не делаем\n} else {\n    msg.payload = 0;\n}\nmsg.topic = \"temperature\";\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 850,
+        "y": 80,
+        "wires": [
+            [
+                "2e45015df5a05bc5",
+                "28aea6eed33b0f86",
+                "0e69a422d7f3b8b5",
+                "4bf161c34b61b464"
+            ]
+        ]
+    },
+    {
+        "id": "ae9ef57f26ab692a",
+        "type": "function",
+        "z": "6a706e8962cb8ed4",
+        "name": "Humidity",
+        "func": "// Преобразуем в число\nif (typeof msg.payload === 'string') {\n    msg.payload = parseFloat(msg.payload);\n    if (isNaN(msg.payload)) {\n        msg.payload = 0;\n    }\n} else if (typeof msg.payload === 'number') {\n    // Уже число, ничего не делаем\n} else {\n    msg.payload = 0;\n}\nmsg.topic = \"humidity\";\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 840,
+        "y": 260,
+        "wires": [
+            [
+                "6fc51dc955e5b0bc",
+                "a28258e21f73925c",
+                "f66db6e82f50b220",
+                "968ac9a18fa393ec"
+            ]
+        ]
+    },
+    {
+        "id": "005448611a17e6a0",
+        "type": "function",
+        "z": "6a706e8962cb8ed4",
+        "name": "Gas",
+        "func": "// Преобразуем в число\nif (typeof msg.payload === 'string') {\n    msg.payload = parseFloat(msg.payload);\n    if (isNaN(msg.payload)) {\n        msg.payload = 0;\n    }\n} else if (typeof msg.payload === 'number') {\n    // Уже число, ничего не делаем\n} else {\n    msg.payload = 0;\n}\nmsg.topic = \"gas\";\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 830,
+        "y": 440,
+        "wires": [
+            [
+                "5480a0dda2feebba",
+                "1f2121dc74423221",
+                "c8a80d7d40648349",
+                "ec88cd77a3390725"
+            ]
+        ]
+    },
+    {
+        "id": "f528b335bde52033",
+        "type": "function",
+        "z": "6a706e8962cb8ed4",
+        "name": "Motion",
+        "func": "// Преобразуем в булево значение\nvar payloadStr = String(msg.payload).toUpperCase();\nmsg.payload = (payloadStr === \"DETECTED\" || payloadStr === \"ON\" || payloadStr === \"1\" || payloadStr === \"TRUE\" || payloadStr === \"YES\");\nmsg.topic = \"motion\";\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 840,
+        "y": 620,
+        "wires": [
+            [
+                "c85bec6330de4a2e",
+                "ad253ca6f997b0cc",
+                "797f7773a0a36c5f"
+            ]
+        ]
+    },
+    {
+        "id": "23681e8e0ce3510d",
+        "type": "function",
+        "z": "6a706e8962cb8ed4",
+        "name": "Fan Status",
+        "func": "// Преобразуем в булево значение\nvar payloadStr = String(msg.payload).toUpperCase();\nmsg.payload = (payloadStr === \"ON\" || payloadStr === \"1\" || payloadStr === \"TRUE\" || payloadStr === \"YES\");\nmsg.topic = \"fan_status\";\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 850,
+        "y": 740,
+        "wires": [
+            [
+                "4c8c2e0fa4a8e399",
+                "7cdd12c22f3fdb77"
+            ]
+        ]
+    },
+    {
+        "id": "2e45015df5a05bc5",
+        "type": "ui_gauge",
+        "z": "6a706e8962cb8ed4",
+        "name": "",
+        "group": "sensors-group",
+        "order": 1,
+        "width": "0",
+        "height": "0",
+        "gtype": "gage",
+        "title": "Temperature",
+        "label": "°C",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "100",
+        "colors": [
+            "#94e3fe",
+            "#cce8b5",
+            "#f4a4c0"
+        ],
+        "seg1": "9",
+        "seg2": "35",
+        "diff": false,
+        "className": "",
+        "x": 1070,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "6fc51dc955e5b0bc",
+        "type": "ui_gauge",
+        "z": "6a706e8962cb8ed4",
+        "name": "",
+        "group": "sensors-group",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "Humidity",
+        "label": "%",
+        "format": "{{value}}",
+        "min": 0,
+        "max": 100,
+        "colors": [
+            "#f4a4c0",
+            "#cce8b5",
+            "#94e3fe"
+        ],
+        "seg1": "50",
+        "seg2": "89",
+        "diff": false,
+        "className": "",
+        "x": 1060,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "5480a0dda2feebba",
+        "type": "ui_gauge",
+        "z": "6a706e8962cb8ed4",
+        "name": "",
+        "group": "sensors-group",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "Gas Level",
+        "label": "PPM",
+        "format": "{{value}}",
+        "min": 0,
+        "max": 1000,
+        "colors": [
+            "#cce8b5",
+            "#cce8b5",
+            "#f4a4c0"
+        ],
+        "seg1": "199",
+        "seg2": "399",
+        "diff": false,
+        "className": "",
+        "x": 1060,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "28aea6eed33b0f86",
+        "type": "ui_chart",
+        "z": "6a706e8962cb8ed4",
+        "name": "",
+        "group": "charts-group",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "label": "Temperature History",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "0",
+        "ymax": "50",
+        "removeOlder": 1,
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "colors": [
+            "#ca3838"
+        ],
+        "outputs": 1,
+        "x": 1100,
+        "y": 80,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a28258e21f73925c",
+        "type": "ui_chart",
+        "z": "6a706e8962cb8ed4",
+        "name": "",
+        "group": "charts-group",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "label": "Humidity History",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "0",
+        "ymax": "100",
+        "removeOlder": 1,
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "colors": [
+            "#53a2ff"
+        ],
+        "outputs": 1,
+        "x": 1090,
+        "y": 260,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "1f2121dc74423221",
+        "type": "ui_chart",
+        "z": "6a706e8962cb8ed4",
+        "name": "",
+        "group": "charts-group",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "label": "Gas Level History",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "0",
+        "ymax": "1000",
+        "removeOlder": 1,
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "colors": [
+            "#00b500"
+        ],
+        "outputs": 1,
+        "x": 1090,
+        "y": 480,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "0e69a422d7f3b8b5",
+        "type": "ui_text",
+        "z": "6a706e8962cb8ed4",
+        "group": "data-group",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Temperature",
+        "format": "{{msg.payload}}°C",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": "",
+        "color": "#000000",
+        "x": 1070,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "f66db6e82f50b220",
+        "type": "ui_text",
+        "z": "6a706e8962cb8ed4",
+        "group": "data-group",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Humidity",
+        "format": "{{msg.payload}}%",
+        "layout": "row-spread",
+        "x": 1060,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "c8a80d7d40648349",
+        "type": "ui_text",
+        "z": "6a706e8962cb8ed4",
+        "group": "data-group",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Gas Level",
+        "format": "{{msg.payload}} PPM",
+        "layout": "row-spread",
+        "x": 1060,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "c85bec6330de4a2e",
+        "type": "ui_led",
+        "z": "6a706e8962cb8ed4",
+        "order": 1,
+        "group": "status-group",
+        "width": "4",
+        "height": "2",
+        "label": "Motion",
+        "labelPlacement": "right",
+        "labelAlignment": "left",
+        "colorForValue": [
+            {
+                "color": "#888888",
+                "value": "false",
+                "valueType": "bool"
+            },
+            {
+                "color": "#0000ff",
+                "value": "true",
+                "valueType": "bool"
+            }
+        ],
+        "allowColorForValueInMessage": false,
+        "shape": "circle",
+        "showGlow": false,
+        "name": "",
+        "x": 1050,
+        "y": 580,
+        "wires": []
+    },
+    {
+        "id": "4c8c2e0fa4a8e399",
+        "type": "ui_led",
+        "z": "6a706e8962cb8ed4",
+        "order": 2,
+        "group": "status-group",
+        "width": "4",
+        "height": "2",
+        "label": "Fan",
+        "labelPlacement": "right",
+        "labelAlignment": "left",
+        "colorForValue": [
+            {
+                "color": "#888888",
+                "value": "false",
+                "valueType": "bool"
+            },
+            {
+                "color": "#caf0fe",
+                "value": "true",
+                "valueType": "bool"
+            }
+        ],
+        "allowColorForValueInMessage": false,
+        "shape": "circle",
+        "showGlow": false,
+        "name": "",
+        "x": 1050,
+        "y": 720,
+        "wires": []
+    },
+    {
+        "id": "ad253ca6f997b0cc",
+        "type": "ui_text",
+        "z": "6a706e8962cb8ed4",
+        "group": "data-group",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Motion",
+        "format": "{{msg.payload ? 'DETECTED' : 'NO MOTION'}}",
+        "layout": "row-spread",
+        "x": 1060,
+        "y": 620,
+        "wires": []
+    },
+    {
+        "id": "7cdd12c22f3fdb77",
+        "type": "ui_text",
+        "z": "6a706e8962cb8ed4",
+        "group": "data-group",
+        "order": 5,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Fan",
+        "format": "{{msg.payload ? 'ON' : 'OFF'}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": "",
+        "color": "#000000",
+        "x": 1050,
+        "y": 760,
+        "wires": []
+    },
+    {
+        "id": "02c8c9bf2296c1d0",
+        "type": "debug",
+        "z": "6a706e8962cb8ed4",
+        "name": "After Normalize",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 520,
+        "y": 520,
+        "wires": []
+    },
+    {
+        "id": "dc4902e45976d395",
+        "type": "mqtt in",
+        "z": "6a706e8962cb8ed4",
+        "name": "",
+        "topic": "DaryaMartsinouskaya/feeds/+",
+        "qos": "1",
+        "datatype": "auto-detect",
+        "broker": "adafruit-io",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 180,
+        "y": 100,
+        "wires": [
+            [
+                "c477bf02800950be"
+            ]
+        ]
+    },
+    {
+        "id": "0c98f3d7d0e25c74",
+        "type": "switch",
+        "z": "6a706e8962cb8ed4",
+        "name": "Route by sensor",
+        "property": "topic",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "cont",
+                "v": "DaryaMartsinouskaya/feeds/temperature",
+                "vt": "str"
+            },
+            {
+                "t": "cont",
+                "v": "DaryaMartsinouskaya/feeds/humidity",
+                "vt": "str"
+            },
+            {
+                "t": "cont",
+                "v": "DaryaMartsinouskaya/feeds/gas",
+                "vt": "str"
+            },
+            {
+                "t": "cont",
+                "v": "DaryaMartsinouskaya/feeds/motion",
+                "vt": "str"
+            },
+            {
+                "t": "cont",
+                "v": "DaryaMartsinouskaya/feeds/fan",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 5,
+        "x": 600,
+        "y": 320,
+        "wires": [
+            [
+                "2659f6b4e5428618"
+            ],
+            [
+                "ae9ef57f26ab692a"
+            ],
+            [
+                "005448611a17e6a0"
+            ],
+            [
+                "f528b335bde52033"
+            ],
+            [
+                "23681e8e0ce3510d"
+            ]
+        ]
+    },
+    {
+        "id": "7f9cad5da1b593dd",
+        "type": "function",
+        "z": "6a706e8962cb8ed4",
+        "name": "Parse Adafruit IO (Universal)",
+        "func": "var payload = msg.payload;\nvar topic = msg.topic || '';\n\n// ===== ИСПРАВЛЕННЫЙ КОД: Упрощенная проверка тестового режима =====\n// Только ИГНОРИРУЕМ тестовые сообщения, НО принимаем реальные MQTT\nvar currentTestMode = flow.get(\"testMode\") || false;\n\n// Проверяем, является ли сообщение тестовым\nvar isTestMessage = (msg._test === true ||\n    msg._direct_injection === true ||\n    msg._reset === true ||\n    msg._scenario === true ||\n    msg._test_scenario !== undefined ||\n    msg._test_type !== undefined ||\n    msg._test_name !== undefined);\n\n// Если тестовый режим ВКЛЮЧЕН, НО это НЕ тестовое сообщение - ПРОПУСКАЕМ\nif (currentTestMode === true && !isTestMessage) {\n    node.log(\"⚠️ Test mode is ON, ignoring real MQTT data from: \" + topic);\n    return null;\n}\n\n// Если тестовый режим ВЫКЛЮЧЕН, ВСЕГДА обрабатываем\n// Если тестовый режим ВКЛЮЧЕН, но это тестовое сообщение - обрабатываем\nnode.log(\"✅ Processing data from: \" + topic + \" (test mode: \" + currentTestMode + \")\");\n\n\n// Если payload уже объект (JSON), обрабатываем его\nif (typeof payload === 'object' && payload !== null) {\n    node.log('Received JSON object: ' + JSON.stringify(payload).substring(0, 100));\n\n    // Adafruit IO обычно отправляет: {\"value\": 22.5, \"created_at\": \"...\", \"feed_id\": ...}\n    if (payload.value !== undefined) {\n        msg.payload = {\n            value: payload.value,\n            last_value: payload.value,\n            key: extractFeedName(topic),\n            is_numeric: typeof payload.value === 'number',\n            format: 'json_object'\n        };\n        return msg;\n    }\n\n    // Если есть feed_id или другие поля\n    msg.payload = payload;\n    return msg;\n}\n\n// Логи для отладки\nnode.log('Input topic: ' + topic + ', type: ' + typeof payload + ', value: ' + payload);\n\n// 0. Обработка JSON объектов (самое важное!)\nif (typeof payload === 'object' && payload !== null) {\n    node.log('Detected JSON object, keys: ' + Object.keys(payload).join(', '));\n\n    // Adafruit IO JSON формат обычно: {\"value\": 19.2, \"created_at\": \"...\", \"feed_id\": ...}\n    if (payload.value !== undefined) {\n        msg.payload = {\n            value: payload.value,\n            last_value: payload.value,\n            key: extractFeedName(topic),\n            is_numeric: typeof payload.value === 'number',\n            format: 'json_object',\n            raw_json: payload\n        };\n        node.log('Parsed JSON value: ' + payload.value);\n        return msg;\n    }\n\n    // Если есть другие поля\n    msg.payload = payload;\n    return msg;\n}\n\n// 1. Обработка CSV формата (\"181,,,\")\nif (typeof payload === 'string' && payload.includes(',')) {\n    var csvParts = payload.split(',');\n    \n    // Фильтруем пустые значения\n    var cleanParts = csvParts.filter(function(val) {\n        return val !== '' && val !== null && val !== undefined;\n    });\n    \n    // Если осталось только одно значение (например \"181\" из \"181,,,\")\n    if (cleanParts.length === 1) {\n        var val = cleanParts[0].trim();\n        var num = parseFloat(val);\n        var isNum = !isNaN(num);\n        \n        msg.payload = {\n            value: isNum ? num : val,\n            last_value: isNum ? num : val,\n            key: extractFeedName(topic),\n            format: 'csv_single',\n            original_csv: payload\n        };\n        node.log('Parsed CSV single value: ' + val);\n        return msg;\n    }\n    \n    // Если несколько значений в CSV\n    msg.payload = {\n        csv_values: cleanParts,\n        original_csv: payload,\n        key: extractFeedName(topic),\n        format: 'csv_multi',\n        // Первое значение как основное\n        value: cleanParts.length > 0 ? cleanParts[0] : null\n    };\n    node.log('Parsed CSV with ' + cleanParts.length + ' values');\n    return msg;\n}\n\n// 2. Обычная строка (\"181\")\nif (typeof payload === 'string') {\n    payload = payload.trim();\n    \n    // Пустая строка\n    if (payload === '') {\n        msg.payload = { value: null, last_value: null, key: extractFeedName(topic) };\n        return msg;\n    }\n    \n    // Пытаемся распарсить JSON\n    if (payload.startsWith('{') || payload.startsWith('[')) {\n        try {\n            msg.payload = JSON.parse(payload);\n            node.log('Parsed JSON successfully');\n            return msg;\n        } catch(e) {\n            // Ошибка парсинга JSON, обрабатываем как строку\n            node.warn('JSON parse failed: ' + e.message);\n        }\n    }\n    \n    // Простое строковое значение\n    var num = parseFloat(payload);\n    var isNum = !isNaN(num) && payload !== '';\n    \n    msg.payload = {\n        value: isNum ? num : payload,\n        last_value: isNum ? num : payload,\n        key: extractFeedName(topic),\n        is_numeric: isNum,\n        original_string: payload\n    };\n    node.log('Parsed as string: ' + payload + (isNum ? ' (number)' : ' (text)'));\n    return msg;\n}\n\n// 3. Число\nif (typeof payload === 'number') {\n    msg.payload = {\n        value: payload,\n        last_value: payload,\n        key: extractFeedName(topic),\n        is_numeric: true\n    };\n    return msg;\n}\n\n// 4. Уже объект\nif (typeof payload === 'object' && payload !== null) {\n    // Добавляем key если нет\n    if (!payload.key && payload.key !== '') {\n        payload.key = extractFeedName(topic);\n    }\n    msg.payload = payload;\n    return msg;\n}\n\n// 5. Другие типы\nmsg.payload = {\n    value: payload,\n    last_value: payload,\n    key: extractFeedName(topic),\n    raw_type: typeof payload\n};\nreturn msg;\n\n// Функция извлечения имени фида\nfunction extractFeedName(topic) {\n    if (!topic || typeof topic !== 'string') return 'unknown';\n\n    var parts = topic.split('/');\n    var lastPart = parts[parts.length - 1];\n\n    // Убираем суффиксы\n    if (lastPart.endsWith('/json')) {\n        lastPart = lastPart.replace('/json', '');\n    }\n\n    if (lastPart.endsWith('/csv')) {\n        lastPart = lastPart.replace('/csv', '');\n        return 'csv_multi_sensor';\n    }\n\n    // ИСПРАВЛЕННЫЙ маппинг на основе ваших данных\n    var feedMapping = {\n        \"3278187\": \"temperature\",  // Температура\n        \"3278188\": \"humidity\",     // Влажность  \n        \"3278189\": \"gas\",          // Газ\n        \"3278190\": \"motion\",       // Движение\n        \"3278191\": \"fan\",          // Вентилятор\n        \"temperature\": \"temperature\",\n        \"humidity\": \"humidity\",\n        \"gas\": \"gas\",\n        \"motion\": \"motion\",\n        \"fan\": \"fan\"\n    };\n\n    return feedMapping[lastPart] || lastPart;\n}",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 180,
+        "y": 260,
+        "wires": [
+            [
+                "1416d36d40224938",
+                "d1389c2696d349de"
+            ]
+        ]
+    },
+    {
+        "id": "d1389c2696d349de",
+        "type": "function",
+        "z": "6a706e8962cb8ed4",
+        "name": "Normalize Topics (Enhanced)",
+        "func": "// Упрощенная нормализация для всех форматов\nvar data = msg.payload;\nvar originalTopic = msg.topic;\n\nnode.log('Normalize input: topic=' + originalTopic + ', data type: ' + typeof data + ', value: ' + data);\n\n// Вспомогательная функция для извлечения типа сенсора\nfunction extractSensorType(topic) {\n    if (!topic) return 'unknown';\n\n    var parts = topic.split('/');\n    var feedId = parts[parts.length - 1];\n\n    // Убираем суффиксы /json и /csv\n    if (feedId.endsWith('/json')) feedId = feedId.replace('/json', '');\n    if (feedId.endsWith('/csv')) feedId = feedId.replace('/csv', '');\n\n    // Маппинг ID на имена\n    var mapping = {\n        \"3278187\": \"temperature\",\n        \"3278188\": \"humidity\",\n        \"3278189\": \"gas\",\n        \"3278190\": \"motion\",\n        \"3278191\": \"fan\",\n        \"temperature\": \"temperature\",\n        \"humidity\": \"humidity\",\n        \"gas\": \"gas\",\n        \"motion\": \"motion\",\n        \"fan\": \"fan\"\n    };\n\n    return mapping[feedId] || feedId;\n}\n\n// 1. Обработка объектов от парсера (JSON или обработанные данные)\nif (data && typeof data === 'object') {\n    // Если это объект с полем value (обработанный JSON)\n    if (data.value !== undefined) {\n        msg.payload = data.value;\n\n        // Определяем тип сенсора\n        var sensorType = data.key || extractSensorType(originalTopic);\n        if (sensorType && sensorType !== 'unknown') {\n            msg.topic = \"DaryaMartsinouskaya/feeds/\" + sensorType;\n            node.log('Normalized object value: ' + sensorType + ' = ' + msg.payload);\n            return msg;\n        }\n    }\n    // Если это простой объект (сырой JSON)\n    else {\n        // Пытаемся извлечь числовое значение\n        for (var key in data) {\n            if (typeof data[key] === 'number') {\n                msg.payload = data[key];\n\n                var sensorType = extractSensorType(originalTopic);\n                if (sensorType && sensorType !== 'unknown') {\n                    msg.topic = \"DaryaMartsinouskaya/feeds/\" + sensorType;\n                    node.log('Normalized raw object: ' + sensorType + ' = ' + msg.payload);\n                    return msg;\n                }\n                break;\n            }\n        }\n    }\n}\n\n// 2. Обработка CSV строк\nif (typeof data === 'string' && data.includes(',')) {\n    var csvParts = data.split(',');\n    var cleanParts = csvParts.filter(function (val) {\n        return val !== '' && val !== null && val !== undefined;\n    });\n\n    // Если в CSV только одно значение (например \"19.2\" из \"19.2,,,\")\n    if (cleanParts.length === 1) {\n        var val = cleanParts[0].trim();\n        var num = parseFloat(val);\n\n        if (!isNaN(num)) {\n            msg.payload = num;\n        } else {\n            msg.payload = val; // Для строковых значений как \"DETECTED\"\n        }\n\n        // Определяем тип сенсора из топика\n        var sensorType = extractSensorType(originalTopic);\n        if (sensorType && sensorType !== 'unknown') {\n            // CSV топики часто содержат данные всех сенсоров\n            // Предположим, что это основной CSV фид\n            msg.topic = \"DaryaMartsinouskaya/feeds/\" + sensorType;\n            node.log('Normalized CSV: ' + sensorType + ' = ' + msg.payload);\n            return msg;\n        }\n    }\n}\n\n// 3. Обработка простых строк и чисел\nif (typeof data === 'string' || typeof data === 'number') {\n    var value = data;\n\n    // Преобразуем строку в число если возможно\n    if (typeof value === 'string') {\n        var num = parseFloat(value);\n        if (!isNaN(num)) {\n            value = num;\n        }\n    }\n\n    msg.payload = value;\n\n    // Определяем тип сенсора\n    var sensorType = extractSensorType(originalTopic);\n    if (sensorType && sensorType !== 'unknown') {\n        msg.topic = \"DaryaMartsinouskaya/feeds/\" + sensorType;\n        node.log('Normalized simple: ' + sensorType + ' = ' + msg.payload);\n        return msg;\n    }\n}\n\n// 4. Не удалось нормализовать\nnode.warn('Cannot normalize: topic=' + originalTopic + ', data type=' + typeof data + ', value=' + data);\nreturn null;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 180,
+        "y": 340,
+        "wires": [
+            [
+                "02c8c9bf2296c1d0",
+                "13fb32d3a6c16c86",
+                "14d509e84936dc92"
+            ]
+        ]
+    },
+    {
+        "id": "13fb32d3a6c16c86",
+        "type": "function",
+        "z": "6a706e8962cb8ed4",
+        "name": "Filter Valid Topics",
+        "func": "// Фильтруем только нужные топики и предотвращаем дублирование\nvar validTopics = [\n    'DaryaMartsinouskaya/feeds/temperature',\n    'DaryaMartsinouskaya/feeds/humidity',\n    'DaryaMartsinouskaya/feeds/gas',\n    'DaryaMartsinouskaya/feeds/motion',\n    'DaryaMartsinouskaya/feeds/fan'\n];\n\n// Отбрасываем CSV, JSON и другие ненужные топики\nif (validTopics.includes(msg.topic)) {\n    // Проверяем значение\n    if (msg.topic.includes('temperature') && msg.payload === 'DETECTED') {\n        node.warn('Invalid temperature value: ' + msg.payload);\n        return null;\n    }\n\n    if (msg.topic.includes('humidity') && msg.payload === 'DETECTED') {\n        node.warn('Invalid humidity value: ' + msg.payload);\n        return null;\n    }\n\n    // Логируем для отладки\n    node.log('Valid topic processed: ' + msg.topic + ' = ' + msg.payload);\n\n    return msg;\n}\n\n// Игнорируем CSV, JSON и другие форматы\n// Также игнорируем числовые ID топики (3278187 и т.д.)\nif (msg.topic.includes('/json') || msg.topic.includes('/csv') || /\\d{7}/.test(msg.topic)) {\n    node.log('Ignoring duplicate topic format: ' + msg.topic);\n    return null;\n}\n\nreturn null;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 530,
+        "y": 440,
+        "wires": [
+            [
+                "0c98f3d7d0e25c74"
+            ]
+        ]
+    },
+    {
+        "id": "1416d36d40224938",
+        "type": "debug",
+        "z": "6a706e8962cb8ed4",
+        "name": "Raw Data Check",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "x": 450,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "c477bf02800950be",
+        "type": "function",
+        "z": "6a706e8962cb8ed4",
+        "name": "Real Data Monitor",
+        "func": "// Real Data Monitor - с отладкой\nvar topic = msg.topic || '';\nvar isTestMessage = msg._test === true ||\n    msg._direct_injection === true ||\n    msg._scenario === true;\n\n// Логируем все входящие сообщения для отладки\nnode.log(`Incoming message - Topic: ${topic}, Test: ${isTestMessage}, Payload: ${typeof msg.payload}`);\n\n// Если это реальное MQTT сообщение (не тестовое)\nif (!isTestMessage && topic.includes('DaryaMartsinouskaya/feeds/')) {\n    // Сохраняем время последних реальных данных\n    flow.set('lastRealMqttData', Date.now());\n\n    // Проверяем, включен ли тестовый режим\n    var testModeActive = flow.get('testMode') || false;\n\n    node.log(`Real MQTT data detected: ${topic} = ${msg.payload}, Test mode: ${testModeActive}`);\n\n    // Если тестовый режим включен, но получены реальные данные\n    // автоматически выключаем тестовый режим\n    if (testModeActive) {\n        node.log('Real MQTT data detected while in test mode. Auto-switching to normal mode.');\n\n        // Выключаем тестовый режим\n        flow.set('testMode', false);\n\n        // Отправляем команду выключения\n        return [{\n            topic: 'force_test_mode_off',\n            payload: false,\n            _auto_switch: true,\n            reason: 'Real MQTT data detected',\n            timestamp: new Date().toISOString()\n        }, msg]; // Передаем оригинальное сообщение дальше\n    }\n} else if (isTestMessage) {\n    node.log(`Test message ignored for real data tracking: ${topic}`);\n}\n\n// Всегда передаем сообщение дальше\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 150,
+        "y": 180,
+        "wires": [
+            [
+                "7f9cad5da1b593dd"
+            ]
+        ]
+    },
+    {
+        "id": "4bf161c34b61b464",
+        "type": "link out",
+        "z": "6a706e8962cb8ed4",
+        "name": "link out Temperature node",
+        "mode": "link",
+        "links": [
+            "3896aaa59a772693"
+        ],
+        "x": 1015,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "968ac9a18fa393ec",
+        "type": "link out",
+        "z": "6a706e8962cb8ed4",
+        "name": "link out Humidity node",
+        "mode": "link",
+        "links": [
+            "1922490d7ac164aa"
+        ],
+        "x": 1015,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "ec88cd77a3390725",
+        "type": "link out",
+        "z": "6a706e8962cb8ed4",
+        "name": "link out Gas node",
+        "mode": "link",
+        "links": [
+            "4901c07d59d4898c"
+        ],
+        "x": 1015,
+        "y": 520,
+        "wires": []
+    },
+    {
+        "id": "797f7773a0a36c5f",
+        "type": "link out",
+        "z": "6a706e8962cb8ed4",
+        "name": "link out Motion node",
+        "mode": "link",
+        "links": [
+            "3c842cd27a94183e"
+        ],
+        "x": 1015,
+        "y": 660,
+        "wires": []
+    },
+    {
+        "id": "0d14af6d85bf7ff4",
+        "type": "link in",
+        "z": "6a706e8962cb8ed4",
+        "name": "link in 1 Enhanced Scenario Runner node",
+        "links": [
+            "6a7d0f7ac7d53d93"
+        ],
+        "x": 485,
+        "y": 300,
+        "wires": [
+            [
+                "0c98f3d7d0e25c74"
+            ]
+        ]
+    },
+    {
+        "id": "ff37a4801fe85d64",
+        "type": "link in",
+        "z": "6a706e8962cb8ed4",
+        "name": "link in 1 Direct Sensor Injector node (a)",
+        "links": [
+            "f1985ffbe7774759"
+        ],
+        "x": 405,
+        "y": 460,
+        "wires": [
+            [
+                "13fb32d3a6c16c86"
+            ]
+        ]
+    },
+    {
+        "id": "750a70adbc0f43cc",
+        "type": "link in",
+        "z": "6a706e8962cb8ed4",
+        "name": "link in Direct Sensor Injector node (c)",
+        "links": [
+            "f1985ffbe7774759"
+        ],
+        "x": 405,
+        "y": 540,
+        "wires": [
+            [
+                "02c8c9bf2296c1d0"
+            ]
+        ]
+    },
+    {
+        "id": "14d509e84936dc92",
+        "type": "link out",
+        "z": "6a706e8962cb8ed4",
+        "name": "link out Normalize Topics (enhanced) node",
+        "mode": "link",
+        "links": [
+            "14ea527879d719b0",
+            "8bec4135a7387575",
+            "8242ab44db1deb91"
+        ],
+        "x": 355,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "ab216d9b18cbde80",
+        "type": "ui_led",
+        "z": "6a706e8962cb8ed4",
+        "order": 1,
+        "group": "a60c4d5dd3cc9c66",
+        "width": "4",
+        "height": "2",
+        "label": "Gas Danger",
+        "labelPlacement": "bottom",
+        "labelAlignment": "center",
+        "colorForValue": [
+            {
+                "color": "#888888",
+                "value": "false",
+                "valueType": "bool"
+            },
+            {
+                "color": "#ff6251",
+                "value": "true",
+                "valueType": "bool"
+            }
+        ],
+        "allowColorForValueInMessage": false,
+        "shape": "circle",
+        "showGlow": true,
+        "name": "Gas LED",
+        "x": 1060,
+        "y": 1020,
+        "wires": []
+    },
+    {
+        "id": "45f1cbb02a160b88",
+        "type": "ui_led",
+        "z": "6a706e8962cb8ed4",
+        "order": 2,
+        "group": "a60c4d5dd3cc9c66",
+        "width": "4",
+        "height": "2",
+        "label": "Temp Alert",
+        "labelPlacement": "bottom",
+        "labelAlignment": "center",
+        "colorForValue": [
+            {
+                "color": "#888888",
+                "value": "false",
+                "valueType": "bool"
+            },
+            {
+                "color": "#fefcdd",
+                "value": "true",
+                "valueType": "bool"
+            }
+        ],
+        "allowColorForValueInMessage": false,
+        "shape": "circle",
+        "showGlow": true,
+        "name": "Temp LED",
+        "x": 1070,
+        "y": 860,
+        "wires": []
+    },
+    {
+        "id": "120e2087ba03bee5",
+        "type": "ui_led",
+        "z": "6a706e8962cb8ed4",
+        "order": 3,
+        "group": "a60c4d5dd3cc9c66",
+        "width": "4",
+        "height": "2",
+        "label": "Humidity Alert",
+        "labelPlacement": "bottom",
+        "labelAlignment": "center",
+        "colorForValue": [
+            {
+                "color": "#888888",
+                "value": "false",
+                "valueType": "bool"
+            },
+            {
+                "color": "#cce8b5",
+                "value": "true",
+                "valueType": "bool"
+            }
+        ],
+        "allowColorForValueInMessage": false,
+        "shape": "circle",
+        "showGlow": true,
+        "name": "Humidity LED",
+        "x": 1080,
+        "y": 940,
+        "wires": []
+    },
+    {
+        "id": "7a7012b354b693d0",
+        "type": "function",
+        "z": "6a706e8962cb8ed4",
+        "name": "Gas LED Status",
+        "func": "// Определяем статус LED для газа\nlet gasValue = parseFloat(msg.payload);\nif (isNaN(gasValue)) gasValue = 0;\n\nmsg.payload = gasValue > 400; // Газ > 400 = опасность\nmsg.topic = \"gas_led\";\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 860,
+        "y": 1020,
+        "wires": [
+            [
+                "ab216d9b18cbde80"
+            ]
+        ]
+    },
+    {
+        "id": "15c4360438b982bb",
+        "type": "function",
+        "z": "6a706e8962cb8ed4",
+        "name": "Temp LED Status",
+        "func": "// Определяем статус LED для температуры\nlet tempValue = parseFloat(msg.payload);\nif (isNaN(tempValue)) tempValue = 0;\n\n// Температура вне диапазона 10-35°C\nmsg.payload = tempValue < 10 || tempValue > 35;\nmsg.topic = \"temp_led\";\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 870,
+        "y": 860,
+        "wires": [
+            [
+                "45f1cbb02a160b88"
+            ]
+        ]
+    },
+    {
+        "id": "c3411e5b353b11b9",
+        "type": "function",
+        "z": "6a706e8962cb8ed4",
+        "name": "Humidity LED Status",
+        "func": "// Определяем статус LED для влажности\nlet humidityValue = parseFloat(msg.payload);\nif (isNaN(humidityValue)) humidityValue = 0;\n\n// Влажность > 90%\nmsg.payload = humidityValue > 90;\nmsg.topic = \"humidity_led\";\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 880,
+        "y": 940,
+        "wires": [
+            [
+                "120e2087ba03bee5"
+            ]
+        ]
+    },
+    {
+        "id": "8a1909951a7a5fcb",
+        "type": "switch",
+        "z": "6a706e8962cb8ed4",
+        "name": "Route by sensor",
+        "property": "topic",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "cont",
+                "v": "DaryaMartsinouskaya/feeds/temperature",
+                "vt": "str"
+            },
+            {
+                "t": "cont",
+                "v": "DaryaMartsinouskaya/feeds/humidity",
+                "vt": "str"
+            },
+            {
+                "t": "cont",
+                "v": "DaryaMartsinouskaya/feeds/gas",
+                "vt": "str"
+            },
+            {
+                "t": "cont",
+                "v": "DaryaMartsinouskaya/feeds/motion",
+                "vt": "str"
+            },
+            {
+                "t": "cont",
+                "v": "DaryaMartsinouskaya/feeds/fan",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 5,
+        "x": 600,
+        "y": 980,
+        "wires": [
+            [
+                "15c4360438b982bb"
+            ],
+            [
+                "c3411e5b353b11b9"
+            ],
+            [
+                "7a7012b354b693d0"
+            ],
+            [],
+            []
+        ]
+    },
+    {
+        "id": "dce111a05087b686",
+        "type": "debug",
+        "z": "6a706e8962cb8ed4",
+        "name": "Gas LED Debug",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "x": 1260,
+        "y": 1020,
+        "wires": []
+    },
+    {
+        "id": "7f54f1105c732397",
+        "type": "debug",
+        "z": "6a706e8962cb8ed4",
+        "name": "Temp LED Debug",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "x": 1270,
+        "y": 860,
+        "wires": []
+    },
+    {
+        "id": "dd1f5b9382c88414",
+        "type": "debug",
+        "z": "6a706e8962cb8ed4",
+        "name": "Humidity LED Debug",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "x": 1280,
+        "y": 940,
+        "wires": []
+    },
+    {
+        "id": "b9b65b395fa35b55",
+        "type": "link in",
+        "z": "6a706e8962cb8ed4",
+        "name": "link in 1 Direct Sensor Injector node (b)",
+        "links": [
+            "f1985ffbe7774759"
+        ],
+        "x": 485,
+        "y": 1020,
+        "wires": [
+            [
+                "8a1909951a7a5fcb"
+            ]
+        ]
+    },
+    {
+        "id": "8242ab44db1deb91",
+        "type": "link in",
+        "z": "6a706e8962cb8ed4",
+        "name": "link in Normalize Topics (enhanced) node",
+        "links": [
+            "14d509e84936dc92"
+        ],
+        "x": 485,
+        "y": 940,
+        "wires": [
+            [
+                "8a1909951a7a5fcb"
+            ]
+        ]
+    },
+    {
+        "id": "f0bbaa825cfb18b2",
+        "type": "link in",
+        "z": "6a706e8962cb8ed4",
+        "name": "link in Test temp LED node",
+        "links": [
+            "52eaa4670f3c5cf3",
+            "8e35c93e3e22393e"
+        ],
+        "x": 755,
+        "y": 840,
+        "wires": [
+            [
+                "15c4360438b982bb"
+            ]
+        ]
+    },
+    {
+        "id": "28c089e513799da5",
+        "type": "link in",
+        "z": "6a706e8962cb8ed4",
+        "name": "link in Test Humidity LED node",
+        "links": [
+            "5b422af47994f935",
+            "c50f5459ca1592ab"
+        ],
+        "x": 755,
+        "y": 920,
+        "wires": [
+            [
+                "c3411e5b353b11b9"
+            ]
+        ]
+    },
+    {
+        "id": "2883e45b182f3852",
+        "type": "link in",
+        "z": "6a706e8962cb8ed4",
+        "name": "link in Test Gas LED node",
+        "links": [
+            "cbe1c17405d28ab8",
+            "e562153d25293914"
+        ],
+        "x": 755,
+        "y": 1040,
+        "wires": [
+            [
+                "7a7012b354b693d0"
+            ]
+        ]
+    },
+    {
+        "id": "8c766c1d6ec74567",
+        "type": "comment",
+        "z": "6a706e8962cb8ed4",
+        "name": "SMART AIR GUARD DATA",
+        "info": "Sensor data received from physical board is processed and reflected on the following UI tabs:\n- Dashboard which includes guards and LEDs' indicators\n- Charts which include historical data about humidity, temperature and gas level changes\n- Data which shows info about temperature, humidity, gas level, fan status, motion detection status",
+        "x": 530,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "a0b350f1fbcd08bf",
+        "type": "debug",
+        "z": "600e568946eb4104",
+        "name": "Raw MQTT",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "x": 150,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "644fe7d49c821590",
+        "type": "ui_switch",
+        "z": "600e568946eb4104",
+        "name": "",
+        "label": "Fan Control",
+        "tooltip": "",
+        "group": "control-group",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "decouple": "false",
+        "topic": "fan/control",
+        "topicType": "str",
+        "style": "",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "officon": "",
+        "offcolor": "",
+        "animate": true,
+        "className": "",
+        "x": 150,
+        "y": 120,
+        "wires": [
+            [
+                "2e49aa4a3dffc170"
+            ]
+        ]
+    },
+    {
+        "id": "2e49aa4a3dffc170",
+        "type": "function",
+        "z": "600e568946eb4104",
+        "name": "Control Fan",
+        "func": "msg.topic = \"DaryaMartsinouskaya/feeds/fan\";\nmsg.payload = msg.payload ? \"ON\" : \"OFF\";\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 310,
+        "y": 120,
+        "wires": [
+            [
+                "c77f34602dfa4ee0"
+            ]
+        ]
+    },
+    {
+        "id": "c77f34602dfa4ee0",
+        "type": "mqtt out",
+        "z": "600e568946eb4104",
+        "name": "",
+        "topic": "",
+        "qos": "1",
+        "retain": "true",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "adafruit-io",
+        "x": 450,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "7f28a8ecd288a350",
+        "type": "comment",
+        "z": "600e568946eb4104",
+        "name": "FAN REMOTE CONTROL",
+        "info": "By using toggle on the control tab the physical garage fan can be turn ON/OFF",
+        "x": 330,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "2fbd5e2c58a88105",
+        "type": "function",
+        "z": "7fe3eb7c02d1e040",
+        "name": "Buffer for ML",
+        "func": "// Буферизация последних 12 значений (1 час при 5-минутном интервале)\ncontext.buffer = context.buffer || [];\n\n// Сохраняем данные с меткой времени\nvar dataPoint = {\n    timestamp: new Date().toISOString(),\n    sensor: msg.topic,\n    value: msg.payload\n};\n\ncontext.buffer.push(dataPoint);\n\n// Держим только последние 12 значений\nif (context.buffer.length > 12) {\n    context.buffer = context.buffer.slice(-12);\n}\n\n// Если буфер полный, отправляем для анализа\nif (context.buffer.length === 12) {\n    // Создаем объект с последними данными\n    var recentData = {\n        temperature: 0,\n        humidity: 0,\n        gas: 0,\n        motion: 0\n    };\n\n    // Извлекаем последние значения каждого типа\n    context.buffer.forEach(function (item) {\n        if (item.sensor === 'temperature') recentData.temperature = item.value;\n        if (item.sensor === 'humidity') recentData.humidity = item.value;\n        if (item.sensor === 'gas') recentData.gas = item.value;\n        if (item.sensor === 'motion') recentData.motion = item.value;\n    });\n\n    // Отправляем для предиктивного анализа\n    node.send({\n        topic: \"ml_input\",\n        payload: recentData,\n        buffer: context.buffer\n    });\n}\n\nreturn null;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 310,
+        "y": 280,
+        "wires": [
+            [
+                "331db10775548905"
+            ]
+        ]
+    },
+    {
+        "id": "331db10775548905",
+        "type": "function",
+        "z": "7fe3eb7c02d1e040",
+        "name": "Predictive Analysis",
+        "func": "// Простая предиктивная модель на основе правил\nvar data = msg.payload;\nvar prediction = {\n    timestamp: new Date().toISOString(),\n    current_gas: data.gas,\n    prediction_15min: data.gas,\n    prediction_30min: data.gas,\n    risk_level: \"low\",\n    recommendation: \"normal\"\n};\n\n// Анализ тренда (если газ растет)\nif (data.gas > 300) {\n    // Прогноз на 15 минут\n    prediction.prediction_15min = Math.min(1000, data.gas * (1 + (data.gas - 300) / 1000));\n    \n    // Прогноз на 30 минут\n    prediction.prediction_30min = Math.min(1200, data.gas * (1 + 2 * (data.gas - 300) / 1000));\n}\n\n// Учет температуры (высокая температура ускоряет накопление газа)\nif (data.temperature > 25) {\n    prediction.prediction_15min *= 1.1;\n    prediction.prediction_30min *= 1.2;\n}\n\n// Учет движения (активность = больше людей = больше CO2)\nif (data.motion) {\n    prediction.prediction_15min *= 1.05;\n    prediction.prediction_30min *= 1.1;\n}\n\n// Определение уровня риска\nif (prediction.prediction_30min > 800) {\n    prediction.risk_level = \"high\";\n    prediction.recommendation = \"preventive_fan_on\";\n} else if (prediction.prediction_30min > 600) {\n    prediction.risk_level = \"medium\";\n    prediction.recommendation = \"monitor_closely\";\n} else {\n    prediction.risk_level = \"low\";\n    prediction.recommendation = \"normal\";\n}\n\n// Округляем значения\nprediction.prediction_15min = Math.round(prediction.prediction_15min);\nprediction.prediction_30min = Math.round(prediction.prediction_30min);\n\nmsg.payload = prediction;\nmsg.topic = \"prediction\";\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 570,
+        "y": 320,
+        "wires": [
+            [
+                "8ccf6ae9799fde4f",
+                "a8b6f665e4c13d7a",
+                "fa97c49f780b0eca",
+                "e87b093ed23cb676",
+                "a029d52ecd17347d"
+            ]
+        ]
+    },
+    {
+        "id": "8ccf6ae9799fde4f",
+        "type": "debug",
+        "z": "7fe3eb7c02d1e040",
+        "name": "Prediction Debug",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "x": 850,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "a8b6f665e4c13d7a",
+        "type": "function",
+        "z": "7fe3eb7c02d1e040",
+        "name": "Preventive Control",
+        "func": "// Принимаем превентивные меры на основе прогноза\nvar prediction = msg.payload;\nvar controlAction = {\n    timestamp: new Date().toISOString(),\n    action: \"none\",\n    reason: \"\",\n    fan_command: \"OFF\"\n};\n\n// Логика превентивного управления\nif (prediction.recommendation === \"preventive_fan_on\") {\n    // Включаем вентилятор упреждающе\n    controlAction.action = \"preventive_fan_on\";\n    controlAction.reason = \"Прогноз превышения 800 ppm через 30 минут: \" + prediction.prediction_30min + \" ppm\";\n    controlAction.fan_command = \"ON\";\n    \n    // Отправляем команду на включение вентилятора\n    node.send({\n        topic: \"DaryaMartsinouskaya/feeds/fan_auto\",\n        payload: \"ON\",\n        control: controlAction\n    });\n} else if (prediction.recommendation === \"monitor_closely\" && prediction.current_gas < 400) {\n    // Мониторинг без действий\n    controlAction.action = \"monitoring\";\n    controlAction.reason = \"Средний риск. Прогноз через 30 минут: \" + prediction.prediction_30min + \" ppm\";\n} else if (prediction.recommendation === \"normal\" && prediction.current_gas < 300) {\n    // Если газ низкий и прогноз хороший, можно выключить вентилятор\n    controlAction.action = \"fan_off_safe\";\n    controlAction.reason = \"Низкий уровень газа и благоприятный прогноз\";\n    controlAction.fan_command = \"OFF\";\n    \n    node.send({\n        topic: \"DaryaMartsinouskaya/feeds/fan_auto\",\n        payload: \"OFF\",\n        control: controlAction\n    });\n}\n\n// Для визуализации\nmsg.payload = controlAction;\nmsg.topic = \"preventive_control\";\n\nreturn msg;",
+        "outputs": 2,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 850,
+        "y": 480,
+        "wires": [
+            [
+                "abcbd93553bb51ee"
+            ],
+            [
+                "966e338067f43edb"
+            ]
+        ]
+    },
+    {
+        "id": "966e338067f43edb",
+        "type": "ui_text",
+        "z": "7fe3eb7c02d1e040",
+        "d": true,
+        "group": "b4574a793b61949f",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Recommendation",
+        "format": "{{msg.payload.action}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": "",
+        "color": "#000000",
+        "x": 1090,
+        "y": 500,
+        "wires": []
+    },
+    {
+        "id": "dd477bcbf7228297",
+        "type": "ui_gauge",
+        "z": "7fe3eb7c02d1e040",
+        "name": "",
+        "group": "b4574a793b61949f",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "Risk level",
+        "label": "",
+        "format": "{{value}}",
+        "min": 0,
+        "max": 100,
+        "colors": [
+            "#00b500",
+            "#fefcdd",
+            "#ff6251"
+        ],
+        "seg1": "33",
+        "seg2": "66",
+        "diff": false,
+        "className": "",
+        "x": 1060,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "fa97c49f780b0eca",
+        "type": "function",
+        "z": "7fe3eb7c02d1e040",
+        "name": "Calculate Risk Level",
+        "func": "// Конвертируем прогноз в уровень риска 0-100%\nvar prediction = msg.payload;\nvar riskLevel = 0;\n\nif (prediction.prediction_30min > 800) {\n    riskLevel = 80 + Math.min(20, (prediction.prediction_30min - 800) / 10);\n} else if (prediction.prediction_30min > 600) {\n    riskLevel = 40 + Math.min(40, (prediction.prediction_30min - 600) / 5);\n} else {\n    riskLevel = Math.min(40, prediction.prediction_30min / 15);\n}\n\nmsg.payload = Math.min(100, Math.round(riskLevel));\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 860,
+        "y": 420,
+        "wires": [
+            [
+                "dd477bcbf7228297"
+            ]
+        ]
+    },
+    {
+        "id": "d10e905f0e6c0e24",
+        "type": "inject",
+        "z": "7fe3eb7c02d1e040",
+        "name": "Test: High risk",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "60",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "test_high_risk",
+        "payload": "{\"temperature\":35,\"humidity\":65,\"gas\":550,\"motion\":true}",
+        "payloadType": "json",
+        "x": 420,
+        "y": 480,
+        "wires": [
+            [
+                "331db10775548905"
+            ]
+        ]
+    },
+    {
+        "id": "c167fc0dce2368f5",
+        "type": "inject",
+        "z": "7fe3eb7c02d1e040",
+        "name": "Test: Low risk",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "test_low_risk",
+        "payload": "{\"temperature\":22,\"humidity\":60,\"gas\":250,\"motion\":false}",
+        "payloadType": "json",
+        "x": 410,
+        "y": 440,
+        "wires": [
+            [
+                "331db10775548905"
+            ]
+        ]
+    },
+    {
+        "id": "d007ca81d81e7713",
+        "type": "file",
+        "z": "7fe3eb7c02d1e040",
+        "name": "Save Predictions",
+        "filename": "predictions_log.json",
+        "appendNewline": true,
+        "createDir": true,
+        "overwriteFile": "false",
+        "encoding": "utf8",
+        "x": 1090,
+        "y": 240,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a029d52ecd17347d",
+        "type": "function",
+        "z": "7fe3eb7c02d1e040",
+        "name": "Format for Log",
+        "func": "// Форматируем данные для лога\nvar logEntry = {\n    timestamp: new Date().toISOString(),\n    prediction: msg.payload,\n    control_action: msg.control || {}\n};\n\nmsg.payload = JSON.stringify(logEntry) + '\\n';\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 840,
+        "y": 240,
+        "wires": [
+            [
+                "d007ca81d81e7713"
+            ]
+        ]
+    },
+    {
+        "id": "89a277326e365634",
+        "type": "ui_switch",
+        "z": "7fe3eb7c02d1e040",
+        "name": "",
+        "label": "Preventive mode",
+        "tooltip": "Enable/Disable Predictive Control",
+        "group": "b4574a793b61949f",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "decouple": "false",
+        "topic": "preventive_mode",
+        "topicType": "str",
+        "style": "",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "officon": "",
+        "offcolor": "",
+        "animate": true,
+        "className": "",
+        "x": 430,
+        "y": 160,
+        "wires": [
+            [
+                "ba93ba62c6a6e5e6"
+            ]
+        ]
+    },
+    {
+        "id": "ba93ba62c6a6e5e6",
+        "type": "function",
+        "z": "7fe3eb7c02d1e040",
+        "name": "Control Preventive Mode",
+        "func": "// Управление режимом предиктивного управления\ncontext.preventiveMode = msg.payload;\n\nvar status = {\n    mode: context.preventiveMode ? \"preventive\" : \"reactive\",\n    timestamp: new Date().toISOString()\n};\n\nmsg.payload = status;\nmsg.topic = \"preventive_mode_status\";\n\nnode.status({fill:\"green\",shape:\"dot\",text:\"Preventive: \" + context.preventiveMode});\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 670,
+        "y": 160,
+        "wires": [
+            [
+                "c7b7f12777c109f2"
+            ]
+        ]
+    },
+    {
+        "id": "c7b7f12777c109f2",
+        "type": "ui_text",
+        "z": "7fe3eb7c02d1e040",
+        "group": "b4574a793b61949f",
+        "order": 5,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Work regime",
+        "format": "{{msg.payload.mode}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": "",
+        "color": "#000000",
+        "x": 890,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "9bf84ee5874769b3",
+        "type": "ui_chart",
+        "z": "7fe3eb7c02d1e040",
+        "name": "",
+        "group": "b4574a793b61949f",
+        "order": 6,
+        "width": 0,
+        "height": 0,
+        "label": "Forecast vs Fact",
+        "chartType": "line",
+        "legend": "true",
+        "xformat": "HH:mm",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "0",
+        "ymax": "1000",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#ff6251",
+            "#00b500",
+            "#000000",
+            "#000000",
+            "#000000",
+            "#000000",
+            "#000000",
+            "#000000",
+            "#000000"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 1090,
+        "y": 300,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "e87b093ed23cb676",
+        "type": "function",
+        "z": "7fe3eb7c02d1e040",
+        "name": "Prepare Chart Data",
+        "func": "// Подготовка данных для графика сравнения прогноза и факта\nvar prediction = msg.payload;\n\n// Текущий газ и прогноз\nvar chartData = [\n    {\n        series: [\"Forecast 30 mins\", \"Current Gas\"],\n        data: [[prediction.prediction_30min], [prediction.current_gas]],\n        labels: [new Date().toLocaleTimeString()]\n    }\n];\n\nmsg.payload = chartData;\nmsg.topic = \"prediction_chart\";\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 850,
+        "y": 300,
+        "wires": [
+            [
+                "9bf84ee5874769b3"
+            ]
+        ]
+    },
+    {
+        "id": "f2924052305938c2",
+        "type": "comment",
+        "z": "7fe3eb7c02d1e040",
+        "name": "PREDICTIVE MODULE ML",
+        "info": "Machine learning module for predictive ventilation control\n- Data buffering\n- Gas level forecasting\n- Preventive control\n- Forecast visualization",
+        "x": 670,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "abcbd93553bb51ee",
+        "type": "ui_text",
+        "z": "7fe3eb7c02d1e040",
+        "d": true,
+        "group": "b4574a793b61949f",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Forecast (30 min)",
+        "format": "{{msg.payload.prediction_30min}} ppm",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": "",
+        "color": "#000000",
+        "x": 1090,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "3896aaa59a772693",
+        "type": "link in",
+        "z": "7fe3eb7c02d1e040",
+        "name": "link in Temperature node",
+        "links": [
+            "4bf161c34b61b464"
+        ],
+        "x": 185,
+        "y": 120,
+        "wires": [
+            [
+                "2fbd5e2c58a88105"
+            ]
+        ]
+    },
+    {
+        "id": "1922490d7ac164aa",
+        "type": "link in",
+        "z": "7fe3eb7c02d1e040",
+        "name": "link in Humidity node",
+        "links": [
+            "968ac9a18fa393ec"
+        ],
+        "x": 185,
+        "y": 180,
+        "wires": [
+            [
+                "2fbd5e2c58a88105"
+            ]
+        ]
+    },
+    {
+        "id": "4901c07d59d4898c",
+        "type": "link in",
+        "z": "7fe3eb7c02d1e040",
+        "name": "link in 1 Gas node",
+        "links": [
+            "ec88cd77a3390725"
+        ],
+        "x": 185,
+        "y": 240,
+        "wires": [
+            [
+                "2fbd5e2c58a88105"
+            ]
+        ]
+    },
+    {
+        "id": "3c842cd27a94183e",
+        "type": "link in",
+        "z": "7fe3eb7c02d1e040",
+        "name": "link in Motion node",
+        "links": [
+            "797f7773a0a36c5f"
+        ],
+        "x": 185,
+        "y": 300,
+        "wires": [
+            [
+                "2fbd5e2c58a88105"
+            ]
+        ]
+    },
+    {
+        "id": "85b8f252475383bc",
+        "type": "link in",
+        "z": "7fe3eb7c02d1e040",
+        "name": "link in Scenario Executor node",
+        "links": [
+            "7ca06a4080e9e92a",
+            "df20dd0aa057695f"
+        ],
+        "x": 185,
+        "y": 360,
+        "wires": [
+            [
+                "2fbd5e2c58a88105"
+            ]
+        ]
+    },
+    {
+        "id": "19dd71621febf920",
+        "type": "link in",
+        "z": "7fe3eb7c02d1e040",
+        "name": "link in Test Sensor Injector node",
+        "links": [
+            "89ba89bec73223af",
+            "0e517da6f2e131b7"
+        ],
+        "x": 185,
+        "y": 420,
+        "wires": [
+            [
+                "2fbd5e2c58a88105"
+            ]
+        ]
+    },
+    {
+        "id": "b8e00a91815f3995",
+        "type": "comment",
+        "z": "ce431305f614f611",
+        "name": "SYSTEM TESTING & VALIDATION MODULE",
+        "info": "Расширенный модуль тестирования системы:\n- Реалистичные сценарии (гараж, выхлопные газы, плесень, тепловой удар)\n- Тестирование всех компонентов (LEDs, вентилятор, motion)\n- Улучшенный интерфейс\n- Физическое тестирование оборудования",
+        "x": 450,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "52a98ef111bfb1af",
+        "type": "ui_dropdown",
+        "z": "ce431305f614f611",
+        "name": "",
+        "label": "Select Test Scenario",
+        "tooltip": "Choose a test scenario",
+        "place": "Select scenario...",
+        "group": "eb5e613d0ee9fd74",
+        "order": 1,
+        "width": "0",
+        "height": "0",
+        "passthru": true,
+        "multiple": false,
+        "options": [
+            {
+                "label": "✅ Normal conditions",
+                "value": "normal",
+                "type": "str"
+            },
+            {
+                "label": "🏍️ Exhaust gases (health hazard)",
+                "value": "exhaust_health",
+                "type": "str"
+            },
+            {
+                "label": "☠️ Exhaust gases (life-threatening)",
+                "value": "exhaust_life",
+                "type": "str"
+            },
+            {
+                "label": "🔥 Garage fire",
+                "value": "garage_fire",
+                "type": "str"
+            },
+            {
+                "label": "🦠 Risk of mold formation",
+                "value": "mold_risk",
+                "type": "str"
+            },
+            {
+                "label": "⚡ Risk of metal corrosion",
+                "value": "corrosion_risk",
+                "type": "str"
+            },
+            {
+                "label": "🥵 Risk of heat stroke",
+                "value": "heat_stroke",
+                "type": "str"
+            },
+            {
+                "label": "👥 Overcrowded office",
+                "value": "crowded_office",
+                "type": "str"
+            },
+            {
+                "label": "🍖 Barbecue",
+                "value": "cooking",
+                "type": "str"
+            },
+            {
+                "label": "🏭 Industrial leak",
+                "value": "industrial_leak",
+                "type": "str"
+            }
+        ],
+        "payload": "",
+        "topic": "selected_scenario",
+        "topicType": "str",
+        "className": "",
+        "x": 340,
+        "y": 140,
+        "wires": [
+            [
+                "26d940f89541846b"
+            ]
+        ]
+    },
+    {
+        "id": "26d940f89541846b",
+        "type": "function",
+        "z": "ce431305f614f611",
+        "name": "Scenario Executor",
+        "func": "// Исполнитель расширенных сценариев - Обновленная версия с ТРЕМЯ выходами\n// ДОБАВЛЕН: Автоматический возврат к нормальным значениям через 10 секунд\nvar scenario = msg.payload;\nvar timestamp = new Date().toISOString();\n\nvar scenarios = {\n    normal: {\n        temperature: 22, humidity: 55, gas: 180, motion: false,\n        description: \"Нормальные условия в помещении\",\n        expected_leds: { gas: false, temp: false, humidity: false },\n        expected_fan: false,\n        duration: 0 // Нормальный режим не требует авто1сброса\n    },\n    exhaust_health: {\n        temperature: 25, humidity: 60, gas: 450, motion: true,\n        description: \"Загазованность выхлопными газами - опасность для здоровья\",\n        expected_leds: { gas: true, temp: false, humidity: false },\n        expected_fan: true,\n        duration: 10000 // 10 секунд\n    },\n    exhaust_life: {\n        temperature: 28, humidity: 65, gas: 850, motion: true,\n        description: \"Загазованность выхлопными газами - угроза жизни!\",\n        expected_leds: { gas: true, temp: false, humidity: false },\n        expected_fan: true,\n        duration: 10000\n    },\n    garage_fire: {\n        temperature: 85, humidity: 35, gas: 1200, motion: true,\n        description: \"Возгорание в гараже! Высокая температура и задымление\",\n        expected_leds: { gas: true, temp: true, humidity: false },\n        expected_fan: true,\n        duration: 10000\n    },\n    mold_risk: {\n        temperature: 18, humidity: 95, gas: 150, motion: false,\n        description: \"Высокая влажность - риск образования плесени\",\n        expected_leds: { gas: false, temp: false, humidity: true },\n        expected_fan: true,\n        duration: 10000\n    },\n    corrosion_risk: {\n        temperature: 15, humidity: 98, gas: 200, motion: false,\n        description: \"Критическая влажность - риск коррозии металла\",\n        expected_leds: { gas: false, temp: false, humidity: true },\n        expected_fan: true,\n        duration: 10000\n    },\n    heat_stroke: {\n        temperature: 42, humidity: 80, gas: 300, motion: true,\n        description: \"Экстремальная температура - риск теплового удара\",\n        expected_leds: { gas: false, temp: true, humidity: true },\n        expected_fan: true,\n        duration: 10000\n    },\n    crowded_office: {\n        temperature: 26, humidity: 68, gas: 650, motion: true,\n        description: \"Переполненный офис - высокая концентрация CO2\",\n        expected_leds: { gas: true, temp: false, humidity: false },\n        expected_fan: true,\n        duration: 10000\n    },\n    cooking: {\n        temperature: 40, humidity: 90, gas: 500, motion: true,\n        description: \"Приготовление пищи - высокая температура и влажность\",\n        expected_leds: { gas: true, temp: true, humidity: true },\n        expected_fan: true,\n        duration: 10000\n    },\n    industrial_leak: {\n        temperature: 30, humidity: 75, gas: 1200, motion: false,\n        description: \"Промышленная утечка газа\",\n        expected_leds: { gas: true, temp: false, humidity: false },\n        expected_fan: true,\n        duration: 10000\n    }\n};\n\nif (scenarios[scenario]) {\n    var scenarioData = scenarios[scenario];\n    var scenarioLabel = getScenarioLabel(scenario);\n    var scenarioDuration = scenarioData.duration || 0;\n\n    // === НОВЫЙ КОД: Автоматический сброс через 10 секунд ===\n    // Только для НЕ-нормальных сценариев (кроме \"normal\")\n    if (scenario !== \"normal\" && scenarioDuration > 0) {\n        // Устанавливаем таймер автоматического возврата\n        setTimeout(function () {\n            node.log('🔄 Auto-reset: Returning to normal conditions after ' +\n                (scenarioDuration / 1000) + ' seconds');\n\n            // Создаем сообщение для возврата к нормальным значениям\n            var normalScenario = scenarios[\"normal\"];\n            var resetSensorMessages = [];\n\n            // Температура\n            resetSensorMessages.push({\n                sensor_type: 'temperature',\n                payload: normalScenario.temperature,\n                scenario: 'auto_reset_normal',\n                description: 'Automatic reset to normal conditions'\n            });\n\n            // Влажность\n            resetSensorMessages.push({\n                sensor_type: 'humidity',\n                payload: normalScenario.humidity,\n                scenario: 'auto_reset_normal',\n                description: 'Automatic reset to normal conditions'\n            });\n\n            // Газ\n            resetSensorMessages.push({\n                sensor_type: 'gas',\n                payload: normalScenario.gas,\n                scenario: 'auto_reset_normal',\n                description: 'Automatic reset to normal conditions'\n            });\n\n            // Движение\n            resetSensorMessages.push({\n                sensor_type: 'motion',\n                payload: normalScenario.motion,\n                scenario: 'auto_reset_normal',\n                description: 'Automatic reset to normal conditions'\n            });\n\n            // Вентилятор\n            resetSensorMessages.push({\n                sensor_type: 'fan',\n                payload: normalScenario.expected_fan,\n                scenario: 'auto_reset_normal',\n                description: 'Automatic reset to normal conditions'\n            });\n\n            // Отправляем сообщение сброса через выход 1 (прямая инъекция)\n            node.send([null, {\n                payload: resetSensorMessages,\n                scenario: 'auto_reset_normal',\n                scenario_name: '🔄 Auto Reset to Normal',\n                timestamp: new Date().toISOString(),\n                _direct_injection: true,\n                _auto_reset: true,\n                _reset_after_scenario: scenario,\n                description: 'System automatically reset to normal conditions after scenario: ' + scenarioLabel\n            }, null]);\n\n            // Также отправляем уведомление для UI\n            node.send([null, null, {\n                topic: 'auto_reset_notification',\n                payload: {\n                    status: 'auto_reset_completed',\n                    original_scenario: scenarioLabel,\n                    reset_to: 'normal_conditions',\n                    duration_ms: scenarioDuration,\n                    timestamp: new Date().toISOString(),\n                    message: '✅ System automatically restored to normal conditions'\n                }\n            }]);\n\n        }, scenarioDuration); // 10000 ms = 10 секунд\n\n        // Логируем установку таймера\n        node.log('⏱️ Auto-reset timer set: ' + scenarioLabel + ' → Normal in ' +\n            (scenarioDuration / 1000) + ' seconds');\n    }\n    // === КОНЕЦ НОВОГО КОДА ===\n\n    // Создаем сообщения для каждого сенсора для прямой инъекции\n    var sensorMessages = [];\n\n    // Температура\n    if (scenarioData.temperature !== undefined) {\n        sensorMessages.push({\n            sensor_type: 'temperature',\n            payload: scenarioData.temperature,\n            scenario: scenario,\n            description: scenarioData.description\n        });\n    }\n\n    // Влажность\n    if (scenarioData.humidity !== undefined) {\n        sensorMessages.push({\n            sensor_type: 'humidity',\n            payload: scenarioData.humidity,\n            scenario: scenario,\n            description: scenarioData.description\n        });\n    }\n\n    // Газ\n    if (scenarioData.gas !== undefined) {\n        sensorMessages.push({\n            sensor_type: 'gas',\n            payload: scenarioData.gas,\n            scenario: scenario,\n            description: scenarioData.description\n        });\n    }\n\n    // Движение\n    if (scenarioData.motion !== undefined) {\n        sensorMessages.push({\n            sensor_type: 'motion',\n            payload: scenarioData.motion,\n            scenario: scenario,\n            description: scenarioData.description\n        });\n    }\n\n    // Вентилятор (на основе expected_fan)\n    if (scenarioData.expected_fan !== undefined) {\n        sensorMessages.push({\n            sensor_type: 'fan',\n            payload: scenarioData.expected_fan,\n            scenario: scenario,\n            description: scenarioData.description\n        });\n    }\n\n    // Данные для ML-модуля\n    var mlData = {\n        topic: \"ml_input\",\n        payload: {\n            temperature: scenarioData.temperature || 0,\n            humidity: scenarioData.humidity || 0,\n            gas: scenarioData.gas || 0,\n            motion: scenarioData.motion || false\n        },\n        _test: true,\n        scenario: scenario,\n        timestamp: timestamp\n    };\n\n    // Возвращаем ТРИ сообщения:\n    return [\n        // Сообщение 1: Для существующей системы (выход 0)\n        {\n            topic: 'scenario_' + scenario,\n            payload: scenarioData,\n            scenario_name: scenarioLabel,\n            timestamp: timestamp,\n            _test: true,\n            _has_auto_reset: (scenario !== \"normal\" && scenarioDuration > 0),\n            _auto_reset_duration: scenarioDuration\n        },\n        // Сообщение 2: Для новой прямой инъекции (выход 1)\n        {\n            payload: sensorMessages,\n            scenario: scenario,\n            scenario_name: scenarioLabel,\n            timestamp: timestamp,\n            _direct_injection: true,\n            description: scenarioData.description,\n            _has_auto_reset: (scenario !== \"normal\" && scenarioDuration > 0),\n            _auto_reset_in: scenarioDuration\n        },\n        // Сообщение 3: Для ML-модуля (выход 2)\n        mlData\n    ];\n}\n\nreturn null;\n\nfunction getScenarioLabel(scenario) {\n    var labels = {\n        normal: \"Нормальные условия\",\n        exhaust_health: \"Выхлопные газы (опасность здоровью)\",\n        exhaust_life: \"Выхлопные газы (угроза жизни)\",\n        garage_fire: \"Возгорание в гараже\",\n        mold_risk: \"Риск образования плесени\",\n        corrosion_risk: \"Риск коррозии металла\",\n        heat_stroke: \"Риск теплового удара\",\n        crowded_office: \"Переполненный офис\",\n        cooking: \"Приготовление пищи\",\n        industrial_leak: \"Промышленная утечка\"\n    };\n    return labels[scenario] || scenario;\n}",
+        "outputs": 3,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 650,
+        "y": 140,
+        "wires": [
+            [
+                "4c77014653efbd61"
+            ],
+            [
+                "0b0b0d0d598748b6"
+            ],
+            [
+                "df20dd0aa057695f"
+            ]
+        ]
+    },
+    {
+        "id": "a9ac78fd6d1df3cd",
+        "type": "ui_button",
+        "z": "ce431305f614f611",
+        "name": "",
+        "group": "eb5e613d0ee9fd74",
+        "order": 2,
+        "width": "6",
+        "height": "1",
+        "passthru": false,
+        "label": "▶️ Run Test",
+        "tooltip": "Run the selected scenario",
+        "color": "white",
+        "bgcolor": "#28a745",
+        "className": "btn-success",
+        "icon": "",
+        "payload": "run",
+        "payloadType": "str",
+        "topic": "run_scenario",
+        "topicType": "str",
+        "x": 150,
+        "y": 140,
+        "wires": [
+            [
+                "52a98ef111bfb1af"
+            ]
+        ]
+    },
+    {
+        "id": "82113ea4db3cdc43",
+        "type": "ui_button",
+        "z": "ce431305f614f611",
+        "name": "",
+        "group": "eb5e613d0ee9fd74",
+        "order": 3,
+        "width": "6",
+        "height": "1",
+        "passthru": false,
+        "label": "🤖 Auto Test Sequence",
+        "tooltip": "Run the automatic sequence of all scenarios",
+        "color": "white",
+        "bgcolor": "#007bff",
+        "className": "",
+        "icon": "",
+        "payload": "start",
+        "payloadType": "str",
+        "topic": "auto_test_sequence",
+        "topicType": "str",
+        "x": 190,
+        "y": 240,
+        "wires": [
+            [
+                "00f5a96d242a46cb"
+            ]
+        ]
+    },
+    {
+        "id": "ed8c60e0e597e362",
+        "type": "ui_button",
+        "z": "ce431305f614f611",
+        "name": "",
+        "group": "4853ddd63a3ce875",
+        "order": 1,
+        "width": "6",
+        "height": "1",
+        "passthru": false,
+        "label": "💡 Test All LEDs",
+        "tooltip": "Testing all LED indicators",
+        "color": "white",
+        "bgcolor": "#ffc107",
+        "className": "",
+        "icon": "",
+        "payload": "test_all",
+        "payloadType": "str",
+        "topic": "test_leds",
+        "topicType": "str",
+        "x": 170,
+        "y": 300,
+        "wires": [
+            [
+                "10b0c41298ee5538"
+            ]
+        ]
+    },
+    {
+        "id": "b667c16a676ed6fe",
+        "type": "function",
+        "z": "ce431305f614f611",
+        "name": "Enhanced Test Data Processor",
+        "func": "// Расширенный обработчик тестовых данных\nvar data = msg.payload;\nvar testName = msg.scenario_name || msg.topic;\nvar timestamp = new Date().toISOString();\n\nnode.log('Starting test: ' + testName + ' | Data: ' + JSON.stringify(data));\n\n// Сохраняем ожидаемые состояния для проверки\ncontext.expectedStates = {\n    gas_led: data.expected_leds ? data.expected_leds.gas : undefined,\n    temp_led: data.expected_leds ? data.expected_leds.temp : undefined,\n    humidity_led: data.expected_leds ? data.expected_leds.humidity : undefined,\n    fan: data.expected_fan\n};\n\n// Создаем отдельные сообщения для каждого сенсора\nvar messages = [];\n\n// Температура\nif (data.temperature !== undefined) {\n    messages.push({\n        topic: 'DaryaMartsinouskaya/feeds/temperature',\n        payload: data.temperature,\n        test: testName,\n        timestamp: timestamp\n    });\n}\n\n// Влажность\nif (data.humidity !== undefined) {\n    messages.push({\n        topic: 'DaryaMartsinouskaya/feeds/humidity',\n        payload: data.humidity,\n        test: testName,\n        timestamp: timestamp\n    });\n}\n\n// Газ\nif (data.gas !== undefined) {\n    messages.push({\n        topic: 'DaryaMartsinouskaya/feeds/gas',\n        payload: data.gas,\n        test: testName,\n        timestamp: timestamp\n    });\n}\n\n// Движение\nif (data.motion !== undefined) {\n    messages.push({\n        topic: 'DaryaMartsinouskaya/feeds/motion',\n        payload: data.motion ? 'DETECTED' : 'NO MOTION',\n        test: testName,\n        timestamp: timestamp\n    });\n}\n\n// Отправляем сообщения на инъекцию\nreturn [messages];",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1270,
+        "y": 80,
+        "wires": [
+            [
+                "ea326f8013120e78"
+            ]
+        ]
+    },
+    {
+        "id": "10b0c41298ee5538",
+        "type": "function",
+        "z": "ce431305f614f611",
+        "name": "LED Test Controller",
+        "func": "// Контроллер тестирования светодиодов\nvar command = msg.payload;\nvar timestamp = new Date().toISOString();\n\nif (command === 'test_all') {\n    // Последовательное тестирование всех LED\n    var sequence = [\n        {delay: 0, led: 'gas', value: true},\n        {delay: 1000, led: 'temp', value: true},\n        {delay: 2000, led: 'humidity', value: true},\n        {delay: 3000, led: 'gas', value: false},\n        {delay: 4000, led: 'temp', value: false},\n        {delay: 5000, led: 'humidity', value: false},\n        {delay: 6000, led: 'gas', value: true},\n        {delay: 7000, led: 'temp', value: true},\n        {delay: 8000, led: 'humidity', value: true}\n    ];\n    \n    sequence.forEach(function(test, index) {\n        setTimeout(function() {\n            // Создаем тестовые данные для активации LED\n            var testData = {};\n            if (test.led === 'gas') {\n                testData = { gas: test.value ? 450 : 150 };\n            } else if (test.led === 'temp') {\n                testData = { temperature: test.value ? 40 : 22 };\n            } else if (test.led === 'humidity') {\n                testData = { humidity: test.value ? 95 : 55 };\n            }\n            \n            node.send({\n                topic: 'test_led_' + test.led,\n                payload: testData,\n                led_name: test.led,\n                led_state: test.value ? 'ON' : 'OFF',\n                timestamp: timestamp\n            });\n        }, test.delay);\n    });\n    \n    return {\n        payload: {\n            status: 'led_test_started',\n            sequence: 'all_leds_blinking',\n            duration: '9 seconds',\n            timestamp: timestamp\n        },\n        topic: 'led_test_status'\n    };\n}\n\nreturn null;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 410,
+        "y": 300,
+        "wires": [
+            [
+                "cf2e2ef3fb62e479"
+            ]
+        ]
+    },
+    {
+        "id": "00f5a96d242a46cb",
+        "type": "function",
+        "z": "ce431305f614f611",
+        "name": "Automatic Test Sequencer",
+        "func": "// Автоматический последователь тестов с расширенными сценариями\nvar startCommand = msg.payload;\nvar timestamp = new Date().toISOString();\n\nif (startCommand !== 'start') return null;\n\nvar testSequence = [\n    {name: 'Нормальные условия', delay: 0, scenario: 'normal'},\n    {name: 'Опасность для здоровья (выхлопы)', delay: 10000, scenario: 'exhaust_health'},\n    {name: 'Угроза жизни (выхлопы)', delay: 20000, scenario: 'exhaust_life'},\n    {name: 'Возгорание в гараже', delay: 30000, scenario: 'garage_fire'},\n    {name: 'Риск плесени', delay: 40000, scenario: 'mold_risk'},\n    {name: 'Риск коррозии', delay: 50000, scenario: 'corrosion_risk'},\n    {name: 'Риск теплового удара', delay: 60000, scenario: 'heat_stroke'},\n    {name: 'Переполненный офис', delay: 70000, scenario: 'crowded_office'},\n    {name: 'Приготовление пищи', delay: 80000, scenario: 'cooking'},\n    {name: 'Промышленная утечка', delay: 90000, scenario: 'industrial_leak'}\n];\n\n// Запускаем последовательность\ntestSequence.forEach(function(test, index) {\n    setTimeout(function() {\n        node.log('Auto sequence: ' + test.name + ' (scenario: ' + test.scenario + ')');\n        \n        // Создаем сообщение для исполнителя сценариев\n        var scenarioMsg = {\n            payload: test.scenario,\n            topic: 'selected_scenario',\n            sequence_name: test.name,\n            sequence_index: index,\n            timestamp: new Date().toISOString()\n        };\n        \n        node.send([scenarioMsg]);\n        \n    }, test.delay);\n});\n\n// Стартовое сообщение\nreturn [{\n    payload: {\n        status: 'auto_test_sequence_started',\n        tests_count: testSequence.length,\n        total_duration: '100 seconds',\n        timestamp: timestamp,\n        message: 'Автоматическая последовательность тестов запущена'\n    },\n    topic: 'auto_sequence_status'\n}];",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 440,
+        "y": 240,
+        "wires": [
+            [
+                "26d940f89541846b"
+            ]
+        ]
+    },
+    {
+        "id": "9fb6358bc91798b5",
+        "type": "ui_button",
+        "z": "ce431305f614f611",
+        "name": "",
+        "group": "eb5e613d0ee9fd74",
+        "order": 4,
+        "width": "6",
+        "height": "1",
+        "passthru": false,
+        "label": "🔄 Reset System",
+        "tooltip": "Reset all tests and restore the system to normal operation",
+        "color": "white",
+        "bgcolor": "#6c757d",
+        "className": "",
+        "icon": "",
+        "payload": "reset",
+        "payloadType": "str",
+        "topic": "reset_test_system",
+        "topicType": "str",
+        "x": 170,
+        "y": 380,
+        "wires": [
+            [
+                "972c9fa67b439784"
+            ]
+        ]
+    },
+    {
+        "id": "972c9fa67b439784",
+        "type": "function",
+        "z": "ce431305f614f611",
+        "name": "Reset Test System",
+        "func": "// Сброс тестовой системы и возврат к нормальным условиям\nvar command = msg.payload;\nvar timestamp = new Date().toISOString();\n\nif (command === \"reset\") {\n    // 1. Выключаем тестовый режим\n    flow.set(\"testMode\", false);\n    context.set(\"testMode\", false);\n\n    // 2. Останавливаем все интервалы тестирования\n    if (context.monitorInterval) {\n        clearInterval(context.monitorInterval);\n        context.monitorInterval = null;\n    }\n\n    // 3. Отправляем команду выключения тестового режима\n    var resetMsg = {\n        topic: \"force_test_mode_off\",\n        payload: false,\n        _reset: true,\n        timestamp: timestamp\n    };\n\n    // 4. ВАЖНО: Запрашиваем реальные данные с платы\n    // Создаем сообщения для запроса актуальных значений\n    var dataRequestMessages = [\n        {\n            topic: \"DaryaMartsinouskaya/feeds/temperature/get\",\n            payload: \"\",\n            _data_request: true\n        },\n        {\n            topic: \"DaryaMartsinouskaya/feeds/humidity/get\",\n            payload: \"\",\n            _data_request: true\n        },\n        {\n            topic: \"DaryaMartsinouskaya/feeds/gas/get\",\n            payload: \"\",\n            _data_request: true\n        },\n        {\n            topic: \"DaryaMartsinouskaya/feeds/motion/get\",\n            payload: \"\",\n            _data_request: true\n        },\n        {\n            topic: \"DaryaMartsinouskaya/feeds/fan/get\",\n            payload: \"\",\n            _data_request: true\n        }\n    ];\n\n    // 5. Отправляем нормальные значения для сброса UI\n    var normalValues = {\n        topic: \"system_reset_normal_values\",\n        payload: {\n            temperature: 22,\n            humidity: 55,\n            gas: 180,\n            motion: false,\n            fan: false,\n            _reset: true,\n            message: \"Система сброшена. Ожидание реальных данных с устройства...\"\n        }\n    };\n\n    // Возвращаем все сообщения\n    return [null, [resetMsg, normalValues], dataRequestMessages];\n}\n\nreturn null;",
+        "outputs": 2,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 410,
+        "y": 380,
+        "wires": [
+            [],
+            [
+                "c88e1996a2a2bd7d"
+            ]
+        ]
+    },
+    {
+        "id": "e53c83269352a479",
+        "type": "mqtt out",
+        "z": "ce431305f614f611",
+        "name": "Test MQTT Out",
+        "topic": "",
+        "qos": "1",
+        "retain": "true",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "adafruit-io",
+        "x": 1620,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "0b0b0d0d598748b6",
+        "type": "function",
+        "z": "ce431305f614f611",
+        "name": "Direct Sensor Injector",
+        "func": "// Прямая инъекция данных сенсоров в систему (обход MQTT)\n// Используется для тестирования без физического устройства\n\nvar sensorType = msg.sensor_type || '';\nvar value = msg.payload || 0;\nvar scenario = msg.scenario || 'manual_injection';\n\n// Определяем топик по типу сенсора\nvar topicMap = {\n    'temperature': 'DaryaMartsinouskaya/feeds/temperature',\n    'humidity': 'DaryaMartsinouskaya/feeds/humidity',\n    'gas': 'DaryaMartsinouskaya/feeds/gas',\n    'motion': 'DaryaMartsinouskaya/feeds/motion',\n    'fan': 'DaryaMartsinouskaya/feeds/fan'\n};\n\nvar topic = topicMap[sensorType] || '';\n\nif (topic === '') {\n    // Пытаемся определить из сообщения\n    if (msg.topic && msg.topic.includes('feeds/')) {\n        topic = msg.topic;\n        sensorType = topic.split('/').pop();\n    }\n}\n\nif (topic !== '') {\n    // Преобразуем значение в правильный формат\n    var processedValue = value;\n    \n    if (sensorType === 'motion') {\n        processedValue = (value === true || value === 'true' || value === 'DETECTED' || value === '1') ? \n                        'DETECTED' : 'NO MOTION';\n    } else if (sensorType === 'fan') {\n        processedValue = (value === true || value === 'true' || value === 'ON' || value === '1') ? \n                        'ON' : 'OFF';\n    }\n    \n    node.log('Direct injection: ' + sensorType + ' = ' + processedValue + ' (scenario: ' + scenario + ')');\n    \n    // Создаем сообщение для системы\n    var systemMsg = {\n        topic: topic,\n        payload: processedValue,\n        _direct_injection: true,\n        _test_scenario: scenario,\n        _timestamp: new Date().toISOString()\n    };\n    \n    return [systemMsg, systemMsg]; // Отправляем в оба маршрута\n}\n\nreturn null;",
+        "outputs": 2,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 880,
+        "y": 180,
+        "wires": [
+            [
+                "f1985ffbe7774759"
+            ],
+            [
+                "b486d5c60448a28c"
+            ]
+        ]
+    },
+    {
+        "id": "b486d5c60448a28c",
+        "type": "debug",
+        "z": "ce431305f614f611",
+        "name": "Direct Injection Debug",
+        "active": true,
+        "tosidebar": true,
+        "console": true,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "x": 1130,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "4ceaedaf465def98",
+        "type": "debug",
+        "z": "ce431305f614f611",
+        "name": "Test Injection Debug",
+        "active": true,
+        "tosidebar": true,
+        "console": true,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "x": 1640,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "911835e32815b82b",
+        "type": "debug",
+        "z": "ce431305f614f611",
+        "name": "Test Results Debug",
+        "active": true,
+        "tosidebar": true,
+        "console": true,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1640,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "ea326f8013120e78",
+        "type": "function",
+        "z": "ce431305f614f611",
+        "name": "Test Sensor Injector",
+        "func": "// Test Sensor Injector - ИСПРАВЛЕННАЯ версия с правильной маршрутизацией\nvar messages = Array.isArray(msg.payload) ? msg.payload : [msg];\nvar results = [];\nvar testName = msg.scenario_name || \"manual_test\";\n\nnode.log('Test Injector: Processing ' + messages.length + ' messages for test: ' + testName);\n\n// Если сообщений нет, завершаем\nif (messages.length === 0) {\n    node.warn('No messages to inject');\n    return null;\n}\n\n// Собираем результаты для отображения\nvar testResult = {\n    success: true,\n    scenario: testName,\n    timestamp: new Date().toISOString(),\n    description: 'Test injection completed',\n    injections: [],\n    temperature: 0,\n    humidity: 0,\n    gas: 0,\n    motion: false\n};\n\n// Обрабатываем все сообщения\nmessages.forEach(function (testMsg, index) {\n    var topic = testMsg.topic || '';\n    var payload = testMsg.payload;\n    var sensor = topic.split('/').pop();\n\n    if (!topic || topic === '') {\n        // Пытаемся определить из полей объекта\n        if (testMsg.temperature !== undefined) {\n            topic = \"DaryaMartsinouskaya/feeds/temperature\";\n            payload = testMsg.temperature;\n            sensor = \"temperature\";\n        } else if (testMsg.humidity !== undefined) {\n            topic = \"DaryaMartsinouskaya/feeds/humidity\";\n            payload = testMsg.humidity;\n            sensor = \"humidity\";\n        } else if (testMsg.gas !== undefined) {\n            topic = \"DaryaMartsinouskaya/feeds/gas\";\n            payload = testMsg.gas;\n            sensor = \"gas\";\n        } else if (testMsg.motion !== undefined) {\n            topic = \"DaryaMartsinouskaya/feeds/motion\";\n            payload = testMsg.motion ? \"DETECTED\" : \"NO MOTION\";\n            sensor = \"motion\";\n        }\n    }\n\n    if (topic && topic !== '') {\n        // Сохраняем результат\n        var injection = {\n            sensor: sensor,\n            value: payload,\n            topic: topic\n        };\n        results.push(injection);\n\n        // Обновляем тестовые данные\n        if (sensor === 'temperature') testResult.temperature = parseFloat(payload) || 0;\n        if (sensor === 'humidity') testResult.humidity = parseFloat(payload) || 0;\n        if (sensor === 'gas') testResult.gas = parseFloat(payload) || 0;\n        if (sensor === 'motion') testResult.motion = (payload === 'DETECTED' || payload === true);\n\n        // Отправляем в MQTT (выход 0)\n        node.send([{\n            topic: topic,\n            payload: String(payload),\n            qos: 1,\n            retain: true,\n            _test: true\n        }]);\n    }\n});\n\n// Если есть результаты, отправляем на UI\nif (results.length > 0) {\n    testResult.injections = results;\n    testResult.success = true;\n\n    node.log('Sending test results to UI: ' + JSON.stringify(testResult).substring(0, 100));\n\n    // Отправляем отдельное сообщение для UI (выход 1)\n    return [null, {\n        topic: 'test_result',\n        payload: testResult,\n        scenario_name: testName,\n        timestamp: new Date().toISOString()\n    }];\n}\n\nreturn null;",
+        "outputs": 3,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1360,
+        "y": 140,
+        "wires": [
+            [
+                "e53c83269352a479"
+            ],
+            [
+                "911835e32815b82b",
+                "4ceaedaf465def98"
+            ],
+            [
+                "0e517da6f2e131b7"
+            ]
+        ]
+    },
+    {
+        "id": "4c77014653efbd61",
+        "type": "function",
+        "z": "ce431305f614f611",
+        "name": "Enhanced Scenario Runner",
+        "func": "// Улучшенный обработчик сценариев\nvar scenarioData = msg.payload;\nvar scenarioName = msg.scenario_name || 'unknown';\n\nnode.log('Enhanced runner: ' + scenarioName + ' data: ' + JSON.stringify(scenarioData).substring(0, 100));\n\n// Создаем массив сообщений для каждого сенсора\nvar sensorMessages = [];\n\n// Обрабатываем все поля сенсоров\nif (scenarioData.temperature !== undefined) {\n    sensorMessages.push({\n        topic: 'DaryaMartsinouskaya/feeds/temperature',\n        payload: scenarioData.temperature,\n        _test: true,\n        _scenario: scenarioName\n    });\n}\n\nif (scenarioData.humidity !== undefined) {\n    sensorMessages.push({\n        topic: 'DaryaMartsinouskaya/feeds/humidity',\n        payload: scenarioData.humidity,\n        _test: true,\n        _scenario: scenarioName\n    });\n}\n\nif (scenarioData.gas !== undefined) {\n    sensorMessages.push({\n        topic: 'DaryaMartsinouskaya/feeds/gas',\n        payload: scenarioData.gas,\n        _test: true,\n        _scenario: scenarioName\n    });\n}\n\nif (scenarioData.motion !== undefined) {\n    sensorMessages.push({\n        topic: 'DaryaMartsinouskaya/feeds/motion',\n        payload: scenarioData.motion ? 'DETECTED' : 'NO MOTION',\n        _test: true,\n        _scenario: scenarioName\n    });\n}\n\nif (scenarioData.fan !== undefined) {\n    sensorMessages.push({\n        topic: 'DaryaMartsinouskaya/feeds/fan',\n        payload: scenarioData.fan ? 'ON' : 'OFF',\n        _test: true,\n        _scenario: scenarioName\n    });\n}\n\n// Отправляем все сообщения\nreturn [sensorMessages];",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 900,
+        "y": 80,
+        "wires": [
+            [
+                "b667c16a676ed6fe",
+                "6a7d0f7ac7d53d93"
+            ]
+        ]
+    },
+    {
+        "id": "c88e1996a2a2bd7d",
+        "type": "function",
+        "z": "ce431305f614f611",
+        "name": "Test Mode Controller - CENTRAL",
+        "func": "// В начале функции, после получения команды:\nvar command = msg.payload;\nvar topic = msg.topic || '';\nvar timestamp = new Date().toISOString();\n\n// Сохраняем время активации тестового режима\nif (topic === 'test_mode' && (command === true || command === 'true' || command === 'ON')) {\n    flow.set('testModeLastActivation', timestamp);\n    node.log('Test mode activated at: ' + timestamp);\n}\n\n// Определяем новое состояние\nvar newTestMode = flow.get('testMode') || false; // По умолчанию текущее значение\n\n// Обрабатываем команды\nif (topic === 'force_test_mode_off' || topic === 'reset_test_system') {\n    newTestMode = false;\n    node.log('Force disabling test mode');\n} else if (topic === 'test_mode') {\n    // Обрабатываем разные форматы значения\n    if (command === true || command === 'true' || command === 'ON' || command === 1 || command === '1') {\n        newTestMode = true;\n    } else if (command === false || command === 'false' || command === 'OFF' || command === 0 || command === '0') {\n        newTestMode = false;\n    }\n} else if (topic === 'manual_test_mode_toggle') {\n    // Инвертируем текущее состояние\n    newTestMode = !newTestMode;\n}\n\n// Сохраняем состояние ВСЮДУ\nflow.set('testMode', newTestMode);\ncontext.set('testMode', newTestMode);\nglobal.set('testMode', newTestMode);\n\n// Логируем\nnode.log('=== TEST MODE === ' + (newTestMode ? 'ON (real data ignored)' : 'OFF (real data processed)'));\n\n// Статус ноды\nnode.status({\n    fill: newTestMode ? 'green' : 'red',\n    shape: 'dot',\n    text: 'Test Mode: ' + (newTestMode ? 'ON' : 'OFF')\n});\n\n// Создаем сообщение для системы\nvar systemMsg = {\n    topic: 'system_test_mode',\n    payload: newTestMode,\n    timestamp: timestamp,\n    _source: 'central_controller'\n};\n\n// Создаем сообщение для UI статуса\nvar uiStatusMsg = {\n    topic: 'test_mode_ui_status',\n    payload: {\n        test_mode: newTestMode,\n        status: newTestMode ? 'TEST MODE' : 'NORMAL MODE',\n        message: newTestMode ? 'Real MQTT data is ignored' : 'Processing real data',\n        timestamp: timestamp,\n        color: newTestMode ? '#ffc107' : '#28a745',\n        bg_color: newTestMode ? '#fff3cd' : '#d4edda',\n        icon: newTestMode ? '🛠️' : '✅'\n    }\n};\n\n// Создаем сообщение для синхронизации переключателя\nvar switchSyncMsg = {\n    topic: 'sync_test_mode_switch',\n    payload: newTestMode,\n    timestamp: timestamp\n};\n\n// Возвращаем все сообщения\nreturn [[systemMsg, uiStatusMsg, switchSyncMsg]];",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 700,
+        "y": 460,
+        "wires": [
+            [
+                "3f2c119909bbe22e"
+            ]
+        ]
+    },
+    {
+        "id": "3f2c119909bbe22e",
+        "type": "function",
+        "z": "ce431305f614f611",
+        "name": "Test Mode Distributor",
+        "func": "// Распределяет сообщения о тестовом режиме по системе\nvar messages = msg.payload;\nvar outputs = [[], [], [], []]; // 4 выхода\n\nif (Array.isArray(messages)) {\n    messages.forEach(function(msgItem) {\n        switch(msgItem.topic) {\n            case 'system_test_mode':\n                // 1. Для парсера MQTT\n                outputs[0].push({\n                    topic: 'mqtt_parser_config',\n                    payload: msgItem.payload\n                });\n                break;\n                \n            case 'test_mode_ui_status':\n                // 2. Для UI отображения\n                outputs[1].push({\n                    topic: 'test_mode_display',\n                    payload: msgItem.payload\n                });\n                // 3. Для главной панели\n                outputs[2].push({\n                    topic: 'system_mode_display',\n                    payload: msgItem.payload\n                });\n                break;\n                \n            case 'sync_test_mode_switch':\n                // 4. Для синхронизации переключателя\n                outputs[3].push({\n                    topic: 'test_mode',\n                    payload: msgItem.payload\n                });\n                break;\n        }\n    });\n}\n\nreturn outputs;",
+        "outputs": 4,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1000,
+        "y": 460,
+        "wires": [
+            [],
+            [
+                "9b349f8e3300ff77"
+            ],
+            [
+                "1f1d4ae0565d4283"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "9b349f8e3300ff77",
+        "type": "ui_text",
+        "z": "ce431305f614f611",
+        "group": "eb5e613d0ee9fd74",
+        "order": 6,
+        "width": "6",
+        "height": "3",
+        "name": "Test Mode Status Panel",
+        "label": "System Mode",
+        "format": "<div style='padding: 15px; border-radius: 8px; background: {{msg.payload.bg_color}}; border: 3px solid {{msg.payload.color}}; box-shadow: 0 3px 10px rgba(0,0,0,0.1); margin: 10px 0;'>\n  <div style='display: flex; align-items: center; gap: 15px;'>\n    <span style='font-size: 36px;'>{{msg.payload.icon}}</span>\n    <div>\n      <h3 style='margin: 0 0 5px 0; color: {{msg.payload.color}};'>{{msg.payload.status}}</h3>\n      <p style='margin: 0; color: #6c757d; font-size: 14px;'>{{msg.payload.message}}</p>\n    </div>\n  </div>\n  <div style='margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(0,0,0,0.1); font-size: 12px; color: #6c757d;'>\n    Last update: {{new Date(msg.payload.timestamp).toLocaleTimeString()}}\n  </div>\n</div>",
+        "layout": "row-spread",
+        "className": "test-mode-display",
+        "style": false,
+        "font": "",
+        "fontSize": "",
+        "color": "#000000",
+        "x": 1270,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "1f1d4ae0565d4283",
+        "type": "ui_text",
+        "z": "ce431305f614f611",
+        "d": true,
+        "group": "status-group",
+        "order": 4,
+        "width": "6",
+        "height": "1",
+        "name": "System Mode Badge",
+        "label": "System Mode",
+        "format": "<div style='display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 25px; background: {{msg.payload.bg_color}}; border: 2px solid {{msg.payload.color}}; font-weight: bold;'>  <span style='font-size: 18px;'>{{msg.payload.icon}}</span>  <span style='color: {{msg.payload.color}};'>{{msg.payload.status}}</span></div>",
+        "layout": "row-spread",
+        "className": "system-mode-badge",
+        "style": false,
+        "font": "",
+        "fontSize": "",
+        "color": "#000000",
+        "x": 1260,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "47886f3672bf0d8b",
+        "type": "inject",
+        "z": "ce431305f614f611",
+        "name": "Initialize Test Mode",
+        "props": [
+            {
+                "p": "payload",
+                "v": "false",
+                "vt": "str"
+            },
+            {
+                "p": "topic",
+                "v": "force_test_mode_off",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "0.5",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 170,
+        "y": 460,
+        "wires": [
+            [
+                "c88e1996a2a2bd7d"
+            ]
+        ]
+    },
+    {
+        "id": "15c563e958b79003",
+        "type": "function",
+        "z": "ce431305f614f611",
+        "name": "Auto Reset Monitor",
+        "func": "// Автоматически выключает тестовый режим через 2 минуты\n// и периодически проверяет соединение с физической платой\n\n// 1. Автоматический сброс через 2 минуты после активации тестового режима\nvar testModeActive = flow.get('testMode') || false;\nvar lastActivation = flow.get('testModeLastActivation') || null;\n\nif (testModeActive && lastActivation) {\n    var activationTime = new Date(lastActivation);\n    var currentTime = new Date();\n    var diffMinutes = (currentTime - activationTime) / (1000 * 60);\n    \n    if (diffMinutes > 2) { // 2 минуты\n        node.log('Auto-reset: Test mode active for more than 2 minutes, switching to normal mode');\n        \n        // Выключаем тестовый режим\n        flow.set('testMode', false);\n        context.set('testMode', false);\n        \n        // Отправляем команду выключения\n        return [{\n            topic: 'force_test_mode_off',\n            payload: false,\n            _auto_reset: true,\n            timestamp: new Date().toISOString()\n        }];\n    }\n}\n\n// 2. Мониторинг физического соединения\n// Проверяем, есть ли реальные данные от MQTT\nvar lastRealData = flow.get('lastRealMqttData') || 0;\nvar currentTime = Date.now();\nvar diffSeconds = (currentTime - lastRealData) / 1000;\n\nif (diffSeconds > 30 && !testModeActive) { // Нет данных 30 секунд\n    node.warn('No real MQTT data for 30 seconds. Checking connection...');\n    \n    // Можно добавить дополнительные проверки соединения\n    return [{\n        topic: 'connection_status',\n        payload: {\n            status: 'warning',\n            message: 'No real data for 30 seconds',\n            timestamp: new Date().toISOString()\n        }\n    }];\n}\n\nreturn null;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 410,
+        "y": 540,
+        "wires": [
+            [
+                "c88e1996a2a2bd7d"
+            ]
+        ]
+    },
+    {
+        "id": "63bf8cc2b55cfde1",
+        "type": "inject",
+        "z": "ce431305f614f611",
+        "name": "Check Every 30s",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "v": "check_reset",
+                "vt": "str"
+            }
+        ],
+        "repeat": "30",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 170,
+        "y": 540,
+        "wires": [
+            [
+                "15c563e958b79003"
+            ]
+        ]
+    },
+    {
+        "id": "df20dd0aa057695f",
+        "type": "link out",
+        "z": "ce431305f614f611",
+        "name": "link out Scenario Executor node",
+        "mode": "link",
+        "links": [
+            "85b8f252475383bc"
+        ],
+        "x": 805,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "0e517da6f2e131b7",
+        "type": "link out",
+        "z": "ce431305f614f611",
+        "name": "link out Test Sensor Injector node",
+        "mode": "link",
+        "links": [
+            "19dd71621febf920"
+        ],
+        "x": 1555,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "6a7d0f7ac7d53d93",
+        "type": "link out",
+        "z": "ce431305f614f611",
+        "name": "link out Enhanced Scenario Runner node",
+        "mode": "link",
+        "links": [
+            "0d14af6d85bf7ff4"
+        ],
+        "x": 1155,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "f1985ffbe7774759",
+        "type": "link out",
+        "z": "ce431305f614f611",
+        "name": "link out Direct Sensor Injector node",
+        "mode": "link",
+        "links": [
+            "750a70adbc0f43cc",
+            "8839d0cd0b298148",
+            "ff37a4801fe85d64",
+            "c6e0262ebe6c997a",
+            "b9b65b395fa35b55"
+        ],
+        "x": 1035,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "cf2e2ef3fb62e479",
+        "type": "link out",
+        "z": "ce431305f614f611",
+        "name": "link out LED Test Controller node",
+        "mode": "link",
+        "links": [
+            "e7c7d6d7285f0a82"
+        ],
+        "x": 555,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "e7c7d6d7285f0a82",
+        "type": "link in",
+        "z": "ce431305f614f611",
+        "name": "link in LED Test Controller node",
+        "links": [
+            "cf2e2ef3fb62e479"
+        ],
+        "x": 1155,
+        "y": 120,
+        "wires": [
+            [
+                "b667c16a676ed6fe"
+            ]
+        ]
+    },
+    {
+        "id": "b0f691581dc168f5",
+        "type": "inject",
+        "z": "ce431305f614f611",
+        "name": "Test Temp LED",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "v": "test",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "40",
+        "payloadType": "num",
+        "x": 160,
+        "y": 640,
+        "wires": [
+            [
+                "8e35c93e3e22393e"
+            ]
+        ]
+    },
+    {
+        "id": "8e35c93e3e22393e",
+        "type": "link out",
+        "z": "ce431305f614f611",
+        "name": "link out link in Test temp LED node",
+        "mode": "link",
+        "links": [
+            "f0bbaa825cfb18b2"
+        ],
+        "x": 335,
+        "y": 640,
+        "wires": []
+    },
+    {
+        "id": "4b441baece6e1c20",
+        "type": "inject",
+        "z": "ce431305f614f611",
+        "name": "Test Humidity LED",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "v": "test",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "95",
+        "payloadType": "num",
+        "x": 170,
+        "y": 680,
+        "wires": [
+            [
+                "c50f5459ca1592ab"
+            ]
+        ]
+    },
+    {
+        "id": "c50f5459ca1592ab",
+        "type": "link out",
+        "z": "ce431305f614f611",
+        "name": "link out Test Humidity LED node",
+        "mode": "link",
+        "links": [
+            "28c089e513799da5"
+        ],
+        "x": 335,
+        "y": 680,
+        "wires": []
+    },
+    {
+        "id": "30602712f75aa149",
+        "type": "inject",
+        "z": "ce431305f614f611",
+        "name": "Test Gas LED",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "v": "test",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "450",
+        "payloadType": "num",
+        "x": 150,
+        "y": 720,
+        "wires": [
+            [
+                "e562153d25293914"
+            ]
+        ]
+    },
+    {
+        "id": "e562153d25293914",
+        "type": "link out",
+        "z": "ce431305f614f611",
+        "name": "link out Test Gas LED node",
+        "mode": "link",
+        "links": [
+            "2883e45b182f3852"
+        ],
+        "x": 335,
+        "y": 720,
+        "wires": []
+    },
+    {
+        "id": "99d3a03a4a5970c1",
+        "type": "global-config",
+        "env": [],
+        "modules": {
+            "node-red-dashboard": "3.6.6",
+            "node-red-contrib-ui-led": "0.4.11"
+        }
+    }
+]
