@@ -10,6 +10,7 @@
 #include <WiFiClientSecure.h>
 #include "Adafruit_MQTT.h"
 #include "Adafruit_MQTT_Client.h"
+#include <MQ135.h>
 
 // ---------------- WIFI + THINGSPEAK -----------------
 const char *ssid = "Alex";
@@ -24,7 +25,7 @@ const char* server = "api.thingspeak.com";
 #define AIO_SERVER   "io.adafruit.com"
 #define AIO_PORT     1883
 #define AIO_USERNAME "DaryaMartsinouskaya"
-#define AIO_KEY      "aio_ifUO96Y9NtBKT4XwAXSKWC3qZ9SR"
+#define AIO_KEY      "aio_DBBy73fmNk0xVVrV1foYz6qCFQmx"
 
 // ---------------- OBJECTS -----------------
 WiFiClientSecure telegramClient; // For Telegram
@@ -100,7 +101,7 @@ const unsigned long ALERT_COOLDOWN = 30000;
 #define SCREEN_WIDTH 128
 #define SCREEN_HEIGHT 64
 
-#define DANGEROUS_GAS 400
+#define DANGEROUS_GAS 1000
 #define LOW_TEMP_THRESHOLD 10
 #define HIGH_TEMP_THRESHOLD 35
 #define HIGH_HUMIDITY_THRESHOLD 90
@@ -112,6 +113,11 @@ const unsigned long ALERT_COOLDOWN = 30000;
 // ---------------- OBJECTS -----------------
 DHT dht(DHTPIN, DHTTYPE);
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire);
+MQ135 mq135 = MQ135(MQ135_PIN);  // Creating sensor object
+
+// ---------------- MQ-135 CALIBRATION VALUES -----------------
+float mq135_RZero = 39;           // For storaging calibrated value R0
+bool calibrationDone = false;    // Flag that calibration is finished
 
 // ---------------- VARIABLES -----------------
 String chatId = "";  
@@ -137,6 +143,7 @@ bool lastTempAlert = false;
 bool lastHumidityAlert = false;
 bool lastMotionState = false;  
 
+
 // ---------------- FUNCTION PROTOTYPES -----------------
 void readSensors();
 void sendToThingSpeak();
@@ -158,6 +165,52 @@ void sendTelegramAlert(String message);
 void sendStatus(String chat_id);
 void sendSensorData(String chat_id);
 String getUptime();
+
+// Function for obtaining calibrated gas value (ppm CO2)
+float getCalibratedGasPPM() {
+  if (!calibrationDone) {
+    Serial.println("⚠️ Warning: MQ135 not calibrated yet!");
+    return -1;
+  }
+  
+  // Получаем сопротивление датчика
+  float resistance = mq135.getResistance();
+  
+  // Вычисляем отношение Rs/R0
+  float ratio = resistance / mq135_RZero;
+  
+  // Альтернативная формула для CO2
+  // При Rs/R0 = 3.6 должно быть 400 ppm
+  // При Rs/R0 = 1.0 должно быть 1000 ppm
+  // При Rs/R0 = 0.4 должно быть 2000 ppm
+  
+  // Более простая формула:
+  float ppm = 400 * (3.6 / ratio);
+  
+  // Ограничиваем
+  if (ppm < 400) ppm = 400;
+  if (ppm > 5000) ppm = 5000;
+  
+  static unsigned long lastDebugLog = 0;
+  if (millis() - lastDebugLog > 2000) {
+    Serial.print("🔍 [MQ135] Rs=");
+    Serial.print(resistance, 1);
+    Serial.print(" Ω, R0=");
+    Serial.print(mq135_RZero, 1);
+    Serial.print(", Ratio=");
+    Serial.print(ratio, 3);
+    Serial.print(", PPM=");
+    Serial.println(ppm, 0);
+    lastDebugLog = millis();
+  }
+  
+  return ppm;
+}
+
+// Function for obtaining raw resistance (for debugging)
+float getGasResistance() {
+  return mq135.getResistance();
+}
 
 void setup() {
   Serial.begin(115200);
@@ -190,7 +243,6 @@ void setup() {
   setRGBColor(false, false, false);
 
   dht.begin();
-  pirReadyTime = millis() + PIR_DEBOUNCE_TIME;
 
   if (!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
     Serial.println("OLED ERROR!");
@@ -202,9 +254,33 @@ void setup() {
   display.setTextSize(1);
   display.setCursor(0,0);
   display.println("System Starting...");
-  display.println("PIR initializing");
+  display.println("Initializing sensors...");
   display.display();
-  delay(PIR_DEBOUNCE_TIME);
+
+  delay(1000);
+
+  temperature = dht.readTemperature();
+  humidity = dht.readHumidity();
+
+  int retry = 0;
+  while ((isnan(temperature) || isnan(humidity)) && retry < 5) {
+    display.clearDisplay();
+    display.setCursor(0, 0);
+    display.println("Reading DHT22...");
+    display.println("Attempt: " + String(retry + 1));
+    display.display();
+    
+    delay(1000);
+    temperature = dht.readTemperature();
+    humidity = dht.readHumidity();
+    retry++;
+  }
+
+  mq135_RZero = 39;
+  calibrationDone = true;
+  Serial.print("✅ Using calibrated RZERO = ");
+  Serial.println(mq135_RZero);
+  pirReadyTime = millis() + PIR_DEBOUNCE_TIME;
 
   // RGB test
   setRGBColor(true, false, false); delay(300);
@@ -250,20 +326,31 @@ void loop() {
 }
 
 // ---------------- SENSOR FUNCTIONS -----------------
+unsigned long lastDHTread = 0;
+const unsigned long DHT_INTERVAL = 2000;
+
 void readSensors() {
+  if (millis() - lastDHTread < DHT_INTERVAL) return;
+  lastDHTread = millis();
+
   temperature = dht.readTemperature();
   humidity = dht.readHumidity();
-  gasLevel = analogRead(MQ135_PIN);
+  // gasLevel = analogRead(MQ135_PIN);
+  if (calibrationDone) {
+    gasLevel = (int)getCalibratedGasPPM();  
+  } else {
+    gasLevel = analogRead(MQ135_PIN);  
+  }
   
   if (isnan(temperature) || isnan(humidity)) {
     Serial.println("Error reading DHT22!");
-    temperature = 0;
-    humidity = 0;
+    return;
   }
   
   Serial.print("Temp: "); Serial.print(temperature);
   Serial.print("C, Humidity: "); Serial.print(humidity);
-  Serial.print("%, Gas: "); Serial.print(gasLevel);
+  // Serial.print("%, Gas: "); Serial.print(gasLevel);
+  Serial.print("%, Gas (ppm): "); Serial.print(gasLevel);
   Serial.print(", Motion: "); Serial.println(motionDetected ? "YES" : "NO");
   Serial.print("Fan Override: "); Serial.println(fanManualOverride ? "MANUAL" : "AUTO");
   Serial.print("Fan Desired: "); Serial.println(fanDesiredState ? "ON" : "OFF");
