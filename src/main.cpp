@@ -83,6 +83,14 @@ unsigned long lastHumidityAlertTime = 0;
 unsigned long lastMotionAlertTime = 0;
 const unsigned long ALERT_COOLDOWN = 30000;
 
+unsigned long autoModeRestoreTime = 0;
+const unsigned long AUTO_RESTORE_DELAY = 300000; // 5 min (300 000 ms)
+
+String lastFanCommand = "";
+unsigned long lastFanCommandTime = 0;
+const unsigned long FAN_COMMAND_COOLDOWN = 3000; 
+
+
 // ---------------- PINS -----------------
 #define DHTPIN 14
 #define BUZZER_PIN 13     
@@ -374,10 +382,12 @@ void updateFanState() {
       manualBeforeEmergency = fanManualOverride;
       desiredStateBeforeEmergency = fanDesiredState;
       Serial.println("⚠️ GAS EMERGENCY STARTED! Saving current state.");
-      Serial.print("Saved state - Manual: ");
-      Serial.print(manualBeforeEmergency ? "YES" : "NO");
-      Serial.print(", Desired: ");
-      Serial.println(desiredStateBeforeEmergency ? "ON" : "OFF");
+      // Serial.print("Saved state - Manual: ");
+      // Serial.print(manualBeforeEmergency ? "YES" : "NO");
+      // Serial.print(", Desired: ");
+      // Serial.println(desiredStateBeforeEmergency ? "ON" : "OFF");
+
+      autoModeRestoreTime = 0;
     }
     
     // If there was manual mode and the fan was off, we send a warning
@@ -414,6 +424,13 @@ void updateFanState() {
         Serial.print(fanManualOverride ? "YES" : "NO");
         Serial.print(", Desired: ");
         Serial.println(fanDesiredState ? "ON" : "OFF");
+
+        if (fanManualOverride) {
+          autoModeRestoreTime = millis() + AUTO_RESTORE_DELAY;
+          Serial.print("⏱️ Auto mode will restore in ");
+          Serial.print(AUTO_RESTORE_DELAY / 60000);
+          Serial.println(" minutes if no further manual commands");
+        }
         
         if (chatIdFound) {
           String modeMsg = fanManualOverride ? 
@@ -431,10 +448,38 @@ void updateFanState() {
     // ============ PRIORITY 2: MANUAL ============
     if (fanManualOverride && !gasEmergency) {
       shouldFanBeOn = fanDesiredState;
+      // Проверяем таймер автоматического возврата в AUTO
+      if (autoModeRestoreTime > 0 && millis() > autoModeRestoreTime) {
+        Serial.println("🔄 Auto mode restored automatically after timeout");
+        fanManualOverride = false;
+        fanDesiredState = false;
+        autoModeRestoreTime = 0;
+        
+        // Отправляем команду AUTO в MQTT для синхронизации с Node-RED
+        if (mqtt.connected()) {
+          feedFan.publish("AUTO");
+          Serial.println("📤 Sent AUTO command to MQTT");
+        }
+        
+        if (chatIdFound) {
+          bot.sendMessage(chatId, "🔄 *Auto mode restored automatically*\n⚙️ Fan control returned to gas sensor\n📊 Gas level: " + 
+                          String(gasLevel) + " ppm", "Markdown");
+        }
+        
+        // Пересчитываем состояние вентилятора после смены режима
+        shouldFanBeOn = false; // В AUTO режиме вентилятор выключен при нормальном газе
+      }
     } 
+
     // ============ PRIORITY 3: AUTO ============
     else if (!gasEmergency) {
       shouldFanBeOn = false; // In automatic mode without gas - off
+    
+    // Если в AUTO режиме и газ нормальный - вентилятор выключен
+      if (fanManualOverride == false) {
+        // Убеждаемся, что реле выключено
+        digitalWrite(RELAY_PIN, HIGH);
+      }
     }
   }
   
@@ -594,10 +639,30 @@ void handleMQTTCommands() {
       }
       
       String fanCommand = (char *)feedFanControl.lastread;
+
+      // ========== ЗАЩИТА ОТ ДУБЛИРУЮЩИХСЯ КОМАНД ==========
+      // Игнорируем ту же команду, если она пришла слишком быстро
+      if (fanCommand == lastFanCommand && (millis() - lastFanCommandTime) < FAN_COMMAND_COOLDOWN) {
+        Serial.print("⚠️ Duplicate command ignored: ");
+        Serial.println(fanCommand);
+        return;
+      }
+      
+      lastFanCommand = fanCommand;
+      lastFanCommandTime = millis();
+      // ===================================================
+
+
       Serial.print("Fan control received from MQTT: ");
       Serial.println(fanCommand);
       
       if (fanCommand == "ON") {
+        // Проверяем, не включен ли уже вентилятор в ручном режиме
+        if (fanManualOverride && fanDesiredState == true) {
+          Serial.println("⚠️ Fan already ON in manual mode, ignoring duplicate");
+          return;
+        }
+
         fanManualOverride = true; // Turning into manual regime
         fanDesiredState = true;   // Fan is turn on
         lastFanToggleTime = millis();
@@ -610,6 +675,12 @@ void handleMQTTCommands() {
         }
       } 
       else if (fanCommand == "OFF") {
+        // Проверяем, не выключен ли уже вентилятор в ручном режиме
+        if (fanManualOverride && fanDesiredState == false) {
+          Serial.println("⚠️ Fan already OFF in manual mode, ignoring duplicate");
+          return;
+        }
+
         if (gasLevel > DANGEROUS_GAS) {
           Serial.println("⚠️ Cannot turn fan OFF - GAS EMERGENCY!");
           
@@ -634,6 +705,12 @@ void handleMQTTCommands() {
         }
       } 
       else if (fanCommand == "AUTO") {
+        // Проверяем, не в AUTO ли уже режим
+        if (!fanManualOverride) {
+          Serial.println("⚠️ Already in AUTO mode, ignoring duplicate");
+          return;
+        }
+        
         // Special command to return to automatic mode
         fanManualOverride = false; // Returning to automatic mode
         lastFanToggleTime = millis();
@@ -729,10 +806,17 @@ void checkConditions() {
   if (gasLevel > DANGEROUS_GAS) {
     gasAlert = true;
     digitalWrite(RED_LED, HIGH);
+
     if (millis() - lastGasAlertTime > ALERT_COOLDOWN) {
       String alertMsg = "🚨 *WARNING! Danger gas concentration level!* 🚨\n";
-      alertMsg += "Gas level: " + String(gasLevel) + "\n";
-      alertMsg += "Fan: " + String(digitalRead(RELAY_PIN) == LOW ? "ON (forced)" : "ERROR!") + "\n";
+      alertMsg += "Gas level: " + String(gasLevel) + " ppm\n";
+      
+      if (gasEmergencyActive || gasLevel > DANGEROUS_GAS) {
+      alertMsg += "Fan: ON (forced)\n";
+    } else {
+      alertMsg += "Fan: OFF\n";
+    }
+
       if (fanManualOverride) {
         alertMsg += "⚠️ Manual control overridden for safety!";
       }
@@ -843,6 +927,7 @@ void setupTelegram() {
   Serial.println("🤖 Telegram Bot is ready!");
   Serial.println("📱 Send any message to the bot @Smart_AirGuard_bot");
   Serial.println("💬 For example: /start or Hello");
+  Serial.println("ℹ️ Fan control is available via Node-RED dashboard only");
 }
 
 void handleTelegramMessages() {
@@ -878,11 +963,13 @@ void handleTelegramMessages() {
         welcomeMsg += "/status - Current status\n";
         welcomeMsg += "/sensors - Sensors data\n";
         welcomeMsg += "/alerts - Active alerts\n";
-        welcomeMsg += "/fan_on - Turn fan ON (manual)\n";
-        welcomeMsg += "/fan_off - Turn fan OFF (manual)*\n";
-        welcomeMsg += "/fan_auto - Auto mode (gas sensor)\n";
+        welcomeMsg += "/id - Show your Chat ID\n";
         welcomeMsg += "/help - Commands info\n\n";
-        welcomeMsg += "*⚠️ Note: During gas emergencies, fan control will be restored after 10 seconds of normal gas levels";
+        welcomeMsg += "*⚠️ Safety features:*\n";
+        welcomeMsg += "• Gas level > 1000 ppm → Fan ON automatically\n";
+        welcomeMsg += "• Fan control is managed via Node-RED dashboard only\n";
+        welcomeMsg += "• Cannot turn fan OFF during gas emergency\n\n";
+        welcomeMsg += "📱 *Note:* This bot provides monitoring only. Use Node-RED for fan control.";
         
         bot.sendMessage(chatId, welcomeMsg, "Markdown");
       }
@@ -893,20 +980,18 @@ void handleTelegramMessages() {
         helpMsg += "/status - Current system status\n";
         helpMsg += "/sensors - Sensors data\n";
         helpMsg += "/alerts - Active alerts\n";
-        helpMsg += "/fan_on - Turn fan ON (manual mode)\n";
-        helpMsg += "/fan_off - Turn fan OFF (manual mode)*\n";
-        helpMsg += "/fan_auto - Switch to AUTO mode (gas sensor)\n";
         helpMsg += "/id - Show your Chat ID\n";
         helpMsg += "/help - This help message\n\n";
         helpMsg += "📊 *Automatic alerts:*\n";
-        helpMsg += "• Gas level > 400 (HIGHEST priority)\n";
+        helpMsg += "• Gas level > 1000 ppm (HIGHEST priority)\n";
         helpMsg += "• Temperature outside 10-35°C\n";
         helpMsg += "• Humidity > 90%\n";
         helpMsg += "• Motion detected\n\n";
-        helpMsg += "*⚠️ Safety features:*\n";
-        helpMsg += "• During gas emergencies, fan turns ON automatically\n";
-        helpMsg += "• Manual control restored after 10s of normal gas\n";
-        helpMsg += "• Cannot turn fan OFF during gas emergency";
+        helpMsg += "🔄 *Fan control:*\n";
+        helpMsg += "• Automatic: Gas sensor controls fan\n";
+        helpMsg += "• Manual: Via Node-RED dashboard only\n";
+        helpMsg += "• ⚠️ Cannot turn OFF during gas emergency\n\n";
+        helpMsg += "📱 *Bot purpose:* Monitoring only. Use Node-RED for control.";
         
         bot.sendMessage(chatId, helpMsg, "Markdown");
       }
@@ -955,40 +1040,27 @@ void handleTelegramMessages() {
             alertsMsg += "   Control restored in: " + String(max(0, secondsLeft / 1000)) + " seconds";
           }
         } else {
-          alertsMsg += String(fanManualOverride ? "MANUAL" : "AUTO");
+          alertsMsg += String(fanManualOverride ? "🔄 MANUAL (via Node-RED)" : "⚙️ AUTO");
         }
         
         bot.sendMessage(chatId, alertsMsg, "Markdown");
-      }
-      else if (text == "/fan_on") {
-        fanManualOverride = true;
-        fanDesiredState = true;
-        bot.sendMessage(chatId, "✅ *Fan turned ON*\n🔄 Mode: Manual control", "Markdown");
-      }
-      else if (text == "/fan_off") {
-        // Проверяем газ перед выключением
-        if (gasLevel > DANGEROUS_GAS) {
-          bot.sendMessage(chatId, "⚠️ *GAS EMERGENCY!*\n\n🚨 Cannot turn fan OFF\n🌀 Fan must stay ON for safety\n⚙️ Gas level: " + 
-                          String(gasLevel), "Markdown");
-        } else {
-          fanManualOverride = true;
-          fanDesiredState = false;
-          bot.sendMessage(chatId, "✅ *Fan turned OFF*\n🔄 Mode: Manual control", "Markdown");
-        }
-      }
-      else if (text == "/fan_auto") {
-        fanManualOverride = false;
-        bot.sendMessage(chatId, "🔄 *Fan control switched to AUTO mode*\n⚙️ Gas sensor will control fan", "Markdown");
       }
       else if (text == "/id") {
         String idMsg = "📱 *Your Chat ID:*\n\n";
         idMsg += "```\n" + chatId + "\n```\n\n";
         idMsg += "💾 Save it for system configuration";
+        idMsg += "ℹ️ This bot provides monitoring only. Use Node-RED for fan control.";
         bot.sendMessage(chatId, idMsg, "Markdown");
       }
       else {
-        String reply = "Unknown command: " + text + "\n";
-        reply += "Use /help for list of commands";
+        String reply = "❓ Unknown command: " + text + "\n\n";
+        reply += "Available commands:\n";
+        reply += "/status - System status\n";
+        reply += "/sensors - Sensor data\n";
+        reply += "/alerts - Active alerts\n";
+        reply += "/id - Your Chat ID\n";
+        reply += "/help - This message\n\n";
+        reply += "ℹ️ Fan control is available via Node-RED dashboard only.";
         bot.sendMessage(chatId, reply, "");
       }
     }
@@ -1006,6 +1078,7 @@ void sendTelegramAlert(String message) {
   alertMsg += message;
   alertMsg += "\n\n🕐 Uptime: " + getUptime();
   alertMsg += "\n📍 System: Smart AirGuard";
+  alertMsg += "ℹ️ Fan control via Node-RED dashboard";
   
   bot.sendMessage(chatId, alertMsg, "Markdown");
   Serial.println("📤 Telegram alert sent");
@@ -1023,7 +1096,7 @@ void sendStatus(String chat_id) {
   statusMsg += "📡 MQTT Status: " + String(mqtt.connected() ? "✅ Connected" : "❌ Disconnected") + "\n\n";
   
   statusMsg += "🚦 *States:*\n";
-  statusMsg += "• Gas level: " + String(gasLevel) + " (" + 
+  statusMsg += "• Gas level: " + String(gasLevel) + " ppm (" + 
                (gasLevel > DANGEROUS_GAS ? "🔴 DANGEROUS" : "✅ Ok") + ")\n";
   statusMsg += "• Temperature: " + String(temperature, 1) + "°C (" + 
                (tempAlert ? "🟡 Warning" : "✅ Ok") + ")\n";
@@ -1039,7 +1112,7 @@ void sendStatus(String chat_id) {
       statusMsg += "\n   Control restored in: " + String(max(0, secondsLeft / 1000)) + " seconds";
     }
   } else {
-    statusMsg += String(fanManualOverride ? "🔄 MANUAL" : "⚙️ AUTO");
+    statusMsg += String(fanManualOverride ? "🔄 MANUAL (via Node-RED)" : "⚙️ AUTO");
   }
   statusMsg += "\n\n";
   
@@ -1048,7 +1121,8 @@ void sendStatus(String chat_id) {
   statusMsg += "• Adafruit IO: On value change (or every 60 sec)\n";
   statusMsg += "• Telegram: Real-time alerts\n\n";
   
-  statusMsg += "⚠️ *Safety note:* During gas emergencies (>400), fan turns ON automatically. Control restored 10 seconds after gas normalizes.";
+  statusMsg += "⚠️ *Safety note:* During gas emergencies (>1000 ppm), fan turns ON automatically.\n";
+  statusMsg += "🔄 Fan control is available via Node-RED dashboard only.";
   
   bot.sendMessage(chat_id, statusMsg, "Markdown");
 }
@@ -1058,7 +1132,7 @@ void sendSensorData(String chat_id) {
   
   sensorMsg += "🌡️ Temperature: *" + String(temperature, 1) + "°C*\n";
   sensorMsg += "💧 Humidity: *" + String(humidity, 1) + "%*\n";
-  sensorMsg += "⚠️ Gas level: *" + String(gasLevel) + "*\n";
+  sensorMsg += "⚠️ Gas level: *" + String(gasLevel) + " ppm*\n";
   sensorMsg += "🚶 Motion: *" + String(motionDetected ? "Yes" : "No") + "*\n";
   sensorMsg += "🌀 Fan: *" + String(digitalRead(RELAY_PIN) == LOW ? "ON" : "OFF") + "*\n";
   sensorMsg += "⚙️ Fan mode: *";
@@ -1069,26 +1143,28 @@ void sendSensorData(String chat_id) {
       sensorMsg += " - restoring in " + String(max(0, secondsLeft / 1000)) + "s";
     }
   } else {
-    sensorMsg += String(fanManualOverride ? "Manual" : "Auto");
+    sensorMsg += String(fanManualOverride ? "Manual (Node-RED)" : "Auto");
   }
   sensorMsg += "*\n\n";
   
   sensorMsg += "📊 *Thresholds:*\n";
-  sensorMsg += "• Dangerous gas level: > " + String(DANGEROUS_GAS) + "\n";
+  sensorMsg += "• Dangerous gas level: > " + String(DANGEROUS_GAS) + " ppm\n";
   sensorMsg += "• Temperature: " + String(LOW_TEMP_THRESHOLD) + 
                " - " + String(HIGH_TEMP_THRESHOLD) + "°C\n";
   sensorMsg += "• Humidity: < " + String(HIGH_HUMIDITY_THRESHOLD) + "%\n\n";
   
   // Emojis for visualization
   String gasStatus = gasLevel > DANGEROUS_GAS ? "🔴 DANGEROUS" : 
-                    (gasLevel > 200 ? "🟡 ELEVATED" : "✅ Ok");
+                    (gasLevel > 600 ? "🟡 ELEVATED" : "✅ Ok");
   String tempStatus = tempAlert ? "🟡 WARNING" : "✅  Ok";
   String humidStatus = humidityAlert ? "🟢 HIGH" : "✅ Ok";
   
   sensorMsg += "🎯 *Current status:*\n";
-  sensorMsg += gasStatus + " (" + String(gasLevel) + ")\n";
+  sensorMsg += gasStatus + " (" + String(gasLevel) + " ppm)\n";
   sensorMsg += tempStatus + " (" + String(temperature, 1) + "°C)\n";
   sensorMsg += humidStatus + " (" + String(humidity, 1) + "%)";
+
+  sensorMsg += "ℹ️ *Note:* Fan control available via Node-RED dashboard only.";
   
   bot.sendMessage(chat_id, sensorMsg, "Markdown");
 }
