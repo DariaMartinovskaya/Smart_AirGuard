@@ -1201,14 +1201,14 @@
         "label": "PPM",
         "format": "{{value}}",
         "min": 0,
-        "max": 1000,
+        "max": "2000",
         "colors": [
             "#cce8b5",
             "#cce8b5",
             "#f4a4c0"
         ],
-        "seg1": "199",
-        "seg2": "399",
+        "seg1": "800",
+        "seg2": "1201",
         "diff": false,
         "className": "",
         "x": 1060,
@@ -1296,15 +1296,27 @@
         "nodata": "",
         "dot": false,
         "ymin": "0",
-        "ymax": "1000",
+        "ymax": "2000",
         "removeOlder": 1,
+        "removeOlderPoints": "",
         "removeOlderUnit": "3600",
         "cutout": 0,
         "useOneColor": false,
+        "useUTC": false,
         "colors": [
-            "#00b500"
+            "#00b500",
+            "#000000",
+            "#000000",
+            "#000000",
+            "#000000",
+            "#000000",
+            "#000000",
+            "#000000",
+            "#000000"
         ],
         "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
         "x": 1090,
         "y": 480,
         "wires": [
@@ -1763,8 +1775,6 @@
         "name": "link out Normalize Topics (enhanced) node",
         "mode": "link",
         "links": [
-            "14ea527879d719b0",
-            "8bec4135a7387575",
             "8242ab44db1deb91"
         ],
         "x": 355,
@@ -1869,8 +1879,9 @@
         "type": "function",
         "z": "6a706e8962cb8ed4",
         "name": "Gas LED Status",
-        "func": "// Определяем статус LED для газа\nlet gasValue = parseFloat(msg.payload);\nif (isNaN(gasValue)) gasValue = 0;\n\nmsg.payload = gasValue > 400; // Газ > 400 = опасность\nmsg.topic = \"gas_led\";\nreturn msg;",
+        "func": "// Определяем статус LED для газа\nlet gasValue = parseFloat(msg.payload);\nif (isNaN(gasValue)) gasValue = 0;\n\nmsg.payload = gasValue > 1000; // Газ > 1000 = опасность\nmsg.topic = \"gas_led\";\nreturn msg;",
         "outputs": 1,
+        "timeout": "",
         "noerr": 0,
         "initialize": "",
         "finalize": "",
@@ -1985,6 +1996,8 @@
         "tostatus": false,
         "complete": "true",
         "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
         "x": 1260,
         "y": 1020,
         "wires": []
@@ -2057,7 +2070,6 @@
         "z": "6a706e8962cb8ed4",
         "name": "link in Test temp LED node",
         "links": [
-            "52eaa4670f3c5cf3",
             "8e35c93e3e22393e"
         ],
         "x": 755,
@@ -2074,7 +2086,6 @@
         "z": "6a706e8962cb8ed4",
         "name": "link in Test Humidity LED node",
         "links": [
-            "5b422af47994f935",
             "c50f5459ca1592ab"
         ],
         "x": 755,
@@ -2091,7 +2102,6 @@
         "z": "6a706e8962cb8ed4",
         "name": "link in Test Gas LED node",
         "links": [
-            "cbe1c17405d28ab8",
             "e562153d25293914"
         ],
         "x": 755,
@@ -2233,8 +2243,9 @@
         "type": "function",
         "z": "7fe3eb7c02d1e040",
         "name": "Predictive Analysis",
-        "func": "// Простая предиктивная модель на основе правил\nvar data = msg.payload;\nvar prediction = {\n    timestamp: new Date().toISOString(),\n    current_gas: data.gas,\n    prediction_15min: data.gas,\n    prediction_30min: data.gas,\n    risk_level: \"low\",\n    recommendation: \"normal\"\n};\n\n// Анализ тренда (если газ растет)\nif (data.gas > 300) {\n    // Прогноз на 15 минут\n    prediction.prediction_15min = Math.min(1000, data.gas * (1 + (data.gas - 300) / 1000));\n    \n    // Прогноз на 30 минут\n    prediction.prediction_30min = Math.min(1200, data.gas * (1 + 2 * (data.gas - 300) / 1000));\n}\n\n// Учет температуры (высокая температура ускоряет накопление газа)\nif (data.temperature > 25) {\n    prediction.prediction_15min *= 1.1;\n    prediction.prediction_30min *= 1.2;\n}\n\n// Учет движения (активность = больше людей = больше CO2)\nif (data.motion) {\n    prediction.prediction_15min *= 1.05;\n    prediction.prediction_30min *= 1.1;\n}\n\n// Определение уровня риска\nif (prediction.prediction_30min > 800) {\n    prediction.risk_level = \"high\";\n    prediction.recommendation = \"preventive_fan_on\";\n} else if (prediction.prediction_30min > 600) {\n    prediction.risk_level = \"medium\";\n    prediction.recommendation = \"monitor_closely\";\n} else {\n    prediction.risk_level = \"low\";\n    prediction.recommendation = \"normal\";\n}\n\n// Округляем значения\nprediction.prediction_15min = Math.round(prediction.prediction_15min);\nprediction.prediction_30min = Math.round(prediction.prediction_30min);\n\nmsg.payload = prediction;\nmsg.topic = \"prediction\";\n\nreturn msg;",
+        "func": "// Простая предиктивная модель на основе правил\nvar data = msg.payload;\nvar prediction = {\n    timestamp: new Date().toISOString(),\n    current_gas: data.gas,\n    prediction_15min: data.gas,\n    prediction_30min: data.gas,\n    risk_level: \"low\",\n    recommendation: \"normal\"\n};\n\n// Анализ тренда - обновленные пороги для ppm CO2\n// Нормальный уровень: 400-600 ppm\n// Повышенный: 600-1000 ppm\n// Опасный: >1000 ppm\n\nif (data.gas > 600) {\n    // Прогноз на 15 минут (более консервативный)\n    prediction.prediction_15min = Math.min(3000, data.gas * (1 + (data.gas - 600) / 1500));\n\n    // Прогноз на 30 минут\n    prediction.prediction_30min = Math.min(3500, data.gas * (1 + 2 * (data.gas - 600) / 1500));\n} else if (data.gas > 450) {\n    // Небольшое повышение\n    prediction.prediction_15min = data.gas * 1.05;\n    prediction.prediction_30min = data.gas * 1.1;\n}\n\n// Учет температуры (высокая температура увеличивает риск)\nif (data.temperature > 28) {\n    prediction.prediction_15min *= 1.08;\n    prediction.prediction_30min *= 1.15;\n} else if (data.temperature > 25) {\n    prediction.prediction_15min *= 1.03;\n    prediction.prediction_30min *= 1.05;\n}\n\n// Учет движения (активность = больше CO2)\nif (data.motion) {\n    prediction.prediction_15min *= 1.02;\n    prediction.prediction_30min *= 1.04;\n}\n\n// Учет влажности (высокая влажность ухудшает качество воздуха)\nif (data.humidity > 80) {\n    prediction.prediction_15min *= 1.05;\n    prediction.prediction_30min *= 1.08;\n}\n\n// Определение уровня риска (скорректированные пороги)\nif (prediction.prediction_30min > 1800) {\n    prediction.risk_level = \"critical\";\n    prediction.recommendation = \"emergency_fan_on\";\n} else if (prediction.prediction_30min > 1300) {\n    prediction.risk_level = \"high\";\n    prediction.recommendation = \"preventive_fan_on\";\n} else if (prediction.prediction_30min > 900) {\n    prediction.risk_level = \"medium\";\n    prediction.recommendation = \"monitor_closely\";\n} else if (prediction.prediction_30min > 600) {\n    prediction.risk_level = \"elevated\";\n    prediction.recommendation = \"ventilate_recommended\";\n} else {\n    prediction.risk_level = \"low\";\n    prediction.recommendation = \"normal\";\n}\n\n// Округляем значения\nprediction.prediction_15min = Math.round(prediction.prediction_15min);\nprediction.prediction_30min = Math.round(prediction.prediction_30min);\n\nmsg.payload = prediction;\nmsg.topic = \"prediction\";\n\nreturn msg;",
         "outputs": 1,
+        "timeout": "",
         "noerr": 0,
         "initialize": "",
         "finalize": "",
@@ -2271,8 +2282,9 @@
         "type": "function",
         "z": "7fe3eb7c02d1e040",
         "name": "Preventive Control",
-        "func": "// Принимаем превентивные меры на основе прогноза\nvar prediction = msg.payload;\nvar controlAction = {\n    timestamp: new Date().toISOString(),\n    action: \"none\",\n    reason: \"\",\n    fan_command: \"OFF\"\n};\n\n// Логика превентивного управления\nif (prediction.recommendation === \"preventive_fan_on\") {\n    // Включаем вентилятор упреждающе\n    controlAction.action = \"preventive_fan_on\";\n    controlAction.reason = \"Прогноз превышения 800 ppm через 30 минут: \" + prediction.prediction_30min + \" ppm\";\n    controlAction.fan_command = \"ON\";\n    \n    // Отправляем команду на включение вентилятора\n    node.send({\n        topic: \"DaryaMartsinouskaya/feeds/fan_auto\",\n        payload: \"ON\",\n        control: controlAction\n    });\n} else if (prediction.recommendation === \"monitor_closely\" && prediction.current_gas < 400) {\n    // Мониторинг без действий\n    controlAction.action = \"monitoring\";\n    controlAction.reason = \"Средний риск. Прогноз через 30 минут: \" + prediction.prediction_30min + \" ppm\";\n} else if (prediction.recommendation === \"normal\" && prediction.current_gas < 300) {\n    // Если газ низкий и прогноз хороший, можно выключить вентилятор\n    controlAction.action = \"fan_off_safe\";\n    controlAction.reason = \"Низкий уровень газа и благоприятный прогноз\";\n    controlAction.fan_command = \"OFF\";\n    \n    node.send({\n        topic: \"DaryaMartsinouskaya/feeds/fan_auto\",\n        payload: \"OFF\",\n        control: controlAction\n    });\n}\n\n// Для визуализации\nmsg.payload = controlAction;\nmsg.topic = \"preventive_control\";\n\nreturn msg;",
+        "func": "// // Принимаем превентивные меры на основе прогноза\n// var prediction = msg.payload;\n// var controlAction = {\n//     timestamp: new Date().toISOString(),\n//     action: \"none\",\n//     reason: \"\",\n//     fan_command: \"OFF\"\n// };\n\n// // Логика превентивного управления\n// if (prediction.recommendation === \"preventive_fan_on\") {\n//     // Включаем вентилятор упреждающе\n//     controlAction.action = \"preventive_fan_on\";\n//     controlAction.reason = \"Прогноз превышения 800 ppm через 30 минут: \" + prediction.prediction_30min + \" ppm\";\n//     controlAction.fan_command = \"ON\";\n    \n//     // Отправляем команду на включение вентилятора\n//     node.send({\n//         topic: \"DaryaMartsinouskaya/feeds/fan_auto\",\n//         payload: \"ON\",\n//         control: controlAction\n//     });\n// } else if (prediction.recommendation === \"monitor_closely\" && prediction.current_gas < 400) {\n//     // Мониторинг без действий\n//     controlAction.action = \"monitoring\";\n//     controlAction.reason = \"Средний риск. Прогноз через 30 минут: \" + prediction.prediction_30min + \" ppm\";\n// } else if (prediction.recommendation === \"normal\" && prediction.current_gas < 300) {\n//     // Если газ низкий и прогноз хороший, можно выключить вентилятор\n//     controlAction.action = \"fan_off_safe\";\n//     controlAction.reason = \"Низкий уровень газа и благоприятный прогноз\";\n//     controlAction.fan_command = \"OFF\";\n    \n//     node.send({\n//         topic: \"DaryaMartsinouskaya/feeds/fan_auto\",\n//         payload: \"OFF\",\n//         control: controlAction\n//     });\n// }\n\n// // Для визуализации\n// msg.payload = controlAction;\n// msg.topic = \"preventive_control\";\n\n// return msg;\n\n// Принимаем превентивные меры на основе прогноза\nvar prediction = msg.payload;\nvar controlAction = {\n    timestamp: new Date().toISOString(),\n    action: \"none\",\n    reason: \"\",\n    fan_command: \"OFF\"\n};\n\n// Логика превентивного управления (обновленные пороги)\nif (prediction.recommendation === \"emergency_fan_on\") {\n    // Экстренное включение при критическом уровне\n    controlAction.action = \"emergency_fan_on\";\n    controlAction.reason = \"КРИТИЧЕСКИЙ УРОВЕНЬ! Прогноз через 30 минут: \" + prediction.prediction_30min + \" ppm\";\n    controlAction.fan_command = \"ON\";\n\n    node.send({\n        topic: \"DaryaMartsinouskaya/feeds/fan\",\n        payload: \"ON\",\n        control: controlAction\n    });\n}\nelse if (prediction.recommendation === \"preventive_fan_on\") {\n    // Превентивное включение при высоком риске\n    controlAction.action = \"preventive_fan_on\";\n    controlAction.reason = \"Высокий риск. Прогноз через 30 минут: \" + prediction.prediction_30min + \" ppm (норма <900)\";\n    controlAction.fan_command = \"ON\";\n\n    node.send({\n        topic: \"DaryaMartsinouskaya/feeds/fan\",\n        payload: \"ON\",\n        control: controlAction\n    });\n}\nelse if (prediction.recommendation === \"monitor_closely\") {\n    // Мониторинг без автоматических действий\n    controlAction.action = \"monitoring\";\n    controlAction.reason = \"Средний риск. Прогноз через 30 минут: \" + prediction.prediction_30min + \" ppm\";\n}\nelse if (prediction.recommendation === \"ventilate_recommended\") {\n    // Рекомендация проветрить (без автоматического включения)\n    controlAction.action = \"ventilate_recommended\";\n    controlAction.reason = \"Повышенный уровень CO2. Текущий: \" + prediction.current_gas + \" ppm. Рекомендуется проветривание\";\n    controlAction.fan_command = \"OFF\";\n}\nelse if (prediction.recommendation === \"normal\" && prediction.current_gas < 550) {\n    // Если газ в норме и прогноз хороший, выключаем вентилятор\n    if (prediction.current_gas < 500) {\n        controlAction.action = \"fan_off_safe\";\n        controlAction.reason = \"Нормальный уровень газа: \" + prediction.current_gas + \" ppm. Вентиляция не требуется\";\n        controlAction.fan_command = \"OFF\";\n\n        node.send({\n            topic: \"DaryaMartsinouskaya/feeds/fan\",\n            payload: \"OFF\",\n            control: controlAction\n        });\n    }\n}\n\n// Для визуализации\nmsg.payload = controlAction;\nmsg.topic = \"preventive_control\";\n\nreturn msg;",
         "outputs": 2,
+        "timeout": "",
         "noerr": 0,
         "initialize": "",
         "finalize": "",
@@ -2343,8 +2355,9 @@
         "type": "function",
         "z": "7fe3eb7c02d1e040",
         "name": "Calculate Risk Level",
-        "func": "// Конвертируем прогноз в уровень риска 0-100%\nvar prediction = msg.payload;\nvar riskLevel = 0;\n\nif (prediction.prediction_30min > 800) {\n    riskLevel = 80 + Math.min(20, (prediction.prediction_30min - 800) / 10);\n} else if (prediction.prediction_30min > 600) {\n    riskLevel = 40 + Math.min(40, (prediction.prediction_30min - 600) / 5);\n} else {\n    riskLevel = Math.min(40, prediction.prediction_30min / 15);\n}\n\nmsg.payload = Math.min(100, Math.round(riskLevel));\nreturn msg;",
+        "func": "// // Конвертируем прогноз в уровень риска 0-100%\n// var prediction = msg.payload;\n// var riskLevel = 0;\n\n// if (prediction.prediction_30min > 1500) {\n//     riskLevel = 80 + Math.min(20, (prediction.prediction_30min - 1500) / 10);\n// } else if (prediction.prediction_30min > 1200) {\n//     riskLevel = 40 + Math.min(40, (prediction.prediction_30min - 1200) / 5);\n// } else {\n//     riskLevel = Math.min(40, prediction.prediction_30min / 30);\n// }\n\n// msg.payload = Math.min(100, Math.round(riskLevel));\n// return msg;\n\n// Конвертируем прогноз в уровень риска 0-100%\nvar prediction = msg.payload;\nvar riskLevel = 0;\n\n// Обновленные пороги в соответствии с Predictive Analysis\nif (prediction.prediction_30min > 1800) {\n    // Критический уровень\n    riskLevel = 90 + Math.min(10, (prediction.prediction_30min - 1800) / 20);\n} else if (prediction.prediction_30min > 1300) {\n    // Высокий уровень\n    riskLevel = 70 + Math.min(20, (prediction.prediction_30min - 1300) / 10);\n} else if (prediction.prediction_30min > 900) {\n    // Средний уровень\n    riskLevel = 40 + Math.min(30, (prediction.prediction_30min - 900) / 15);\n} else if (prediction.prediction_30min > 600) {\n    // Повышенный уровень\n    riskLevel = 20 + Math.min(20, (prediction.prediction_30min - 600) / 20);\n} else {\n    // Нормальный уровень\n    riskLevel = Math.min(20, prediction.prediction_30min / 30);\n}\n\nmsg.payload = Math.min(100, Math.round(riskLevel));\nreturn msg;",
         "outputs": 1,
+        "timeout": "",
         "noerr": 0,
         "initialize": "",
         "finalize": "",
@@ -2541,7 +2554,7 @@
         "nodata": "",
         "dot": false,
         "ymin": "0",
-        "ymax": "1000",
+        "ymax": "3500",
         "removeOlder": 1,
         "removeOlderPoints": "",
         "removeOlderUnit": "3600",
@@ -2690,7 +2703,6 @@
         "z": "7fe3eb7c02d1e040",
         "name": "link in Scenario Executor node",
         "links": [
-            "7ca06a4080e9e92a",
             "df20dd0aa057695f"
         ],
         "x": 185,
@@ -2707,7 +2719,6 @@
         "z": "7fe3eb7c02d1e040",
         "name": "link in Test Sensor Injector node",
         "links": [
-            "89ba89bec73223af",
             "0e517da6f2e131b7"
         ],
         "x": 185,
@@ -2811,7 +2822,7 @@
         "type": "function",
         "z": "ce431305f614f611",
         "name": "Scenario Executor",
-        "func": "// Исполнитель расширенных сценариев - Обновленная версия с ТРЕМЯ выходами\n// ДОБАВЛЕН: Автоматический возврат к нормальным значениям через 10 секунд\nvar scenario = msg.payload;\nvar timestamp = new Date().toISOString();\n\nvar scenarios = {\n    normal: {\n        temperature: 22, humidity: 55, gas: 180, motion: false,\n        description: \"Нормальные условия в помещении\",\n        expected_leds: { gas: false, temp: false, humidity: false },\n        expected_fan: false,\n        duration: 0 // Нормальный режим не требует авто1сброса\n    },\n    exhaust_health: {\n        temperature: 25, humidity: 60, gas: 450, motion: true,\n        description: \"Загазованность выхлопными газами - опасность для здоровья\",\n        expected_leds: { gas: true, temp: false, humidity: false },\n        expected_fan: true,\n        duration: 10000 // 10 секунд\n    },\n    exhaust_life: {\n        temperature: 28, humidity: 65, gas: 850, motion: true,\n        description: \"Загазованность выхлопными газами - угроза жизни!\",\n        expected_leds: { gas: true, temp: false, humidity: false },\n        expected_fan: true,\n        duration: 10000\n    },\n    garage_fire: {\n        temperature: 85, humidity: 35, gas: 1200, motion: true,\n        description: \"Возгорание в гараже! Высокая температура и задымление\",\n        expected_leds: { gas: true, temp: true, humidity: false },\n        expected_fan: true,\n        duration: 10000\n    },\n    mold_risk: {\n        temperature: 18, humidity: 95, gas: 150, motion: false,\n        description: \"Высокая влажность - риск образования плесени\",\n        expected_leds: { gas: false, temp: false, humidity: true },\n        expected_fan: true,\n        duration: 10000\n    },\n    corrosion_risk: {\n        temperature: 15, humidity: 98, gas: 200, motion: false,\n        description: \"Критическая влажность - риск коррозии металла\",\n        expected_leds: { gas: false, temp: false, humidity: true },\n        expected_fan: true,\n        duration: 10000\n    },\n    heat_stroke: {\n        temperature: 42, humidity: 80, gas: 300, motion: true,\n        description: \"Экстремальная температура - риск теплового удара\",\n        expected_leds: { gas: false, temp: true, humidity: true },\n        expected_fan: true,\n        duration: 10000\n    },\n    crowded_office: {\n        temperature: 26, humidity: 68, gas: 650, motion: true,\n        description: \"Переполненный офис - высокая концентрация CO2\",\n        expected_leds: { gas: true, temp: false, humidity: false },\n        expected_fan: true,\n        duration: 10000\n    },\n    cooking: {\n        temperature: 40, humidity: 90, gas: 500, motion: true,\n        description: \"Приготовление пищи - высокая температура и влажность\",\n        expected_leds: { gas: true, temp: true, humidity: true },\n        expected_fan: true,\n        duration: 10000\n    },\n    industrial_leak: {\n        temperature: 30, humidity: 75, gas: 1200, motion: false,\n        description: \"Промышленная утечка газа\",\n        expected_leds: { gas: true, temp: false, humidity: false },\n        expected_fan: true,\n        duration: 10000\n    }\n};\n\nif (scenarios[scenario]) {\n    var scenarioData = scenarios[scenario];\n    var scenarioLabel = getScenarioLabel(scenario);\n    var scenarioDuration = scenarioData.duration || 0;\n\n    // === НОВЫЙ КОД: Автоматический сброс через 10 секунд ===\n    // Только для НЕ-нормальных сценариев (кроме \"normal\")\n    if (scenario !== \"normal\" && scenarioDuration > 0) {\n        // Устанавливаем таймер автоматического возврата\n        setTimeout(function () {\n            node.log('🔄 Auto-reset: Returning to normal conditions after ' +\n                (scenarioDuration / 1000) + ' seconds');\n\n            // Создаем сообщение для возврата к нормальным значениям\n            var normalScenario = scenarios[\"normal\"];\n            var resetSensorMessages = [];\n\n            // Температура\n            resetSensorMessages.push({\n                sensor_type: 'temperature',\n                payload: normalScenario.temperature,\n                scenario: 'auto_reset_normal',\n                description: 'Automatic reset to normal conditions'\n            });\n\n            // Влажность\n            resetSensorMessages.push({\n                sensor_type: 'humidity',\n                payload: normalScenario.humidity,\n                scenario: 'auto_reset_normal',\n                description: 'Automatic reset to normal conditions'\n            });\n\n            // Газ\n            resetSensorMessages.push({\n                sensor_type: 'gas',\n                payload: normalScenario.gas,\n                scenario: 'auto_reset_normal',\n                description: 'Automatic reset to normal conditions'\n            });\n\n            // Движение\n            resetSensorMessages.push({\n                sensor_type: 'motion',\n                payload: normalScenario.motion,\n                scenario: 'auto_reset_normal',\n                description: 'Automatic reset to normal conditions'\n            });\n\n            // Вентилятор\n            resetSensorMessages.push({\n                sensor_type: 'fan',\n                payload: normalScenario.expected_fan,\n                scenario: 'auto_reset_normal',\n                description: 'Automatic reset to normal conditions'\n            });\n\n            // Отправляем сообщение сброса через выход 1 (прямая инъекция)\n            node.send([null, {\n                payload: resetSensorMessages,\n                scenario: 'auto_reset_normal',\n                scenario_name: '🔄 Auto Reset to Normal',\n                timestamp: new Date().toISOString(),\n                _direct_injection: true,\n                _auto_reset: true,\n                _reset_after_scenario: scenario,\n                description: 'System automatically reset to normal conditions after scenario: ' + scenarioLabel\n            }, null]);\n\n            // Также отправляем уведомление для UI\n            node.send([null, null, {\n                topic: 'auto_reset_notification',\n                payload: {\n                    status: 'auto_reset_completed',\n                    original_scenario: scenarioLabel,\n                    reset_to: 'normal_conditions',\n                    duration_ms: scenarioDuration,\n                    timestamp: new Date().toISOString(),\n                    message: '✅ System automatically restored to normal conditions'\n                }\n            }]);\n\n        }, scenarioDuration); // 10000 ms = 10 секунд\n\n        // Логируем установку таймера\n        node.log('⏱️ Auto-reset timer set: ' + scenarioLabel + ' → Normal in ' +\n            (scenarioDuration / 1000) + ' seconds');\n    }\n    // === КОНЕЦ НОВОГО КОДА ===\n\n    // Создаем сообщения для каждого сенсора для прямой инъекции\n    var sensorMessages = [];\n\n    // Температура\n    if (scenarioData.temperature !== undefined) {\n        sensorMessages.push({\n            sensor_type: 'temperature',\n            payload: scenarioData.temperature,\n            scenario: scenario,\n            description: scenarioData.description\n        });\n    }\n\n    // Влажность\n    if (scenarioData.humidity !== undefined) {\n        sensorMessages.push({\n            sensor_type: 'humidity',\n            payload: scenarioData.humidity,\n            scenario: scenario,\n            description: scenarioData.description\n        });\n    }\n\n    // Газ\n    if (scenarioData.gas !== undefined) {\n        sensorMessages.push({\n            sensor_type: 'gas',\n            payload: scenarioData.gas,\n            scenario: scenario,\n            description: scenarioData.description\n        });\n    }\n\n    // Движение\n    if (scenarioData.motion !== undefined) {\n        sensorMessages.push({\n            sensor_type: 'motion',\n            payload: scenarioData.motion,\n            scenario: scenario,\n            description: scenarioData.description\n        });\n    }\n\n    // Вентилятор (на основе expected_fan)\n    if (scenarioData.expected_fan !== undefined) {\n        sensorMessages.push({\n            sensor_type: 'fan',\n            payload: scenarioData.expected_fan,\n            scenario: scenario,\n            description: scenarioData.description\n        });\n    }\n\n    // Данные для ML-модуля\n    var mlData = {\n        topic: \"ml_input\",\n        payload: {\n            temperature: scenarioData.temperature || 0,\n            humidity: scenarioData.humidity || 0,\n            gas: scenarioData.gas || 0,\n            motion: scenarioData.motion || false\n        },\n        _test: true,\n        scenario: scenario,\n        timestamp: timestamp\n    };\n\n    // Возвращаем ТРИ сообщения:\n    return [\n        // Сообщение 1: Для существующей системы (выход 0)\n        {\n            topic: 'scenario_' + scenario,\n            payload: scenarioData,\n            scenario_name: scenarioLabel,\n            timestamp: timestamp,\n            _test: true,\n            _has_auto_reset: (scenario !== \"normal\" && scenarioDuration > 0),\n            _auto_reset_duration: scenarioDuration\n        },\n        // Сообщение 2: Для новой прямой инъекции (выход 1)\n        {\n            payload: sensorMessages,\n            scenario: scenario,\n            scenario_name: scenarioLabel,\n            timestamp: timestamp,\n            _direct_injection: true,\n            description: scenarioData.description,\n            _has_auto_reset: (scenario !== \"normal\" && scenarioDuration > 0),\n            _auto_reset_in: scenarioDuration\n        },\n        // Сообщение 3: Для ML-модуля (выход 2)\n        mlData\n    ];\n}\n\nreturn null;\n\nfunction getScenarioLabel(scenario) {\n    var labels = {\n        normal: \"Нормальные условия\",\n        exhaust_health: \"Выхлопные газы (опасность здоровью)\",\n        exhaust_life: \"Выхлопные газы (угроза жизни)\",\n        garage_fire: \"Возгорание в гараже\",\n        mold_risk: \"Риск образования плесени\",\n        corrosion_risk: \"Риск коррозии металла\",\n        heat_stroke: \"Риск теплового удара\",\n        crowded_office: \"Переполненный офис\",\n        cooking: \"Приготовление пищи\",\n        industrial_leak: \"Промышленная утечка\"\n    };\n    return labels[scenario] || scenario;\n}",
+        "func": "// Исполнитель расширенных сценариев - Обновленная версия с ТРЕМЯ выходами\n// ДОБАВЛЕН: Автоматический возврат к нормальным значениям через 10 секунд\nvar scenario = msg.payload;\nvar timestamp = new Date().toISOString();\n\nvar scenarios = {\n    normal: {\n        temperature: 22, humidity: 55, gas: 450, motion: false,\n        description: \"Нормальные условия в помещении\",\n        expected_leds: { gas: false, temp: false, humidity: false },\n        expected_fan: false,\n        duration: 0 // Нормальный режим не требует автосброса\n    },\n    exhaust_health: {\n        temperature: 25, humidity: 60, gas: 1200, motion: true,\n        description: \"Загазованность выхлопными газами - опасность для здоровья (головная боль, утомляемость)\",\n        expected_leds: { gas: true, temp: false, humidity: false },\n        expected_fan: true,\n        duration: 10000 // 10 секунд\n    },\n    exhaust_life: {\n        temperature: 28, humidity: 65, gas: 2500, motion: true,\n        description: \"Загазованность выхлопными газами - угроза жизни! (Тошнота, головокружение)\",\n        expected_leds: { gas: true, temp: false, humidity: false },\n        expected_fan: true,\n        duration: 10000\n    },\n    garage_fire: {\n        temperature: 85, humidity: 35, gas: 3000, motion: true,\n        description: \"Возгорание в гараже! Высокая температура и задымление. 3000 ppm - экстремально опасно, дым, продукты горения\",\n        expected_leds: { gas: true, temp: true, humidity: false },\n        expected_fan: true,\n        duration: 10000\n    },\n    mold_risk: {\n        temperature: 18, humidity: 90, gas: 450, motion: false,\n        description: \"Высокая влажность - риск образования плесени\",\n        expected_leds: { gas: false, temp: false, humidity: true },\n        expected_fan: true,\n        duration: 10000\n    },\n    corrosion_risk: {\n        temperature: 15, humidity: 95, gas: 450, motion: false,\n        description: \"Критическая влажность - риск коррозии металла\",\n        expected_leds: { gas: false, temp: false, humidity: true },\n        expected_fan: true,\n        duration: 10000\n    },\n    heat_stroke: {\n        temperature: 42, humidity: 80, gas: 300, motion: true,\n        description: \"Экстремальная температура - риск теплового удара\",\n        expected_leds: { gas: false, temp: true, humidity: true },\n        expected_fan: true,\n        duration: 10000\n    },\n    crowded_office: {\n        temperature: 26, humidity: 68, gas: 1400, motion: true,\n        description: \"Переполненный офис - высокая концентрация CO2. 1400 ppm - низкое качество воздуха, сонливость\",\n        expected_leds: { gas: true, temp: false, humidity: false },\n        expected_fan: true,\n        duration: 10000\n    },\n    cooking: {\n        temperature: 40, humidity: 90, gas: 1100, motion: true,\n        description: \"Приготовление пищи - высокая температура и влажность. 1100 ppm - продукты горения газа/дым\",\n        expected_leds: { gas: true, temp: true, humidity: true },\n        expected_fan: true,\n        duration: 10000\n    },\n    industrial_leak: {\n        temperature: 30, humidity: 75, gas: 2800, motion: false,\n        description: \"Промышленная утечка газа. 2800 ppm - серьезная утечка газа\",\n        expected_leds: { gas: true, temp: false, humidity: false },\n        expected_fan: true,\n        duration: 10000\n    }\n};\n\nif (scenarios[scenario]) {\n    var scenarioData = scenarios[scenario];\n    var scenarioLabel = getScenarioLabel(scenario);\n    var scenarioDuration = scenarioData.duration || 0;\n\n    // === НОВЫЙ КОД: Автоматический сброс через 10 секунд ===\n    // Только для НЕ-нормальных сценариев (кроме \"normal\")\n    if (scenario !== \"normal\" && scenarioDuration > 0) {\n        // Устанавливаем таймер автоматического возврата\n        setTimeout(function () {\n            node.log('🔄 Auto-reset: Returning to normal conditions after ' +\n                (scenarioDuration / 1000) + ' seconds');\n\n            // Создаем сообщение для возврата к нормальным значениям\n            var normalScenario = scenarios[\"normal\"];\n            var resetSensorMessages = [];\n\n            // Температура\n            resetSensorMessages.push({\n                sensor_type: 'temperature',\n                payload: normalScenario.temperature,\n                scenario: 'auto_reset_normal',\n                description: 'Automatic reset to normal conditions'\n            });\n\n            // Влажность\n            resetSensorMessages.push({\n                sensor_type: 'humidity',\n                payload: normalScenario.humidity,\n                scenario: 'auto_reset_normal',\n                description: 'Automatic reset to normal conditions'\n            });\n\n            // Газ\n            resetSensorMessages.push({\n                sensor_type: 'gas',\n                payload: normalScenario.gas,\n                scenario: 'auto_reset_normal',\n                description: 'Automatic reset to normal conditions'\n            });\n\n            // Движение\n            resetSensorMessages.push({\n                sensor_type: 'motion',\n                payload: normalScenario.motion,\n                scenario: 'auto_reset_normal',\n                description: 'Automatic reset to normal conditions'\n            });\n\n            // Вентилятор\n            resetSensorMessages.push({\n                sensor_type: 'fan',\n                payload: normalScenario.expected_fan,\n                scenario: 'auto_reset_normal',\n                description: 'Automatic reset to normal conditions'\n            });\n\n            // Отправляем сообщение сброса через выход 1 (прямая инъекция)\n            node.send([null, {\n                payload: resetSensorMessages,\n                scenario: 'auto_reset_normal',\n                scenario_name: '🔄 Auto Reset to Normal',\n                timestamp: new Date().toISOString(),\n                _direct_injection: true,\n                _auto_reset: true,\n                _reset_after_scenario: scenario,\n                description: 'System automatically reset to normal conditions after scenario: ' + scenarioLabel\n            }, null]);\n\n            // Также отправляем уведомление для UI\n            node.send([null, null, {\n                topic: 'auto_reset_notification',\n                payload: {\n                    status: 'auto_reset_completed',\n                    original_scenario: scenarioLabel,\n                    reset_to: 'normal_conditions',\n                    duration_ms: scenarioDuration,\n                    timestamp: new Date().toISOString(),\n                    message: '✅ System automatically restored to normal conditions'\n                }\n            }]);\n\n        }, scenarioDuration); // 10000 ms = 10 секунд\n\n        // Логируем установку таймера\n        node.log('⏱️ Auto-reset timer set: ' + scenarioLabel + ' → Normal in ' +\n            (scenarioDuration / 1000) + ' seconds');\n    }\n    // === КОНЕЦ НОВОГО КОДА ===\n\n    // Создаем сообщения для каждого сенсора для прямой инъекции\n    var sensorMessages = [];\n\n    // Температура\n    if (scenarioData.temperature !== undefined) {\n        sensorMessages.push({\n            sensor_type: 'temperature',\n            payload: scenarioData.temperature,\n            scenario: scenario,\n            description: scenarioData.description\n        });\n    }\n\n    // Влажность\n    if (scenarioData.humidity !== undefined) {\n        sensorMessages.push({\n            sensor_type: 'humidity',\n            payload: scenarioData.humidity,\n            scenario: scenario,\n            description: scenarioData.description\n        });\n    }\n\n    // Газ\n    if (scenarioData.gas !== undefined) {\n        sensorMessages.push({\n            sensor_type: 'gas',\n            payload: scenarioData.gas,\n            scenario: scenario,\n            description: scenarioData.description\n        });\n    }\n\n    // Движение\n    if (scenarioData.motion !== undefined) {\n        sensorMessages.push({\n            sensor_type: 'motion',\n            payload: scenarioData.motion,\n            scenario: scenario,\n            description: scenarioData.description\n        });\n    }\n\n    // Вентилятор (на основе expected_fan)\n    if (scenarioData.expected_fan !== undefined) {\n        sensorMessages.push({\n            sensor_type: 'fan',\n            payload: scenarioData.expected_fan,\n            scenario: scenario,\n            description: scenarioData.description\n        });\n    }\n\n    // Данные для ML-модуля\n    var mlData = {\n        topic: \"ml_input\",\n        payload: {\n            temperature: scenarioData.temperature || 0,\n            humidity: scenarioData.humidity || 0,\n            gas: scenarioData.gas || 0,\n            motion: scenarioData.motion || false\n        },\n        _test: true,\n        scenario: scenario,\n        timestamp: timestamp\n    };\n\n    // Возвращаем ТРИ сообщения:\n    return [\n        // Сообщение 1: Для существующей системы (выход 0)\n        {\n            topic: 'scenario_' + scenario,\n            payload: scenarioData,\n            scenario_name: scenarioLabel,\n            timestamp: timestamp,\n            _test: true,\n            _has_auto_reset: (scenario !== \"normal\" && scenarioDuration > 0),\n            _auto_reset_duration: scenarioDuration\n        },\n        // Сообщение 2: Для новой прямой инъекции (выход 1)\n        {\n            payload: sensorMessages,\n            scenario: scenario,\n            scenario_name: scenarioLabel,\n            timestamp: timestamp,\n            _direct_injection: true,\n            description: scenarioData.description,\n            _has_auto_reset: (scenario !== \"normal\" && scenarioDuration > 0),\n            _auto_reset_in: scenarioDuration\n        },\n        // Сообщение 3: Для ML-модуля (выход 2)\n        mlData\n    ];\n}\n\nreturn null;\n\nfunction getScenarioLabel(scenario) {\n    var labels = {\n        normal: \"Нормальные условия\",\n        exhaust_health: \"Выхлопные газы (опасность здоровью)\",\n        exhaust_life: \"Выхлопные газы (угроза жизни)\",\n        garage_fire: \"Возгорание в гараже\",\n        mold_risk: \"Риск образования плесени\",\n        corrosion_risk: \"Риск коррозии металла\",\n        heat_stroke: \"Риск теплового удара\",\n        crowded_office: \"Переполненный офис\",\n        cooking: \"Приготовление пищи\",\n        industrial_leak: \"Промышленная утечка\"\n    };\n    return labels[scenario] || scenario;\n}",
         "outputs": 3,
         "timeout": "",
         "noerr": 0,
@@ -3107,7 +3118,7 @@
         "statusVal": "",
         "statusType": "auto",
         "x": 1640,
-        "y": 260,
+        "y": 220,
         "wires": []
     },
     {
@@ -3349,7 +3360,7 @@
             "19dd71621febf920"
         ],
         "x": 1555,
-        "y": 200,
+        "y": 180,
         "wires": []
     },
     {
@@ -3373,9 +3384,7 @@
         "mode": "link",
         "links": [
             "750a70adbc0f43cc",
-            "8839d0cd0b298148",
             "ff37a4801fe85d64",
-            "c6e0262ebe6c997a",
             "b9b65b395fa35b55"
         ],
         "x": 1035,
@@ -3541,7 +3550,7 @@
         "wires": []
     },
     {
-        "id": "99d3a03a4a5970c1",
+        "id": "c912aacfd6544f1b",
         "type": "global-config",
         "env": [],
         "modules": {
