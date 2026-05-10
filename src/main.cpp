@@ -1077,7 +1077,7 @@ void sendTelegramAlert(String message) {
   String alertMsg = "⚠️ *SYSTEM ALERT* ⚠️\n\n";
   alertMsg += message;
   alertMsg += "\n\n🕐 Uptime: " + getUptime();
-  alertMsg += "\n📍 System: Smart AirGuard";
+  alertMsg += "\n📍 System: Smart AirGuard\n";
   alertMsg += "ℹ️ Fan control via Node-RED dashboard";
   
   bot.sendMessage(chatId, alertMsg, "Markdown");
