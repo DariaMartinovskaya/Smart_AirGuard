@@ -173,16 +173,16 @@ float getCalibratedGasPPM() {
     return -1;
   }
   
-  // Получаем сопротивление датчика
+  // Get the sensor resistance
   float resistance = mq135.getResistance();
   
-  // Вычисляем отношение Rs/R0
+  // Calculate the Rs/R0 ratio
   float ratio = resistance / mq135_RZero;
   
-  // Более простая формула:
+  // Simpler formula:
   float ppm = 400 * (3.6 / ratio);
   
-  // Ограничиваем
+  // Limit the value
   if (ppm < 400) ppm = 400;
   if (ppm > 5000) ppm = 5000;
   
@@ -422,22 +422,22 @@ void updateFanState() {
     // ============ PRIORITY 2: MANUAL ============
     if (fanManualOverride && !gasEmergency) {
       shouldFanBeOn = fanDesiredState;
-      // Проверяем таймер автоматического возврата в AUTO
+      // Check the automatic restore timer for AUTO mode
       if (autoModeRestoreTime > 0 && millis() > autoModeRestoreTime) {
         Serial.println("🔄 Auto mode restored automatically after timeout");
         fanManualOverride = false;
         fanDesiredState = false;
         autoModeRestoreTime = 0;
         
-        // Отправляем команду AUTO в MQTT для синхронизации с Node-RED
+        // Send AUTO command to MQTT to sync with Node-RED
         if (mqtt.connected()) {
           feedFan.publish("AUTO");
           Serial.println("📤 Sent AUTO command to MQTT");
         }
         
         if (chatIdFound) {
-          // Пересчитываем состояние вентилятора после смены режима
-          shouldFanBeOn = false; // В AUTO режиме вентилятор выключен при нормальном газе
+          // // Recalculate fan state after switching mode
+          shouldFanBeOn = false; // In AUTO mode, the fan is off when gas level is normal
         }
       }
     } 
@@ -445,9 +445,9 @@ void updateFanState() {
     else if (!gasEmergency) {
       shouldFanBeOn = false; // In automatic mode without gas - off
     
-      // Если в AUTO режиме и газ нормальный - вентилятор выключен
+      // If in AUTO mode and gas level is normal - fan is off
       if (fanManualOverride == false) {
-        // Убеждаемся, что реле выключено
+        // // Make sure the relay is turned off
         digitalWrite(RELAY_PIN, HIGH);
       }
     }
@@ -604,7 +604,7 @@ void handleMQTTCommands() {
   
   while ((subscription = mqtt.readSubscription(0))) {
     
-    // ========== ОБРАБОТКА КОМАНД ВЕНТИЛЯТОРА ==========
+    // ========== FAN COMMAND HANDLING ==========
     if (subscription == &feedFanControl) {
       if (millis() - lastFanToggleTime < FAN_DEBOUNCE) {
         return;
@@ -668,7 +668,7 @@ void handleMQTTCommands() {
       }
     }
     
-    // ========== ОБРАБОТКА КОМАНД ИЗ TELEGRAM ==========
+    // ========== HANDLING COMMANDS FROM TELEGRAM ==========
 if (subscription == &feedTelegramCommands) {
     String command = (char *)feedTelegramCommands.lastread;
     Serial.print("📱 Telegram command received: ");
@@ -772,7 +772,7 @@ if (subscription == &feedTelegramCommands) {
         response += "Current gas level: " + String(gasLevel) + " ppm";
     }
     
-    // Отправляем ответ
+    // Sending response
     if (response != "") {
         Adafruit_MQTT_Publish feedTelegramResponse = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "/feeds/telegram_response");
         feedTelegramResponse.publish(response.c_str());
@@ -891,13 +891,13 @@ void checkConditions() {
     }
   }
 
-  // ========== ТЕМПЕРАТУРА ==========
+  // ========== TEMPERATURE ==========
   if (temperature < LOW_TEMP_THRESHOLD || temperature > HIGH_TEMP_THRESHOLD) {
     tempAlert = true;
     digitalWrite(YELLOW_LED, HIGH);
     
     if (millis() - lastTempAlertTime > ALERT_COOLDOWN) {
-      // ✅ ВМЕСТО sendTelegramAlert() - ПУБЛИКУЕМ В MQTT
+
       String mqttMsg = "TEMP_ALERT:" + String(temperature);
       if (feedEvent.publish(mqttMsg.c_str())) {
         Serial.print("📤 [MQTT] Published event: ");
@@ -907,7 +907,7 @@ void checkConditions() {
     }
   } 
   else if (prevTempAlert) {
-    // ✅ Температура нормализовалась
+    // ✅ Temperature normalised
     String mqttMsg = "TEMP_NORMAL:" + String(temperature);
     if (feedEvent.publish(mqttMsg.c_str())) {
       Serial.print("📤 [MQTT] Published event: ");
@@ -915,13 +915,12 @@ void checkConditions() {
     }
   }
 
-  // ========== ВЛАЖНОСТЬ ==========
+  // ========== HUMIDITY ==========
   if (humidity > HIGH_HUMIDITY_THRESHOLD) {
     humidityAlert = true;
     digitalWrite(GREEN_LED, HIGH);
     
     if (millis() - lastHumidityAlertTime > ALERT_COOLDOWN) {
-      // ✅ ВМЕСТО sendTelegramAlert() - ПУБЛИКУЕМ В MQTT
       String mqttMsg = "HUMIDITY_ALERT:" + String(humidity);
       if (feedEvent.publish(mqttMsg.c_str())) {
         Serial.print("📤 [MQTT] Published event: ");
@@ -931,7 +930,7 @@ void checkConditions() {
     }
   } 
   else if (prevHumidityAlert) {
-    // ✅ Влажность нормализовалась
+    // ✅ Humidity normalised
     String mqttMsg = "HUMIDITY_NORMAL:" + String(humidity);
     if (feedEvent.publish(mqttMsg.c_str())) {
       Serial.print("📤 [MQTT] Published event: ");
@@ -939,9 +938,8 @@ void checkConditions() {
     }
   }
 
-  // ========== ДВИЖЕНИЕ ==========
+  // ========== MOTION ==========
   if (motionDetected && !prevMotionState) {
-    // ✅ ВМЕСТО sendTelegramAlert() - ПУБЛИКУЕМ В MQTT
     String mqttMsg = "MOTION_DETECTED";
     if (feedEvent.publish(mqttMsg.c_str())) {
       Serial.print("📤 [MQTT] Published event: ");
@@ -950,7 +948,7 @@ void checkConditions() {
     lastMotionAlertTime = millis();
   } 
   else if (!motionDetected && prevMotionState && (millis() - lastMotionAlertTime > 5000)) {
-    // ✅ Движение прекратилось
+    // ✅ Motion stopped
     String mqttMsg = "MOTION_STOPPED";
     if (feedEvent.publish(mqttMsg.c_str())) {
       Serial.print("📤 [MQTT] Published event: ");
@@ -1022,18 +1020,16 @@ void displayData() {
 }
 
 void publishEventsToMQTT() {
-    // Вместо отправки в Telegram, публикуем события в MQTT
-    // Node-RED подписан на эти топики и сам отправит Telegram
     
     static bool lastGasAlertPublished = false;
     static bool lastTempAlertPublished = false;
     static bool lastHumidityAlertPublished = false;
     static bool lastMotionPublished = false;
     
-    // Публикуем газовую тревогу
+    // Publish gas alert
     if (gasAlert && !lastGasAlertPublished) {
         String mqttMsg = "GAS_ALERT:" + String(gasLevel);
-        if (feedEvent.publish(mqttMsg.c_str())) {  // <--- .c_str() преобразует String в const char*
+        if (feedEvent.publish(mqttMsg.c_str())) {  
             Serial.println("📤 GAS_ALERT sent to MQTT");
             lastGasAlertPublished = true;
         }
@@ -1041,10 +1037,10 @@ void publishEventsToMQTT() {
         lastGasAlertPublished = false;
     }
     
-    // Публикуем температурную тревогу
+    // Publish temperature alert
     if (tempAlert && !lastTempAlertPublished) {
         String mqttMsg = "TEMP_ALERT:" + String(temperature);
-        if (feedEvent.publish(mqttMsg.c_str())) {  // <--- .c_str()
+        if (feedEvent.publish(mqttMsg.c_str())) {  
             Serial.println("📤 TEMP_ALERT sent to MQTT");
             lastTempAlertPublished = true;
         }
@@ -1052,10 +1048,10 @@ void publishEventsToMQTT() {
         lastTempAlertPublished = false;
     }
     
-    // Публикуем влажность
+    // Publish humidity
     if (humidityAlert && !lastHumidityAlertPublished) {
         String mqttMsg = "HUMIDITY_ALERT:" + String(humidity);
-        if (feedEvent.publish(mqttMsg.c_str())) {  // <--- .c_str()
+        if (feedEvent.publish(mqttMsg.c_str())) {  
             Serial.println("📤 HUMIDITY_ALERT sent to MQTT");
             lastHumidityAlertPublished = true;
         }
@@ -1063,10 +1059,10 @@ void publishEventsToMQTT() {
         lastHumidityAlertPublished = false;
     }
     
-    // Публикуем движение
+    // Publish motion
     if (motionDetected && !lastMotionPublished) {
         String mqttMsg = "MOTION_DETECTED";
-        if (feedEvent.publish(mqttMsg.c_str())) {  // <--- .c_str()
+        if (feedEvent.publish(mqttMsg.c_str())) {  
             Serial.println("📤 MOTION_DETECTED sent to MQTT");
             lastMotionPublished = true;
         }
