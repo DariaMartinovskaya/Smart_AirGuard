@@ -31,6 +31,18 @@
         "env": []
     },
     {
+        "id": "11a19020df5de0e5",
+        "type": "tab",
+        "label": "Telegram Integration",
+        "disabled": false
+    },
+    {
+        "id": "f70a28abf1f09461",
+        "type": "tab",
+        "label": "Model Validation",
+        "disabled": false
+    },
+    {
         "id": "917a5983e20ab019",
         "type": "ui_base",
         "theme": {
@@ -393,15 +405,6 @@
         "name": "Smart AirGuard",
         "icon": "dashboard",
         "order": 1
-    },
-    {
-        "id": "33990f11634fb945",
-        "type": "ui_tab",
-        "name": "ESP32 Sensors",
-        "icon": "dashboard",
-        "order": 1,
-        "disabled": false,
-        "hidden": false
     },
     {
         "id": "76c1e908e35145de",
@@ -1025,6 +1028,248 @@
         "collapse": false
     },
     {
+        "id": "ui_metrics_group",
+        "type": "ui_group",
+        "z": "7fe3eb7c02d1e040",
+        "name": "Model Validation Metrics",
+        "tab": "fbb60ff3546b7c38",
+        "order": 2,
+        "disp": true,
+        "width": "12",
+        "collapse": false
+    },
+    {
+        "id": "dfbc100a5aae3264",
+        "type": "ui_group",
+        "name": "📊 Key Metrics",
+        "tab": "6ef00cded6b390bf",
+        "order": 1,
+        "width": 12,
+        "collapse": false
+    },
+    {
+        "id": "d6bafc699fbba5fd",
+        "type": "ui_group",
+        "name": "📋 Summary Report",
+        "tab": "6ef00cded6b390bf",
+        "order": 2,
+        "width": 12,
+        "collapse": false
+    },
+    {
+        "id": "b291e4108b8f8599",
+        "type": "ui_group",
+        "name": "📈 Gauge View",
+        "tab": "6ef00cded6b390bf",
+        "order": 3,
+        "width": 12,
+        "collapse": false
+    },
+    {
+        "id": "bccc72d42336393e",
+        "type": "ui_group",
+        "name": "📉 Error History",
+        "tab": "6ef00cded6b390bf",
+        "order": 4,
+        "width": 12,
+        "collapse": false
+    },
+    {
+        "id": "6ef00cded6b390bf",
+        "type": "ui_tab",
+        "name": "Model Validation",
+        "icon": "analytics",
+        "order": 10,
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "3440a176cb33c6e0",
+        "type": "ui_group",
+        "name": "Key Metrics",
+        "tab": "950c51e6089ac7c1",
+        "order": 1,
+        "width": 12,
+        "collapse": false
+    },
+    {
+        "id": "93842c7c8e9ffaea",
+        "type": "ui_group",
+        "name": "Summary Report",
+        "tab": "950c51e6089ac7c1",
+        "order": 2,
+        "width": 12,
+        "collapse": false
+    },
+    {
+        "id": "5da2b3715e714fa1",
+        "type": "ui_group",
+        "name": "Gauge View",
+        "tab": "950c51e6089ac7c1",
+        "order": 3,
+        "width": 12,
+        "collapse": false
+    },
+    {
+        "id": "11e203b5fd5632b5",
+        "type": "ui_group",
+        "name": "Error History",
+        "tab": "950c51e6089ac7c1",
+        "order": 4,
+        "width": 12,
+        "collapse": false
+    },
+    {
+        "id": "950c51e6089ac7c1",
+        "type": "ui_tab",
+        "name": "Model Validation",
+        "icon": "analytics",
+        "order": 10,
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "89651545d62a2c1e",
+        "type": "ui_group",
+        "name": "Key Metrics",
+        "tab": "0702b7f11f38b104",
+        "order": 1,
+        "width": 12,
+        "collapse": false
+    },
+    {
+        "id": "ca6bb916dc15a055",
+        "type": "ui_group",
+        "name": "Summary Report",
+        "tab": "0702b7f11f38b104",
+        "order": 2,
+        "width": 12,
+        "collapse": false
+    },
+    {
+        "id": "554d533baa8a6dbe",
+        "type": "ui_group",
+        "name": "Gauge View",
+        "tab": "0702b7f11f38b104",
+        "order": 3,
+        "width": 12,
+        "collapse": false
+    },
+    {
+        "id": "ac8ac4ce0ceb2efe",
+        "type": "ui_group",
+        "name": "Error History",
+        "tab": "0702b7f11f38b104",
+        "order": 4,
+        "width": 12,
+        "collapse": false
+    },
+    {
+        "id": "0702b7f11f38b104",
+        "type": "ui_tab",
+        "name": "Model Validation",
+        "icon": "analytics",
+        "order": 10,
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "0adf53b8326bb61b",
+        "type": "ui_group",
+        "name": "📊 Key Metrics",
+        "tab": "9e78a6df5c72074c",
+        "order": 1,
+        "width": 12,
+        "collapse": false
+    },
+    {
+        "id": "709a645b28a654ca",
+        "type": "ui_group",
+        "name": "📋 Summary Report",
+        "tab": "9e78a6df5c72074c",
+        "order": 2,
+        "width": 12,
+        "collapse": false
+    },
+    {
+        "id": "0f7fec146f843eb7",
+        "type": "ui_group",
+        "name": "📈 Gauge View",
+        "tab": "9e78a6df5c72074c",
+        "order": 3,
+        "width": 12,
+        "collapse": false
+    },
+    {
+        "id": "3b2d6d178abbab79",
+        "type": "ui_group",
+        "name": "📉 Error History",
+        "tab": "9e78a6df5c72074c",
+        "order": 4,
+        "width": 12,
+        "collapse": false
+    },
+    {
+        "id": "9e78a6df5c72074c",
+        "type": "ui_tab",
+        "name": "Model Validation",
+        "icon": "analytics",
+        "order": 10,
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "d572240d594503cc",
+        "type": "ui_group",
+        "name": "Key Metrics",
+        "tab": "6c21c5034cc8e8d2",
+        "order": 1,
+        "disp": true,
+        "width": "3",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "897ef7ed8096b7e8",
+        "type": "ui_group",
+        "name": "📋 Summary Report",
+        "tab": "6c21c5034cc8e8d2",
+        "order": 2,
+        "width": 12,
+        "collapse": false
+    },
+    {
+        "id": "bd4ca68c391860b6",
+        "type": "ui_group",
+        "name": "Gauge View",
+        "tab": "6c21c5034cc8e8d2",
+        "order": 3,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "8299aa0106b3778b",
+        "type": "ui_group",
+        "name": "Error History",
+        "tab": "6c21c5034cc8e8d2",
+        "order": 4,
+        "disp": true,
+        "width": "9",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "6c21c5034cc8e8d2",
+        "type": "ui_tab",
+        "name": "Model Validation",
+        "icon": "analytics",
+        "order": 10,
+        "disabled": false,
+        "hidden": false
+    },
+    {
         "id": "2659f6b4e5428618",
         "type": "function",
         "z": "6a706e8962cb8ed4",
@@ -1356,6 +1601,11 @@
         "label": "Humidity",
         "format": "{{msg.payload}}%",
         "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": "",
+        "color": "#000000",
         "x": 1060,
         "y": 220,
         "wires": []
@@ -2013,6 +2263,8 @@
         "tostatus": false,
         "complete": "true",
         "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
         "x": 1270,
         "y": 860,
         "wires": []
@@ -2258,7 +2510,8 @@
                 "a8b6f665e4c13d7a",
                 "fa97c49f780b0eca",
                 "e87b093ed23cb676",
-                "a029d52ecd17347d"
+                "a029d52ecd17347d",
+                "4fa8d6bacb506f86"
             ]
         ]
     },
@@ -2274,7 +2527,7 @@
         "complete": "true",
         "targetType": "full",
         "x": 850,
-        "y": 360,
+        "y": 380,
         "wires": []
     },
     {
@@ -2290,7 +2543,7 @@
         "finalize": "",
         "libs": [],
         "x": 850,
-        "y": 480,
+        "y": 500,
         "wires": [
             [
                 "abcbd93553bb51ee"
@@ -2318,8 +2571,8 @@
         "font": "",
         "fontSize": "",
         "color": "#000000",
-        "x": 1090,
-        "y": 500,
+        "x": 1130,
+        "y": 520,
         "wires": []
     },
     {
@@ -2346,8 +2599,8 @@
         "seg2": "66",
         "diff": false,
         "className": "",
-        "x": 1060,
-        "y": 420,
+        "x": 1100,
+        "y": 440,
         "wires": []
     },
     {
@@ -2363,7 +2616,7 @@
         "finalize": "",
         "libs": [],
         "x": 860,
-        "y": 420,
+        "y": 440,
         "wires": [
             [
                 "dd477bcbf7228297"
@@ -2438,7 +2691,7 @@
         "createDir": true,
         "overwriteFile": "false",
         "encoding": "utf8",
-        "x": 1090,
+        "x": 1130,
         "y": 240,
         "wires": [
             []
@@ -2489,8 +2742,8 @@
         "offcolor": "",
         "animate": true,
         "className": "",
-        "x": 430,
-        "y": 160,
+        "x": 330,
+        "y": 140,
         "wires": [
             [
                 "ba93ba62c6a6e5e6"
@@ -2508,8 +2761,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 670,
-        "y": 160,
+        "x": 590,
+        "y": 140,
         "wires": [
             [
                 "c7b7f12777c109f2"
@@ -2533,8 +2786,8 @@
         "font": "",
         "fontSize": "",
         "color": "#000000",
-        "x": 890,
-        "y": 160,
+        "x": 830,
+        "y": 140,
         "wires": []
     },
     {
@@ -2575,7 +2828,7 @@
         "outputs": 1,
         "useDifferentColor": false,
         "className": "",
-        "x": 1090,
+        "x": 1130,
         "y": 300,
         "wires": [
             []
@@ -2629,8 +2882,8 @@
         "font": "",
         "fontSize": "",
         "color": "#000000",
-        "x": 1090,
-        "y": 460,
+        "x": 1130,
+        "y": 480,
         "wires": []
     },
     {
@@ -2728,6 +2981,17 @@
                 "2fbd5e2c58a88105"
             ]
         ]
+    },
+    {
+        "id": "4fa8d6bacb506f86",
+        "type": "link out",
+        "z": "7fe3eb7c02d1e040",
+        "name": "link out Predictive Analysis",
+        "mode": "link",
+        "links": [],
+        "x": 775,
+        "y": 560,
+        "wires": []
     },
     {
         "id": "b8e00a91815f3995",
@@ -2892,7 +3156,7 @@
         "topic": "auto_test_sequence",
         "topicType": "str",
         "x": 190,
-        "y": 240,
+        "y": 200,
         "wires": [
             [
                 "00f5a96d242a46cb"
@@ -2920,7 +3184,7 @@
         "topic": "test_leds",
         "topicType": "str",
         "x": 170,
-        "y": 300,
+        "y": 260,
         "wires": [
             [
                 "10b0c41298ee5538"
@@ -2939,7 +3203,7 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 1270,
+        "x": 1250,
         "y": 80,
         "wires": [
             [
@@ -2959,7 +3223,7 @@
         "finalize": "",
         "libs": [],
         "x": 410,
-        "y": 300,
+        "y": 260,
         "wires": [
             [
                 "cf2e2ef3fb62e479"
@@ -2978,7 +3242,7 @@
         "finalize": "",
         "libs": [],
         "x": 440,
-        "y": 240,
+        "y": 200,
         "wires": [
             [
                 "26d940f89541846b"
@@ -3006,7 +3270,7 @@
         "topic": "reset_test_system",
         "topicType": "str",
         "x": 170,
-        "y": 380,
+        "y": 320,
         "wires": [
             [
                 "972c9fa67b439784"
@@ -3026,7 +3290,7 @@
         "finalize": "",
         "libs": [],
         "x": 410,
-        "y": 380,
+        "y": 320,
         "wires": [
             [],
             [
@@ -3048,8 +3312,8 @@
         "correl": "",
         "expiry": "",
         "broker": "adafruit-io",
-        "x": 1620,
-        "y": 80,
+        "x": 1720,
+        "y": 40,
         "wires": []
     },
     {
@@ -3085,6 +3349,8 @@
         "tostatus": false,
         "complete": "true",
         "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
         "x": 1130,
         "y": 200,
         "wires": []
@@ -3100,8 +3366,8 @@
         "tostatus": false,
         "complete": "true",
         "targetType": "full",
-        "x": 1640,
-        "y": 140,
+        "x": 1740,
+        "y": 100,
         "wires": []
     },
     {
@@ -3117,8 +3383,8 @@
         "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1640,
-        "y": 220,
+        "x": 1740,
+        "y": 140,
         "wires": []
     },
     {
@@ -3133,8 +3399,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 1360,
-        "y": 140,
+        "x": 1500,
+        "y": 80,
         "wires": [
             [
                 "e53c83269352a479"
@@ -3160,7 +3426,7 @@
         "finalize": "",
         "libs": [],
         "x": 900,
-        "y": 80,
+        "y": 100,
         "wires": [
             [
                 "b667c16a676ed6fe",
@@ -3181,7 +3447,7 @@
         "finalize": "",
         "libs": [],
         "x": 700,
-        "y": 460,
+        "y": 380,
         "wires": [
             [
                 "3f2c119909bbe22e"
@@ -3201,7 +3467,7 @@
         "finalize": "",
         "libs": [],
         "x": 1000,
-        "y": 460,
+        "y": 380,
         "wires": [
             [],
             [
@@ -3231,7 +3497,7 @@
         "fontSize": "",
         "color": "#000000",
         "x": 1270,
-        "y": 440,
+        "y": 360,
         "wires": []
     },
     {
@@ -3253,7 +3519,7 @@
         "fontSize": "",
         "color": "#000000",
         "x": 1260,
-        "y": 480,
+        "y": 400,
         "wires": []
     },
     {
@@ -3281,7 +3547,7 @@
         "payload": "",
         "payloadType": "date",
         "x": 170,
-        "y": 460,
+        "y": 380,
         "wires": [
             [
                 "c88e1996a2a2bd7d"
@@ -3300,7 +3566,7 @@
         "finalize": "",
         "libs": [],
         "x": 410,
-        "y": 540,
+        "y": 420,
         "wires": [
             [
                 "c88e1996a2a2bd7d"
@@ -3330,7 +3596,7 @@
         "payload": "",
         "payloadType": "date",
         "x": 170,
-        "y": 540,
+        "y": 420,
         "wires": [
             [
                 "15c563e958b79003"
@@ -3346,8 +3612,8 @@
         "links": [
             "85b8f252475383bc"
         ],
-        "x": 805,
-        "y": 240,
+        "x": 795,
+        "y": 220,
         "wires": []
     },
     {
@@ -3359,7 +3625,7 @@
         "links": [
             "19dd71621febf920"
         ],
-        "x": 1555,
+        "x": 1655,
         "y": 180,
         "wires": []
     },
@@ -3372,7 +3638,7 @@
         "links": [
             "0d14af6d85bf7ff4"
         ],
-        "x": 1155,
+        "x": 1095,
         "y": 40,
         "wires": []
     },
@@ -3400,8 +3666,8 @@
         "links": [
             "e7c7d6d7285f0a82"
         ],
-        "x": 555,
-        "y": 320,
+        "x": 535,
+        "y": 260,
         "wires": []
     },
     {
@@ -3412,7 +3678,7 @@
         "links": [
             "cf2e2ef3fb62e479"
         ],
-        "x": 1155,
+        "x": 1135,
         "y": 120,
         "wires": [
             [
@@ -3443,7 +3709,7 @@
         "payload": "40",
         "payloadType": "num",
         "x": 160,
-        "y": 640,
+        "y": 480,
         "wires": [
             [
                 "8e35c93e3e22393e"
@@ -3459,8 +3725,8 @@
         "links": [
             "f0bbaa825cfb18b2"
         ],
-        "x": 335,
-        "y": 640,
+        "x": 275,
+        "y": 480,
         "wires": []
     },
     {
@@ -3486,7 +3752,7 @@
         "payload": "95",
         "payloadType": "num",
         "x": 170,
-        "y": 680,
+        "y": 520,
         "wires": [
             [
                 "c50f5459ca1592ab"
@@ -3502,8 +3768,8 @@
         "links": [
             "28c089e513799da5"
         ],
-        "x": 335,
-        "y": 680,
+        "x": 295,
+        "y": 520,
         "wires": []
     },
     {
@@ -3529,7 +3795,7 @@
         "payload": "450",
         "payloadType": "num",
         "x": 150,
-        "y": 720,
+        "y": 560,
         "wires": [
             [
                 "e562153d25293914"
@@ -3545,12 +3811,950 @@
         "links": [
             "2883e45b182f3852"
         ],
-        "x": 335,
-        "y": 720,
+        "x": 255,
+        "y": 560,
         "wires": []
     },
     {
-        "id": "c912aacfd6544f1b",
+        "id": "8f759b7af4de4054",
+        "type": "inject",
+        "z": "11a19020df5de0e5",
+        "name": "Poll every 2 sec",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "2",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "str",
+        "x": 170,
+        "y": 160,
+        "wires": [
+            [
+                "f7e1dd692e943136"
+            ]
+        ]
+    },
+    {
+        "id": "f7e1dd692e943136",
+        "type": "http request",
+        "z": "11a19020df5de0e5",
+        "name": "Get Updates",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "https://api.telegram.org/bot8159417350:AAFVaCa_djh0A81HtL3QTT7Ww9rcLwBU4Yg/getUpdates",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 370,
+        "y": 160,
+        "wires": [
+            [
+                "d5aac0e2150ee187"
+            ]
+        ]
+    },
+    {
+        "id": "d5aac0e2150ee187",
+        "type": "function",
+        "z": "11a19020df5de0e5",
+        "name": "Process Commands",
+        "func": "let lastUpdateId = flow.get(\"last_update_id\") || 0;\nlet updates = msg.payload.result;\n\nif (!updates || !Array.isArray(updates)) return null;\n\nlet results = [];\n\nfor (let i = 0; i < updates.length; i++) {\n    let update = updates[i];\n    let updateId = update.update_id;\n    let message = update.message;\n    \n    if (updateId > lastUpdateId && message && message.text) {\n        let text = message.text;\n        let chatId = message.chat.id;\n        \n        if (updateId > lastUpdateId) lastUpdateId = updateId;\n        \n        let command = \"\";\n        if (text === \"/status\") command = \"STATUS\";\n        else if (text === \"/sensors\") command = \"SENSORS\";\n        else if (text === \"/alerts\") command = \"ALERTS\";\n        else if (text === \"/help\") command = \"HELP\";\n        else if (text === \"/fan_on\") command = \"FAN_ON\";\n        else if (text === \"/fan_off\") command = \"FAN_OFF\";\n        else if (text === \"/fan_auto\") command = \"FAN_AUTO\";\n        else continue;\n        \n        if (command !== \"\") {\n            node.log(\"📤 Command: \" + command);\n            \n            flow.set(\"telegram_chat_id\", chatId);\n            \n            results.push([\n                {\n                    topic: \"DaryaMartsinouskaya/feeds/telegram_commands\",\n                    payload: command,\n                    qos: 1,\n                    retain: false\n                },\n                {\n                    payload: {\n                        chat_id: chatId,\n                        text: \"✅ Command received: \" + command\n                    },\n                    url: \"https://api.telegram.org/bot8159417350:AAFVaCa_djh0A81HtL3QTT7Ww9rcLwBU4Yg/sendMessage\"\n                }\n            ]);\n        }\n    }\n}\n\nflow.set(\"last_update_id\", lastUpdateId);\n\nif (results.length === 0) return null;\n\nreturn [].concat(...results);",
+        "outputs": 2,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 640,
+        "y": 160,
+        "wires": [
+            [
+                "3405c36f2e649d6f"
+            ],
+            [
+                "2683d5362e9aef51"
+            ]
+        ]
+    },
+    {
+        "id": "3405c36f2e649d6f",
+        "type": "mqtt out",
+        "z": "11a19020df5de0e5",
+        "name": "MQTT to ESP32",
+        "topic": "DaryaMartsinouskaya/feeds/telegram_commands",
+        "qos": "1",
+        "retain": "false",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "adafruit-io",
+        "x": 860,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "2683d5362e9aef51",
+        "type": "http request",
+        "z": "11a19020df5de0e5",
+        "name": "Send ACK",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 850,
+        "y": 200,
+        "wires": [
+            [
+                "16c167634b8785f4"
+            ]
+        ]
+    },
+    {
+        "id": "16c167634b8785f4",
+        "type": "debug",
+        "z": "11a19020df5de0e5",
+        "name": "ACK Debug",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1070,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "581a7ed031bdea00",
+        "type": "mqtt in",
+        "z": "11a19020df5de0e5",
+        "name": "ESP32 Response",
+        "topic": "DaryaMartsinouskaya/feeds/telegram_response",
+        "qos": "0",
+        "datatype": "auto",
+        "broker": "adafruit-io",
+        "nl": false,
+        "rap": false,
+        "inputs": 0,
+        "x": 140,
+        "y": 280,
+        "wires": [
+            [
+                "9d82c12af5476126"
+            ]
+        ]
+    },
+    {
+        "id": "9d82c12af5476126",
+        "type": "function",
+        "z": "11a19020df5de0e5",
+        "name": "Format Response",
+        "func": "let chatId = flow.get(\"telegram_chat_id\") || \"360267276\";\nlet responseText = String(msg.payload);\n\nreturn {\n    payload: {\n        chat_id: chatId,\n        text: responseText,\n        parse_mode: \"Markdown\"\n    }\n};",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 390,
+        "y": 280,
+        "wires": [
+            [
+                "033334a3fe43ecf6"
+            ]
+        ]
+    },
+    {
+        "id": "033334a3fe43ecf6",
+        "type": "http request",
+        "z": "11a19020df5de0e5",
+        "name": "Send to Telegram",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "https://api.telegram.org/bot8159417350:AAFVaCa_djh0A81HtL3QTT7Ww9rcLwBU4Yg/sendMessage",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 630,
+        "y": 280,
+        "wires": [
+            [
+                "14f3a9665062f27b"
+            ]
+        ]
+    },
+    {
+        "id": "14f3a9665062f27b",
+        "type": "debug",
+        "z": "11a19020df5de0e5",
+        "name": "Final Response",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 860,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "b2391c74978394c2",
+        "type": "comment",
+        "z": "11a19020df5de0e5",
+        "name": "TELEGRAM INTEGRATION",
+        "info": "This Node-RED flow enables bidirectional communication between the Smart AirGuard ESP32 and Telegram.\n\nThree Main Pipelines:\n\n1. Command Pipeline (User → ESP32)\n- Polls Telegram every 2 seconds for user commands (`/status`, `/fan_on`, etc.)\n- Sends commands to ESP32 via MQTT feed `telegram_commands`\n- Sends immediate \"✅ Command received\" confirmation to user\n\n2. Response Pipeline (ESP32 → User)\n- Listens to ESP32 responses on MQTT feed `telegram_response`\n- Forwards responses back to the Telegram user\n\n3. Auto Notification Pipeline (ESP32 → User)\n- Listens to event feed `events` (GAS_ALERT, MOTION_DETECTED, TEMP_ALERT, etc.)\n- Automatically sends formatted alerts to Telegram without user request\n\nSupported Commands:\n`/status` – System status  \n`/sensors` – Sensor data  \n`/alerts` – Active alerts  \n`/fan_on`, `/fan_off`, `/fan_auto` – Fan control  \n`/help` – Help message",
+        "x": 450,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "mqtt_events_in",
+        "type": "mqtt in",
+        "z": "11a19020df5de0e5",
+        "name": "Events from ESP32",
+        "topic": "DaryaMartsinouskaya/feeds/events",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "adafruit-io",
+        "nl": false,
+        "rap": false,
+        "inputs": 0,
+        "x": 150,
+        "y": 360,
+        "wires": [
+            [
+                "format_auto_alert"
+            ]
+        ]
+    },
+    {
+        "id": "format_auto_alert",
+        "type": "function",
+        "z": "11a19020df5de0e5",
+        "name": "Format Auto Alert",
+        "func": "let payload = msg.payload;\nlet message = \"\";\nlet chatId = flow.get(\"telegram_chat_id\") || \"360267276\";\n\nif (typeof payload === 'string') {\n    if (payload.startsWith(\"GAS_ALERT:\")) {\n        let gasValue = payload.split(\":\")[1];\n        message = \"🚨 *GAS ALERT!* 🚨\\n\\n\" +\n                 \"⚠️ Dangerous gas concentration!\\n\" +\n                 \"📊 Gas level: *\" + gasValue + \" ppm*\\n\" +\n                 \"🌀 Fan: *ON (forced)*\\n\\n\" +\n                 \"📍 Smart AirGuard System\";\n    }\n    else if (payload.startsWith(\"GAS_NORMAL:\")) {\n        let gasValue = payload.split(\":\")[1];\n        message = \"✅ *Gas normal*\\n\\n\" +\n                 \"📊 Current gas: *\" + gasValue + \" ppm*\\n\" +\n                 \"🌀 Fan: *OFF*\\n\\n\" +\n                 \"📍 Smart AirGuard System\";\n    }\n    else if (payload.startsWith(\"TEMP_ALERT:\")) {\n        let temp = payload.split(\":\")[1];\n        message = \"🌡️ *Temperature Alert!*\\n\\n\" +\n                 \"⚠️ Temperature out of range!\\n\" +\n                 \"📊 Current: *\" + temp + \"°C*\\n\" +\n                 \"📏 Range: 10-35°C\\n\\n\" +\n                 \"📍 Smart AirGuard System\";\n    }\n    else if (payload.startsWith(\"TEMP_NORMAL:\")) {\n        let temp = payload.split(\":\")[1];\n        message = \"✅ *Temperature normal*\\n\\n\" +\n                 \"📊 Current: *\" + temp + \"°C*\\n\\n\" +\n                 \"📍 Smart AirGuard System\";\n    }\n    else if (payload.startsWith(\"HUMIDITY_ALERT:\")) {\n        let humidity = payload.split(\":\")[1];\n        message = \"💧 *High Humidity Alert!*\\n\\n\" +\n                 \"⚠️ Humidity is too high!\\n\" +\n                 \"📊 Current: *\" + humidity + \"%*\\n\" +\n                 \"📏 Threshold: 90%\\n\\n\" +\n                 \"📍 Smart AirGuard System\";\n    }\n    else if (payload.startsWith(\"HUMIDITY_NORMAL:\")) {\n        let humidity = payload.split(\":\")[1];\n        message = \"✅ *Humidity normal*\\n\\n\" +\n                 \"📊 Current: *\" + humidity + \"%*\\n\\n\" +\n                 \"📍 Smart AirGuard System\";\n    }\n    else if (payload === \"MOTION_DETECTED\") {\n        message = \"🚶 *Motion detected!*\\n\\n\" +\n                 \"📍 Smart AirGuard System\";\n    }\n    else if (payload === \"MOTION_STOPPED\") {\n        message = \"✅ *Motion stopped*\\n\\n\" +\n                 \"📍 Smart AirGuard System\";\n    }\n}\n\nif (message === \"\") return null;\n\nreturn {\n    payload: {\n        chat_id: chatId,\n        text: message,\n        parse_mode: \"Markdown\"\n    }\n};",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 390,
+        "y": 360,
+        "wires": [
+            [
+                "send_auto_alert"
+            ]
+        ]
+    },
+    {
+        "id": "send_auto_alert",
+        "type": "http request",
+        "z": "11a19020df5de0e5",
+        "name": "Send Alert",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "https://api.telegram.org/bot8159417350:AAFVaCa_djh0A81HtL3QTT7Ww9rcLwBU4Yg/sendMessage",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 610,
+        "y": 360,
+        "wires": [
+            [
+                "alert_debug"
+            ]
+        ]
+    },
+    {
+        "id": "alert_debug",
+        "type": "debug",
+        "z": "11a19020df5de0e5",
+        "name": "Alert Debug",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 850,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "auto_notifications",
+        "type": "mqtt in",
+        "z": "11a19020df5de0e5",
+        "name": "Auto Events",
+        "topic": "DaryaMartsinouskaya/feeds/events",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "adafruit-io",
+        "nl": false,
+        "rap": false,
+        "inputs": 0,
+        "x": 130,
+        "y": 440,
+        "wires": [
+            [
+                "format_auto_message"
+            ]
+        ]
+    },
+    {
+        "id": "format_auto_message",
+        "type": "function",
+        "z": "11a19020df5de0e5",
+        "name": "Format Auto Message",
+        "func": "let payload = msg.payload;\nlet message = \"\";\nlet chatId = flow.get(\"telegram_chat_id\") || \"360267276\";\n\nif (typeof payload === 'string') {\n    if (payload.startsWith(\"GAS_ALERT:\")) {\n        let gasValue = payload.split(\":\")[1];\n        message = \"🚨 *GAS ALERT!* 🚨\\n\\n\" +\n                 \"⚠️ Dangerous gas concentration!\\n\" +\n                 \"📊 Gas level: *\" + gasValue + \" ppm*\\n\" +\n                 \"🌀 Fan: *ON (forced)*\\n\\n\" +\n                 \"📍 Smart AirGuard System\";\n    }\n    else if (payload.startsWith(\"GAS_NORMAL:\")) {\n        let gasValue = payload.split(\":\")[1];\n        message = \"✅ *Gas normal*\\n\\n\" +\n                 \"📊 Current gas: *\" + gasValue + \" ppm*\\n\" +\n                 \"🌀 Fan: *OFF*\\n\\n\" +\n                 \"📍 Smart AirGuard System\";\n    }\n    else if (payload.startsWith(\"TEMP_ALERT:\")) {\n        let temp = payload.split(\":\")[1];\n        message = \"🌡️ *Temperature Alert!*\\n\\n\" +\n                 \"⚠️ Temperature out of range!\\n\" +\n                 \"📊 Current: *\" + temp + \"°C*\\n\" +\n                 \"📏 Range: 10-35°C\\n\\n\" +\n                 \"📍 Smart AirGuard System\";\n    }\n    else if (payload.startsWith(\"TEMP_NORMAL:\")) {\n        let temp = payload.split(\":\")[1];\n        message = \"✅ *Temperature normal*\\n\\n\" +\n                 \"📊 Current: *\" + temp + \"°C*\\n\\n\" +\n                 \"📍 Smart AirGuard System\";\n    }\n    else if (payload.startsWith(\"HUMIDITY_ALERT:\")) {\n        let humidity = payload.split(\":\")[1];\n        message = \"💧 *High Humidity Alert!*\\n\\n\" +\n                 \"⚠️ Humidity is too high!\\n\" +\n                 \"📊 Current: *\" + humidity + \"%*\\n\" +\n                 \"📏 Threshold: 90%\\n\\n\" +\n                 \"📍 Smart AirGuard System\";\n    }\n    else if (payload.startsWith(\"HUMIDITY_NORMAL:\")) {\n        let humidity = payload.split(\":\")[1];\n        message = \"✅ *Humidity normal*\\n\\n\" +\n                 \"📊 Current: *\" + humidity + \"%*\\n\\n\" +\n                 \"📍 Smart AirGuard System\";\n    }\n    else if (payload === \"MOTION_DETECTED\") {\n        message = \"🚶 *Motion detected!*\\n\\n\" +\n                 \"📍 Smart AirGuard System\";\n    }\n    else if (payload === \"MOTION_STOPPED\") {\n        message = \"✅ *Motion stopped*\\n\\n\" +\n                 \"📍 Smart AirGuard System\";\n    }\n    else if (payload === \"FAN_MANUAL_ON\") {\n        message = \"🌀 *Fan turned ON manually*\\n\\n\" +\n            \"📍 Smart AirGuard System\";\n    }\n    else if (payload === \"FAN_MANUAL_OFF\") {\n        message = \"⭕ *Fan turned OFF manually*\\n\\n\" +\n            \"📍 Smart AirGuard System\";\n    }\n    else if (payload === \"FAN_AUTO_MODE\") {\n        message = \"⚙️ *Fan switched to AUTO mode*\\n\\n\" +\n            \"📍 Smart AirGuard System\";\n    }\n}\n\nif (message === \"\") return null;\n\nreturn {\n    payload: {\n        chat_id: chatId,\n        text: message,\n        parse_mode: \"Markdown\"\n    }\n};",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 400,
+        "y": 440,
+        "wires": [
+            [
+                "send_auto_notification"
+            ]
+        ]
+    },
+    {
+        "id": "send_auto_notification",
+        "type": "http request",
+        "z": "11a19020df5de0e5",
+        "name": "Send Auto Notification",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "https://api.telegram.org/bot8159417350:AAFVaCa_djh0A81HtL3QTT7Ww9rcLwBU4Yg/sendMessage",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 640,
+        "y": 440,
+        "wires": [
+            [
+                "auto_notify_debug"
+            ]
+        ]
+    },
+    {
+        "id": "auto_notify_debug",
+        "type": "debug",
+        "z": "11a19020df5de0e5",
+        "name": "Auto Notify Debug",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 870,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "64162abe5a2bbc1f",
+        "type": "mqtt in",
+        "z": "f70a28abf1f09461",
+        "name": "Gas Data",
+        "topic": "DaryaMartsinouskaya/feeds/gas",
+        "qos": "0",
+        "datatype": "auto",
+        "broker": "adafruit-io",
+        "nl": false,
+        "rap": false,
+        "inputs": 0,
+        "x": 120,
+        "y": 260,
+        "wires": [
+            [
+                "f1b2c3d4e5a6b7c8"
+            ]
+        ]
+    },
+    {
+        "id": "09428586d9394c77",
+        "type": "function",
+        "z": "f70a28abf1f09461",
+        "name": "Calculate Metrics",
+        "func": "let actualValues = context.actualValues || [];\nlet predictedValues = context.predictedValues || [];\nlet currentGas = msg.payload;\n\nif (typeof currentGas === 'string') {\n    currentGas = parseFloat(currentGas);\n}\n\nif (typeof currentGas === 'number' && currentGas > 0 && !isNaN(currentGas)) {\n    actualValues.push({ value: currentGas, timestamp: Date.now() });\n    if (actualValues.length > 50) actualValues = actualValues.slice(-50);\n    \n    if (actualValues.length > 6) {\n        let predicted = actualValues[actualValues.length - 7];\n        if (predicted) {\n            let newPrediction = {\n                actual: currentGas,\n                predicted: predicted.value,\n                timestamp: Date.now()\n            };\n            predictedValues.push(newPrediction);\n            if (predictedValues.length > 50) predictedValues = predictedValues.slice(-50);\n            \n            let sharedPredictions = flow.get(\"shared_predicted_values\") || [];\n            sharedPredictions.push(newPrediction);\n            if (sharedPredictions.length > 50) sharedPredictions = sharedPredictions.slice(-50);\n            flow.set(\"shared_predicted_values\", sharedPredictions);\n            \n            node.log(\"📊 Total predictions: \" + sharedPredictions.length);\n        }\n    }\n    \n    context.actualValues = actualValues;\n    context.predictedValues = predictedValues;\n}\n\nlet metrics = {\n    timestamp: new Date().toISOString(),\n    mae: 0, rmse: 0, mape: 0, accuracy: 0, samples: predictedValues.length\n};\n\nif (predictedValues.length >= 3) {\n    let sumAbsError = 0, sumSquaredError = 0, sumAbsPercentError = 0;\n    for (let i = 0; i < predictedValues.length; i++) {\n        let error = predictedValues[i].actual - predictedValues[i].predicted;\n        let absError = Math.abs(error);\n        sumAbsError += absError;\n        sumSquaredError += error * error;\n        sumAbsPercentError += (absError / (predictedValues[i].actual + 0.01)) * 100;\n    }\n    metrics.mae = (sumAbsError / predictedValues.length).toFixed(1);\n    metrics.rmse = Math.sqrt(sumSquaredError / predictedValues.length).toFixed(1);\n    metrics.mape = (sumAbsPercentError / predictedValues.length).toFixed(1);\n    let acc = ((1 - metrics.mae / 500) * 100);\n    metrics.accuracy = Math.min(100, Math.max(0, acc)).toFixed(1);\n}\n\nreturn { payload: metrics, topic: \"metrics\" };",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 650,
+        "y": 240,
+        "wires": [
+            [
+                "28010865c32d4728",
+                "c277c892298b3198"
+            ]
+        ]
+    },
+    {
+        "id": "28010865c32d4728",
+        "type": "function",
+        "z": "f70a28abf1f09461",
+        "name": "Send to UI",
+        "func": "let m = msg.payload;\nreturn [\n    { payload: parseFloat(m.mae), topic: \"mae\" },\n    { payload: parseFloat(m.rmse), topic: \"rmse\" },\n    { payload: parseFloat(m.mape), topic: \"mape\" },\n    { payload: parseFloat(m.accuracy), topic: \"accuracy\" },\n    { payload: m, topic: \"summary\" }\n];",
+        "outputs": 5,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 850,
+        "y": 420,
+        "wires": [
+            [
+                "b2aa75b8c3ec225e",
+                "f134693ac0594b9a"
+            ],
+            [
+                "812d59339eebfa4e",
+                "dbfaf582d76a9333"
+            ],
+            [
+                "5247ec03f066f515",
+                "c09e29260358b760"
+            ],
+            [
+                "294b7cbb92a4708f",
+                "a68496e206ec30c7"
+            ],
+            [
+                "a1b2c3d4e5f60111"
+            ]
+        ]
+    },
+    {
+        "id": "c277c892298b3198",
+        "type": "function",
+        "z": "f70a28abf1f09461",
+        "name": "Update Chart",
+        "func": "let predictedValues = flow.get(\"shared_predicted_values\") || [];\n\nif (predictedValues.length === 0) {\n    return null;\n}\n\n// Берём последнюю ошибку\nlet last = predictedValues[predictedValues.length - 1];\n\nlet error = Math.abs(last.actual - last.predicted);\n\nmsg.payload = error;\nmsg.topic = \"Prediction Error\";\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 860,
+        "y": 160,
+        "wires": [
+            [
+                "9147a49cbb5bc32a"
+            ]
+        ]
+    },
+    {
+        "id": "b2aa75b8c3ec225e",
+        "type": "ui_text",
+        "z": "f70a28abf1f09461",
+        "group": "d572240d594503cc",
+        "order": 1,
+        "width": "3",
+        "height": "4",
+        "name": "",
+        "label": "",
+        "format": "<div style='background: white; border-radius: 12px; padding: 15px; text-align: center;'><div>📊 MAE</div><div style='font-size: 32px; font-weight: bold;'>{{msg.payload}} ppm</div><div>Target: &lt; 50 ppm</div></div>",
+        "layout": "",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": "",
+        "color": "#000000",
+        "x": 1030,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "812d59339eebfa4e",
+        "type": "ui_text",
+        "z": "f70a28abf1f09461",
+        "group": "d572240d594503cc",
+        "order": 2,
+        "width": 3,
+        "height": "4",
+        "name": "",
+        "label": "",
+        "format": "<div style='background: white; border-radius: 12px; padding: 15px; text-align: center;'><div>📈 RMSE </div><div style='font-size: 32px; font-weight: bold;'>{{msg.payload}} ppm</div><div>Target: &lt; 75 ppm</div></div>",
+        "layout": "",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": "",
+        "color": "#000000",
+        "x": 1030,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "5247ec03f066f515",
+        "type": "ui_text",
+        "z": "f70a28abf1f09461",
+        "group": "d572240d594503cc",
+        "order": 3,
+        "width": 3,
+        "height": "4",
+        "name": "",
+        "label": "",
+        "format": "<div style='background: white; border-radius: 12px; padding: 15px; text-align: center;'><div>🎯 MAPE </div><div style='font-size: 32px; font-weight: bold;'>{{msg.payload}}%</div><div>Target: &lt; 15%</div></div>",
+        "layout": "",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": "",
+        "color": "#000000",
+        "x": 1030,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "294b7cbb92a4708f",
+        "type": "ui_text",
+        "z": "f70a28abf1f09461",
+        "group": "d572240d594503cc",
+        "order": 4,
+        "width": 3,
+        "height": "4",
+        "name": "",
+        "label": "",
+        "format": "<div style='background: white; border-radius: 12px; padding: 15px; text-align: center;'><div>🏆 Accuracy</div><div style='font-size: 32px; font-weight: bold;'>{{msg.payload}}%</div><div>Target: &gt; 80%</div></div>",
+        "layout": "",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": "",
+        "color": "#000000",
+        "x": 1030,
+        "y": 580,
+        "wires": []
+    },
+    {
+        "id": "f134693ac0594b9a",
+        "type": "ui_gauge",
+        "z": "f70a28abf1f09461",
+        "name": "MAE",
+        "group": "bd4ca68c391860b6",
+        "order": 1,
+        "width": "6",
+        "height": "4",
+        "gtype": "gage",
+        "title": "MAE - average error ",
+        "label": "ppm",
+        "format": "{{value}}",
+        "min": 0,
+        "max": 150,
+        "colors": [
+            "#cce8b5",
+            "#ffe4a8",
+            "#f4a4c0"
+        ],
+        "seg1": "50",
+        "seg2": "100",
+        "diff": false,
+        "className": "",
+        "x": 1030,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "dbfaf582d76a9333",
+        "type": "ui_gauge",
+        "z": "f70a28abf1f09461",
+        "name": "",
+        "group": "bd4ca68c391860b6",
+        "order": 2,
+        "width": "6",
+        "height": "4",
+        "gtype": "gage",
+        "title": "RMSE - penalizes large errors",
+        "label": "ppm",
+        "format": "{{value}}",
+        "min": 0,
+        "max": 150,
+        "colors": [
+            "#cce8b5",
+            "#ffe4a8",
+            "#f4a4c0"
+        ],
+        "seg1": "50",
+        "seg2": "100",
+        "diff": false,
+        "className": "",
+        "x": 1110,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "c09e29260358b760",
+        "type": "ui_gauge",
+        "z": "f70a28abf1f09461",
+        "name": "",
+        "group": "bd4ca68c391860b6",
+        "order": 3,
+        "width": "6",
+        "height": "4",
+        "gtype": "gage",
+        "title": "MAPE - percentage error",
+        "label": "%",
+        "format": "{{value}}",
+        "min": 0,
+        "max": 100,
+        "colors": [
+            "#cce8b5",
+            "#ffe4a8",
+            "#f4a4c0"
+        ],
+        "seg1": "15",
+        "seg2": "30",
+        "diff": false,
+        "className": "",
+        "x": 1090,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "a68496e206ec30c7",
+        "type": "ui_gauge",
+        "z": "f70a28abf1f09461",
+        "name": "",
+        "group": "bd4ca68c391860b6",
+        "order": 4,
+        "width": "6",
+        "height": "4",
+        "gtype": "gage",
+        "title": "Accuracy",
+        "label": "%",
+        "format": "{{value}}",
+        "min": 0,
+        "max": 100,
+        "colors": [
+            "#f4a4c0",
+            "#ffd9a8",
+            "#cce8b5"
+        ],
+        "seg1": "60",
+        "seg2": "80",
+        "diff": false,
+        "className": "",
+        "x": 1040,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "9147a49cbb5bc32a",
+        "type": "ui_chart",
+        "z": "f70a28abf1f09461",
+        "name": "",
+        "group": "8299aa0106b3778b",
+        "order": 1,
+        "width": "9",
+        "height": "6",
+        "label": "Prediction Error Distribution (ppm)",
+        "chartType": "line",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": true,
+        "ymin": "0",
+        "ymax": "2000",
+        "removeOlder": "100",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "1",
+        "cutout": "",
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#ca3838",
+            "#000000",
+            "#000000",
+            "#000000",
+            "#000000",
+            "#000000",
+            "#000000",
+            "#000000",
+            "#000000"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 1120,
+        "y": 160,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "ae8efe9052854c45",
+        "type": "inject",
+        "z": "f70a28abf1f09461",
+        "name": "400 ppm",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "topic": "",
+        "payload": "400",
+        "payloadType": "num",
+        "x": 360,
+        "y": 60,
+        "wires": [
+            [
+                "09428586d9394c77"
+            ]
+        ]
+    },
+    {
+        "id": "090b265e3db9f1cc",
+        "type": "inject",
+        "z": "f70a28abf1f09461",
+        "name": "450 ppm",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "topic": "",
+        "payload": "450",
+        "payloadType": "num",
+        "x": 360,
+        "y": 100,
+        "wires": [
+            [
+                "09428586d9394c77"
+            ]
+        ]
+    },
+    {
+        "id": "4552e4356f1ae674",
+        "type": "inject",
+        "z": "f70a28abf1f09461",
+        "name": "500 ppm",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "topic": "",
+        "payload": "500",
+        "payloadType": "num",
+        "x": 360,
+        "y": 140,
+        "wires": [
+            [
+                "09428586d9394c77"
+            ]
+        ]
+    },
+    {
+        "id": "ad6264a10100976f",
+        "type": "inject",
+        "z": "f70a28abf1f09461",
+        "name": "550 ppm",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "topic": "",
+        "payload": "550",
+        "payloadType": "num",
+        "x": 360,
+        "y": 180,
+        "wires": [
+            [
+                "09428586d9394c77"
+            ]
+        ]
+    },
+    {
+        "id": "4af0285631723518",
+        "type": "inject",
+        "z": "f70a28abf1f09461",
+        "name": "Reset",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "topic": "",
+        "payload": "reset",
+        "payloadType": "str",
+        "x": 110,
+        "y": 400,
+        "wires": [
+            [
+                "61a2b9c66a1c763f"
+            ]
+        ]
+    },
+    {
+        "id": "61a2b9c66a1c763f",
+        "type": "function",
+        "z": "f70a28abf1f09461",
+        "name": "Clear History",
+        "func": "context.actualValues = [];\ncontext.predictedValues = [];\nflow.set(\"shared_predicted_values\", []);\nflow.set(\"validation_metrics\", null);\nnode.log(\"🔄 All cleared\");\nreturn null;",
+        "outputs": 1,
+        "x": 370,
+        "y": 400,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "f1b2c3d4e5a6b7c8",
+        "type": "function",
+        "z": "f70a28abf1f09461",
+        "name": "Allow Stable Gas Values",
+        "func": "// Пропускаем одинаковые значения газа раз в 30 секунд\n// чтобы model validation продолжал получать данные\n\nlet lastGas = context.get('lastGas') || null;\nlet lastSentTime = context.get('lastSentTime') || 0;\n\nlet gas = msg.payload;\n\nif (typeof gas === 'string') {\n    gas = parseFloat(gas);\n}\n\nif (isNaN(gas)) {\n    return null;\n}\n\nlet now = Date.now();\n\n// Отправляем если:\n// 1. значение изменилось\n// ИЛИ\n// 2. прошло 30 секунд\n\nif (gas !== lastGas || (now - lastSentTime) > 30000) {\n    context.set('lastGas', gas);\n    context.set('lastSentTime', now);\n\n    msg.payload = gas;\n    return msg;\n}\n\nreturn null;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 410,
+        "y": 300,
+        "wires": [
+            [
+                "09428586d9394c77"
+            ]
+        ]
+    },
+    {
+        "id": "e9f8a7b6c5d4e3f2",
+        "type": "inject",
+        "z": "f70a28abf1f09461",
+        "name": "Test Stable 400 ppm",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "5",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "topic": "",
+        "payload": "400",
+        "payloadType": "num",
+        "x": 160,
+        "y": 340,
+        "wires": [
+            [
+                "f1b2c3d4e5a6b7c8"
+            ]
+        ]
+    },
+    {
+        "id": "a1b2c3d4e5f60111",
+        "type": "ui_template",
+        "z": "f70a28abf1f09461",
+        "group": "8299aa0106b3778b",
+        "name": "Validation Info",
+        "order": 2,
+        "width": "9",
+        "height": "10",
+        "format": "<div style=\"padding:15px; background:white; border-radius:12px; color:#222; line-height:1.5; font-size:14px;\">\n<h3 style=\"margin-top:0;\">Model Validation Metrics</h3>\n\n<h4>📊 MAE (Mean Absolute Error)</h4>\n<p>Average prediction error in ppm.<br>\nLower values mean better prediction accuracy.</p>\n<ul>\n<li>Good: below 50 ppm</li>\n<li>High: above 100 ppm</li>\n</ul>\n\n<h4>📈 RMSE (Root Mean Square Error)</h4>\n<p>Measures prediction stability and penalizes large errors.</p>\n<ul>\n<li>Good: below 75 ppm</li>\n<li>Large spikes increase RMSE quickly</li>\n</ul>\n\n<h4>🎯 MAPE (Mean Absolute Percentage Error)</h4>\n<p>Prediction error in percentage.</p>\n<ul>\n<li>Good: below 15%</li>\n<li>High percentages indicate unstable predictions</li>\n</ul>\n\n<h4>🏆 Accuracy</h4>\n<p>Estimated overall prediction quality.</p>\n<ul>\n<li>Excellent: above 80%</li>\n<li>Low accuracy means predictions differ from actual gas values</li>\n</ul>\n\n<h4>Prediction Error Distribution</h4>\n<p>Shows recent prediction errors over time.</p>\n<ul>\n<li>Lower line = more stable predictions</li>\n<li>Large spikes = sudden gas changes or unstable sensor behavior</li>\n</ul>\n\n<h4>ℹNotes</h4>\n<ul>\n<li>Metrics update automatically from live gas sensor data</li>\n<li>Stable gas values are periodically validated</li>\n<li>All gas values are measured in ppm</li>\n</ul>\n</div>",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 1060,
+        "y": 660,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "00296e5f9e51acc5",
+        "type": "comment",
+        "z": "f70a28abf1f09461",
+        "name": "MODEL VALIDATION",
+        "info": "This nodes shows the following:\n\n### 📊 MAE (Mean Absolute Error)\n\nAverage prediction error in ppm.\nLower values mean better prediction accuracy.\n\n* ✅ Good: below 50 ppm\n* ⚠️ High: above 100 ppm\n\n---\n\n### 📈 RMSE (Root Mean Square Error)\n\nMeasures prediction stability and penalizes large errors.\n\n* ✅ Good: below 75 ppm\n* ⚠️ Large spikes increase RMSE quickly\n\n---\n\n### 🎯 MAPE (Mean Absolute Percentage Error)\n\nPrediction error in percentage.\n\n* ✅ Good: below 15%\n* ⚠️ High percentages indicate unstable predictions\n\n---\n\n### 🏆 Accuracy\n\nEstimated overall prediction quality.\n\n* ✅ Excellent: above 80%\n* ⚠️ Low accuracy means predictions differ from actual gas values\n\n---\n\n### 📉 Prediction Error Distribution\n\nShows recent prediction errors over time.\n\n* Lower line = more stable predictions\n* Large spikes = sudden gas level changes or unstable sensor behavior\n\n---\n\n### ℹ️ Notes\n\n* Metrics update automatically from live gas sensor data\n* Stable gas values are periodically validated to maintain continuous model evaluation\n* All gas values are measured in ppm (parts per million)\n",
+        "x": 660,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "3a3a88ceab53e63e",
         "type": "global-config",
         "env": [],
         "modules": {
