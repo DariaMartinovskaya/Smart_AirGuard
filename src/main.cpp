@@ -308,7 +308,7 @@ void loop() {
   handleMQTTCommands();
   
   // Handle MQTT commands from Node-RED
-  publishEventsToMQTT(); // New for Telegram
+  // publishEventsToMQTT(); // New for Telegram
   
   toneAlertNonBlocking(); // non-blocking buzzer
   delay(100);
@@ -636,7 +636,7 @@ void handleMQTTCommands() {
         fanDesiredState = true;
         lastFanToggleTime = millis();
         Serial.println("✅ Fan turned ON from Node-RED (Manual mode)");
-        feedFan.publish("ON");
+        // feedFan.publish("ON");
       } 
       else if (fanCommand == "OFF") {
         if (fanManualOverride && fanDesiredState == false) {
@@ -654,7 +654,7 @@ void handleMQTTCommands() {
         fanDesiredState = false;
         lastFanToggleTime = millis();
         Serial.println("✅ Fan turned OFF from Node-RED (Manual mode)");
-        feedFan.publish("OFF");
+        // feedFan.publish("OFF");
       } 
       else if (fanCommand == "AUTO") {
         if (!fanManualOverride) {
@@ -862,32 +862,29 @@ void checkConditions() {
   digitalWrite(YELLOW_LED, LOW);
   digitalWrite(GREEN_LED, LOW);
 
-  // ========== ГАЗ ==========
+  // ========== GAS ==========
   if (gasLevel > DANGEROUS_GAS) {
     gasAlert = true;
     digitalWrite(RED_LED, HIGH);
 
-    // ✅ ВМЕСТО sendTelegramAlert() - ПУБЛИКУЕМ В MQTT
     if (millis() - lastGasAlertTime > ALERT_COOLDOWN) {
-      
-      // Формируем сообщение для MQTT
       String mqttMsg = "GAS_ALERT:" + String(gasLevel);
-      
-      // Публикуем в feed "events"
       if (feedEvent.publish(mqttMsg.c_str())) {
         Serial.print("📤 [MQTT] Published event: ");
         Serial.println(mqttMsg);
       }
-      
       lastGasAlertTime = millis();
     }
   } 
   else if (prevGasAlert && gasLevel <= DANGEROUS_GAS) {
-    // ✅ Газ нормализовался - публикуем в MQTT
-    String mqttMsg = "GAS_NORMAL:" + String(gasLevel);
-    if (feedEvent.publish(mqttMsg.c_str())) {
-      Serial.print("📤 [MQTT] Published event: ");
-      Serial.println(mqttMsg);
+    // Only send ONCE when gas normalizes
+    if (millis() - lastGasAlertTime > ALERT_COOLDOWN) {
+      String mqttMsg = "GAS_NORMAL:" + String(gasLevel);
+      if (feedEvent.publish(mqttMsg.c_str())) {
+        Serial.print("📤 [MQTT] Published event: ");
+        Serial.println(mqttMsg);
+      }
+      lastGasAlertTime = millis();  // Use same timer to prevent repeated sends
     }
   }
 
@@ -897,7 +894,6 @@ void checkConditions() {
     digitalWrite(YELLOW_LED, HIGH);
     
     if (millis() - lastTempAlertTime > ALERT_COOLDOWN) {
-
       String mqttMsg = "TEMP_ALERT:" + String(temperature);
       if (feedEvent.publish(mqttMsg.c_str())) {
         Serial.print("📤 [MQTT] Published event: ");
@@ -907,11 +903,14 @@ void checkConditions() {
     }
   } 
   else if (prevTempAlert) {
-    // ✅ Temperature normalised
-    String mqttMsg = "TEMP_NORMAL:" + String(temperature);
-    if (feedEvent.publish(mqttMsg.c_str())) {
-      Serial.print("📤 [MQTT] Published event: ");
-      Serial.println(mqttMsg);
+    // Only send ONCE when temperature normalizes
+    if (millis() - lastTempAlertTime > ALERT_COOLDOWN) {
+      String mqttMsg = "TEMP_NORMAL:" + String(temperature);
+      if (feedEvent.publish(mqttMsg.c_str())) {
+        Serial.print("📤 [MQTT] Published event: ");
+        Serial.println(mqttMsg);
+      }
+      lastTempAlertTime = millis();  // Use same timer to prevent repeated sends
     }
   }
 
@@ -930,16 +929,24 @@ void checkConditions() {
     }
   } 
   else if (prevHumidityAlert) {
-    // ✅ Humidity normalised
-    String mqttMsg = "HUMIDITY_NORMAL:" + String(humidity);
-    if (feedEvent.publish(mqttMsg.c_str())) {
-      Serial.print("📤 [MQTT] Published event: ");
-      Serial.println(mqttMsg);
+    // Only send ONCE when humidity normalizes
+    if (millis() - lastHumidityAlertTime > ALERT_COOLDOWN) {
+      String mqttMsg = "HUMIDITY_NORMAL:" + String(humidity);
+      if (feedEvent.publish(mqttMsg.c_str())) {
+        Serial.print("📤 [MQTT] Published event: ");
+        Serial.println(mqttMsg);
+      }
+      lastHumidityAlertTime = millis();  // Use same timer to prevent repeated sends
     }
   }
 
   // ========== MOTION ==========
-  if (motionDetected && !prevMotionState) {
+  static unsigned long lastMotionPublish = 0;
+
+  if (motionDetected && !prevMotionState &&
+    millis() - lastMotionPublish > 10000) {
+
+    lastMotionPublish = millis();
     String mqttMsg = "MOTION_DETECTED";
     if (feedEvent.publish(mqttMsg.c_str())) {
       Serial.print("📤 [MQTT] Published event: ");
@@ -948,12 +955,13 @@ void checkConditions() {
     lastMotionAlertTime = millis();
   } 
   else if (!motionDetected && prevMotionState && (millis() - lastMotionAlertTime > 5000)) {
-    // ✅ Motion stopped
+    // Motion stopped - only send once
     String mqttMsg = "MOTION_STOPPED";
     if (feedEvent.publish(mqttMsg.c_str())) {
       Serial.print("📤 [MQTT] Published event: ");
       Serial.println(mqttMsg);
     }
+    // Don't update lastMotionAlertTime here to allow cooldown
   }
 
   lastGasAlert = gasAlert;
@@ -1019,57 +1027,57 @@ void displayData() {
   display.display();
 }
 
-void publishEventsToMQTT() {
+// void publishEventsToMQTT() {
     
-    static bool lastGasAlertPublished = false;
-    static bool lastTempAlertPublished = false;
-    static bool lastHumidityAlertPublished = false;
-    static bool lastMotionPublished = false;
+//     static bool lastGasAlertPublished = false;
+//     static bool lastTempAlertPublished = false;
+//     static bool lastHumidityAlertPublished = false;
+//     static bool lastMotionPublished = false;
     
-    // Publish gas alert
-    if (gasAlert && !lastGasAlertPublished) {
-        String mqttMsg = "GAS_ALERT:" + String(gasLevel);
-        if (feedEvent.publish(mqttMsg.c_str())) {  
-            Serial.println("📤 GAS_ALERT sent to MQTT");
-            lastGasAlertPublished = true;
-        }
-    } else if (!gasAlert) {
-        lastGasAlertPublished = false;
-    }
+//     // Publish gas alert
+//     if (gasAlert && !lastGasAlertPublished) {
+//         String mqttMsg = "GAS_ALERT:" + String(gasLevel);
+//         if (feedEvent.publish(mqttMsg.c_str())) {  
+//             Serial.println("📤 GAS_ALERT sent to MQTT");
+//             lastGasAlertPublished = true;
+//         }
+//     } else if (!gasAlert) {
+//         lastGasAlertPublished = false;
+//     }
     
-    // Publish temperature alert
-    if (tempAlert && !lastTempAlertPublished) {
-        String mqttMsg = "TEMP_ALERT:" + String(temperature);
-        if (feedEvent.publish(mqttMsg.c_str())) {  
-            Serial.println("📤 TEMP_ALERT sent to MQTT");
-            lastTempAlertPublished = true;
-        }
-    } else if (!tempAlert) {
-        lastTempAlertPublished = false;
-    }
+//     // Publish temperature alert
+//     if (tempAlert && !lastTempAlertPublished) {
+//         String mqttMsg = "TEMP_ALERT:" + String(temperature);
+//         if (feedEvent.publish(mqttMsg.c_str())) {  
+//             Serial.println("📤 TEMP_ALERT sent to MQTT");
+//             lastTempAlertPublished = true;
+//         }
+//     } else if (!tempAlert) {
+//         lastTempAlertPublished = false;
+//     }
     
-    // Publish humidity
-    if (humidityAlert && !lastHumidityAlertPublished) {
-        String mqttMsg = "HUMIDITY_ALERT:" + String(humidity);
-        if (feedEvent.publish(mqttMsg.c_str())) {  
-            Serial.println("📤 HUMIDITY_ALERT sent to MQTT");
-            lastHumidityAlertPublished = true;
-        }
-    } else if (!humidityAlert) {
-        lastHumidityAlertPublished = false;
-    }
+//     // Publish humidity
+//     if (humidityAlert && !lastHumidityAlertPublished) {
+//         String mqttMsg = "HUMIDITY_ALERT:" + String(humidity);
+//         if (feedEvent.publish(mqttMsg.c_str())) {  
+//             Serial.println("📤 HUMIDITY_ALERT sent to MQTT");
+//             lastHumidityAlertPublished = true;
+//         }
+//     } else if (!humidityAlert) {
+//         lastHumidityAlertPublished = false;
+//     }
     
-    // Publish motion
-    if (motionDetected && !lastMotionPublished) {
-        String mqttMsg = "MOTION_DETECTED";
-        if (feedEvent.publish(mqttMsg.c_str())) {  
-            Serial.println("📤 MOTION_DETECTED sent to MQTT");
-            lastMotionPublished = true;
-        }
-    } else if (!motionDetected) {
-        lastMotionPublished = false;
-    }
-}
+//     // Publish motion
+//     if (motionDetected && !lastMotionPublished) {
+//         String mqttMsg = "MOTION_DETECTED";
+//         if (feedEvent.publish(mqttMsg.c_str())) {  
+//             Serial.println("📤 MOTION_DETECTED sent to MQTT");
+//             lastMotionPublished = true;
+//         }
+//     } else if (!motionDetected) {
+//         lastMotionPublished = false;
+//     }
+// }
 
 String getUptime() {
   unsigned long seconds = millis() / 1000;
