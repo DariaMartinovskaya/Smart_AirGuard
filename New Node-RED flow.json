@@ -1449,11 +1449,11 @@
         "max": "2000",
         "colors": [
             "#cce8b5",
-            "#cce8b5",
+            "#f2f7b7",
             "#f4a4c0"
         ],
         "seg1": "800",
-        "seg2": "1201",
+        "seg2": "1001",
         "diff": false,
         "className": "",
         "x": 1060,
@@ -4036,7 +4036,7 @@
         "type": "comment",
         "z": "11a19020df5de0e5",
         "name": "TELEGRAM INTEGRATION",
-        "info": "This Node-RED flow enables bidirectional communication between the Smart AirGuard ESP32 and Telegram.\n\nThree Main Pipelines:\n\n1. Command Pipeline (User → ESP32)\n- Polls Telegram every 2 seconds for user commands (`/status`, `/fan_on`, etc.)\n- Sends commands to ESP32 via MQTT feed `telegram_commands`\n- Sends immediate \"✅ Command received\" confirmation to user\n\n2. Response Pipeline (ESP32 → User)\n- Listens to ESP32 responses on MQTT feed `telegram_response`\n- Forwards responses back to the Telegram user\n\n3. Auto Notification Pipeline (ESP32 → User)\n- Listens to event feed `events` (GAS_ALERT, MOTION_DETECTED, TEMP_ALERT, etc.)\n- Automatically sends formatted alerts to Telegram without user request\n\nSupported Commands:\n`/status` – System status  \n`/sensors` – Sensor data  \n`/alerts` – Active alerts  \n`/fan_on`, `/fan_off`, `/fan_auto` – Fan control  \n`/help` – Help message",
+        "info": "This Node-RED flow enables bidirectional communication between the Smart AirGuard ESP32 and Telegram.\n\nTwo Main Pipelines:\n\n1. Command Pipeline (User → ESP32)\n- Polls Telegram every 2 seconds for user commands (`/status`, `/fan_on`, etc.)\n- Sends commands to ESP32 via MQTT feed `telegram_commands`\n- Sends immediate \"✅ Command received\" confirmation to user\n\n2. Response Pipeline (ESP32 → User)\n- Listens to ESP32 responses on MQTT feed `telegram_response`\n- Forwards responses back to the Telegram user\n\nSupported Commands:\n`/status` – System status  \n`/sensors` – Sensor data  \n`/alerts` – Active alerts  \n`/fan_on`, `/fan_off`, `/fan_auto` – Fan control  \n`/help` – Help message",
         "x": 450,
         "y": 60,
         "wires": []
@@ -4066,7 +4066,7 @@
         "type": "function",
         "z": "11a19020df5de0e5",
         "name": "Format Auto Alert",
-        "func": "let payload = msg.payload;\nlet message = \"\";\nlet chatId = flow.get(\"telegram_chat_id\") || \"360267276\";\n\nif (typeof payload === 'string') {\n    if (payload.startsWith(\"GAS_ALERT:\")) {\n        let gasValue = payload.split(\":\")[1];\n        message = \"🚨 *GAS ALERT!* 🚨\\n\\n\" +\n                 \"⚠️ Dangerous gas concentration!\\n\" +\n                 \"📊 Gas level: *\" + gasValue + \" ppm*\\n\" +\n                 \"🌀 Fan: *ON (forced)*\\n\\n\" +\n                 \"📍 Smart AirGuard System\";\n    }\n    else if (payload.startsWith(\"GAS_NORMAL:\")) {\n        let gasValue = payload.split(\":\")[1];\n        message = \"✅ *Gas normal*\\n\\n\" +\n                 \"📊 Current gas: *\" + gasValue + \" ppm*\\n\" +\n                 \"🌀 Fan: *OFF*\\n\\n\" +\n                 \"📍 Smart AirGuard System\";\n    }\n    else if (payload.startsWith(\"TEMP_ALERT:\")) {\n        let temp = payload.split(\":\")[1];\n        message = \"🌡️ *Temperature Alert!*\\n\\n\" +\n                 \"⚠️ Temperature out of range!\\n\" +\n                 \"📊 Current: *\" + temp + \"°C*\\n\" +\n                 \"📏 Range: 10-35°C\\n\\n\" +\n                 \"📍 Smart AirGuard System\";\n    }\n    else if (payload.startsWith(\"TEMP_NORMAL:\")) {\n        let temp = payload.split(\":\")[1];\n        message = \"✅ *Temperature normal*\\n\\n\" +\n                 \"📊 Current: *\" + temp + \"°C*\\n\\n\" +\n                 \"📍 Smart AirGuard System\";\n    }\n    else if (payload.startsWith(\"HUMIDITY_ALERT:\")) {\n        let humidity = payload.split(\":\")[1];\n        message = \"💧 *High Humidity Alert!*\\n\\n\" +\n                 \"⚠️ Humidity is too high!\\n\" +\n                 \"📊 Current: *\" + humidity + \"%*\\n\" +\n                 \"📏 Threshold: 90%\\n\\n\" +\n                 \"📍 Smart AirGuard System\";\n    }\n    else if (payload.startsWith(\"HUMIDITY_NORMAL:\")) {\n        let humidity = payload.split(\":\")[1];\n        message = \"✅ *Humidity normal*\\n\\n\" +\n                 \"📊 Current: *\" + humidity + \"%*\\n\\n\" +\n                 \"📍 Smart AirGuard System\";\n    }\n    else if (payload === \"MOTION_DETECTED\") {\n        message = \"🚶 *Motion detected!*\\n\\n\" +\n                 \"📍 Smart AirGuard System\";\n    }\n    else if (payload === \"MOTION_STOPPED\") {\n        message = \"✅ *Motion stopped*\\n\\n\" +\n                 \"📍 Smart AirGuard System\";\n    }\n}\n\nif (message === \"\") return null;\n\nreturn {\n    payload: {\n        chat_id: chatId,\n        text: message,\n        parse_mode: \"Markdown\"\n    }\n};",
+        "func": "let payload = msg.payload;\nlet message = \"\";\nlet chatId = flow.get(\"telegram_chat_id\") || \"360267276\";\n\nif (typeof payload === 'string') {\n    if (payload.startsWith(\"GAS_ALERT:\")) {\n        let gasValue = payload.split(\":\")[1];\n        message = \"🚨 *GAS ALERT!* 🚨\\n\\n\" +\n                 \"⚠️ Dangerous gas concentration!\\n\" +\n                 \"📊 Gas level: *\" + gasValue + \" ppm*\\n\" +\n                 \"🌀 Fan: *ON (forced)*\\n\\n\" +\n                 \"📍 Smart AirGuard System\";\n    }\n    else if (payload.startsWith(\"GAS_NORMAL:\")) {\n        let gasValue = payload.split(\":\")[1];\n        message = \"✅ *Gas normal*\\n\\n\" +\n                 \"📊 Current gas: *\" + gasValue + \" ppm*\\n\" +\n                 \"🌀 Fan: *OFF*\\n\\n\" +\n                 \"📍 Smart AirGuard System\";\n    }\n    else if (payload.startsWith(\"TEMP_ALERT:\")) {\n        let temp = payload.split(\":\")[1];\n        message = \"🌡️ *Temperature Alert!*\\n\\n\" +\n                 \"⚠️ Temperature out of range!\\n\" +\n                 \"📊 Current: *\" + temp + \"°C*\\n\" +\n                 \"📏 Range: 10-35°C\\n\\n\" +\n                 \"📍 Smart AirGuard System\";\n    }\n    else if (payload.startsWith(\"TEMP_NORMAL:\")) {\n        let temp = payload.split(\":\")[1];\n        message = \"✅ *Temperature normal*\\n\\n\" +\n                 \"📊 Current: *\" + temp + \"°C*\\n\\n\" +\n                 \"📍 Smart AirGuard System\";\n    }\n    else if (payload.startsWith(\"HUMIDITY_ALERT:\")) {\n        let humidity = payload.split(\":\")[1];\n        message = \"💧 *High Humidity Alert!*\\n\\n\" +\n                 \"⚠️ Humidity is too high!\\n\" +\n                 \"📊 Current: *\" + humidity + \"%*\\n\" +\n                 \"📏 Threshold: 90%\\n\\n\" +\n                 \"📍 Smart AirGuard System\";\n    }\n    else if (payload.startsWith(\"HUMIDITY_NORMAL:\")) {\n        let humidity = payload.split(\":\")[1];\n        message = \"✅ *Humidity normal*\\n\\n\" +\n                 \"📊 Current: *\" + humidity + \"%*\\n\\n\" +\n                 \"📍 Smart AirGuard System\";\n    }\n    else if (payload === \"MOTION_DETECTED\") {\n        message = \"🚶 *Motion detected!*\\n\\n\" +\n                 \"📍 Smart AirGuard System\";\n    }\n    else if (payload === \"MOTION_STOPPED\") {\n        message = \"✅ *Motion stopped*\\n\\n\" +\n                 \"📍 Smart AirGuard System\";\n    }\n    else if (payload === \"FAN_MANUAL_ON\") {\n        message = \"🌀 *Fan turned ON manually*\\n\\n📍 Smart AirGuard System\";\n    }\n    else if (payload === \"FAN_MANUAL_OFF\") {\n        message = \"⭕ *Fan turned OFF manually*\\n\\n📍 Smart AirGuard System\";\n    }\n    else if (payload === \"FAN_AUTO_MODE\") {\n        message = \"⚙️ *Fan switched to AUTO mode*\\n\\n📍 Smart AirGuard System\";\n    }\n}\n\nif (message === \"\") return null;\n\nreturn {\n    payload: {\n        chat_id: chatId,\n        text: message,\n        parse_mode: \"Markdown\"\n    }\n};",
         "outputs": 1,
         "timeout": "",
         "noerr": 0,
@@ -4120,87 +4120,6 @@
         "statusType": "auto",
         "x": 850,
         "y": 360,
-        "wires": []
-    },
-    {
-        "id": "auto_notifications",
-        "type": "mqtt in",
-        "z": "11a19020df5de0e5",
-        "name": "Auto Events",
-        "topic": "DaryaMartsinouskaya/feeds/events",
-        "qos": "0",
-        "datatype": "auto-detect",
-        "broker": "adafruit-io",
-        "nl": false,
-        "rap": false,
-        "inputs": 0,
-        "x": 130,
-        "y": 440,
-        "wires": [
-            [
-                "format_auto_message"
-            ]
-        ]
-    },
-    {
-        "id": "format_auto_message",
-        "type": "function",
-        "z": "11a19020df5de0e5",
-        "name": "Format Auto Message",
-        "func": "let payload = msg.payload;\nlet message = \"\";\nlet chatId = flow.get(\"telegram_chat_id\") || \"360267276\";\n\nif (typeof payload === 'string') {\n    if (payload.startsWith(\"GAS_ALERT:\")) {\n        let gasValue = payload.split(\":\")[1];\n        message = \"🚨 *GAS ALERT!* 🚨\\n\\n\" +\n                 \"⚠️ Dangerous gas concentration!\\n\" +\n                 \"📊 Gas level: *\" + gasValue + \" ppm*\\n\" +\n                 \"🌀 Fan: *ON (forced)*\\n\\n\" +\n                 \"📍 Smart AirGuard System\";\n    }\n    else if (payload.startsWith(\"GAS_NORMAL:\")) {\n        let gasValue = payload.split(\":\")[1];\n        message = \"✅ *Gas normal*\\n\\n\" +\n                 \"📊 Current gas: *\" + gasValue + \" ppm*\\n\" +\n                 \"🌀 Fan: *OFF*\\n\\n\" +\n                 \"📍 Smart AirGuard System\";\n    }\n    else if (payload.startsWith(\"TEMP_ALERT:\")) {\n        let temp = payload.split(\":\")[1];\n        message = \"🌡️ *Temperature Alert!*\\n\\n\" +\n                 \"⚠️ Temperature out of range!\\n\" +\n                 \"📊 Current: *\" + temp + \"°C*\\n\" +\n                 \"📏 Range: 10-35°C\\n\\n\" +\n                 \"📍 Smart AirGuard System\";\n    }\n    else if (payload.startsWith(\"TEMP_NORMAL:\")) {\n        let temp = payload.split(\":\")[1];\n        message = \"✅ *Temperature normal*\\n\\n\" +\n                 \"📊 Current: *\" + temp + \"°C*\\n\\n\" +\n                 \"📍 Smart AirGuard System\";\n    }\n    else if (payload.startsWith(\"HUMIDITY_ALERT:\")) {\n        let humidity = payload.split(\":\")[1];\n        message = \"💧 *High Humidity Alert!*\\n\\n\" +\n                 \"⚠️ Humidity is too high!\\n\" +\n                 \"📊 Current: *\" + humidity + \"%*\\n\" +\n                 \"📏 Threshold: 90%\\n\\n\" +\n                 \"📍 Smart AirGuard System\";\n    }\n    else if (payload.startsWith(\"HUMIDITY_NORMAL:\")) {\n        let humidity = payload.split(\":\")[1];\n        message = \"✅ *Humidity normal*\\n\\n\" +\n                 \"📊 Current: *\" + humidity + \"%*\\n\\n\" +\n                 \"📍 Smart AirGuard System\";\n    }\n    else if (payload === \"MOTION_DETECTED\") {\n        message = \"🚶 *Motion detected!*\\n\\n\" +\n                 \"📍 Smart AirGuard System\";\n    }\n    else if (payload === \"MOTION_STOPPED\") {\n        message = \"✅ *Motion stopped*\\n\\n\" +\n                 \"📍 Smart AirGuard System\";\n    }\n    else if (payload === \"FAN_MANUAL_ON\") {\n        message = \"🌀 *Fan turned ON manually*\\n\\n\" +\n            \"📍 Smart AirGuard System\";\n    }\n    else if (payload === \"FAN_MANUAL_OFF\") {\n        message = \"⭕ *Fan turned OFF manually*\\n\\n\" +\n            \"📍 Smart AirGuard System\";\n    }\n    else if (payload === \"FAN_AUTO_MODE\") {\n        message = \"⚙️ *Fan switched to AUTO mode*\\n\\n\" +\n            \"📍 Smart AirGuard System\";\n    }\n}\n\nif (message === \"\") return null;\n\nreturn {\n    payload: {\n        chat_id: chatId,\n        text: message,\n        parse_mode: \"Markdown\"\n    }\n};",
-        "outputs": 1,
-        "timeout": "",
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 400,
-        "y": 440,
-        "wires": [
-            [
-                "send_auto_notification"
-            ]
-        ]
-    },
-    {
-        "id": "send_auto_notification",
-        "type": "http request",
-        "z": "11a19020df5de0e5",
-        "name": "Send Auto Notification",
-        "method": "POST",
-        "ret": "obj",
-        "paytoqs": "ignore",
-        "url": "https://api.telegram.org/bot8159417350:AAFVaCa_djh0A81HtL3QTT7Ww9rcLwBU4Yg/sendMessage",
-        "tls": "",
-        "persist": false,
-        "proxy": "",
-        "insecureHTTPParser": false,
-        "authType": "",
-        "senderr": false,
-        "headers": [],
-        "x": 640,
-        "y": 440,
-        "wires": [
-            [
-                "auto_notify_debug"
-            ]
-        ]
-    },
-    {
-        "id": "auto_notify_debug",
-        "type": "debug",
-        "z": "11a19020df5de0e5",
-        "name": "Auto Notify Debug",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "payload",
-        "targetType": "msg",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 870,
-        "y": 440,
         "wires": []
     },
     {
@@ -4754,7 +4673,7 @@
         "wires": []
     },
     {
-        "id": "3a3a88ceab53e63e",
+        "id": "100b91d9db267047",
         "type": "global-config",
         "env": [],
         "modules": {
