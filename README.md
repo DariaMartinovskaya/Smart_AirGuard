@@ -86,73 +86,35 @@ The project was developed as a Master's thesis at the Polytechnic Institute of B
 
 ## System Architecture
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                     Smart AirGuard System                   │
-├─────────────────────────────────────────────────────────────┤
-│  ┌─────────┐  ┌─────────┐  ┌─────────┐  ┌──────────────┐    │
-│  │ DHT22   │  │ MQ-135  │  │ PIR     │  │ OLED         │    │
-│  │ Temp/Hum│  │ Gas     │  │ Motion  │  │ Display      │    │
-│  └────┬────┘  └────┬────┘  └────┬────┘  └─────┬───────-┘    │
-│       │            │            │             │             │
-├───────┼────────────┼────────────┼─────────────┼───────────-─┤
-│       │            │            │             │             │
-│  ┌────▼────┐ ┌────-▼───┐ ┌────-─▼──┐    ┌───-─▼──────┐      │
-│  │ ESP32   │ │ RGB LED │ │ Buzzer  │    │ Relay      │      │
-│  │         │ │ Status  │ │ Alarm   │    │ Fan        │      │
-│  │         │ │ Ind.    │ │         │    │ Control    │      │
-│  └────┬────┘ └─────────┘ └─────────┘    └────┬─────-─┘      │
-│       │                                      │              │
-├───────┼──────────────────────────────────────┼──────────--──┤
-│       │                                      │              │
-│  ┌────▼──────┐ MQTT                     ┌───-▼─────┐        │
-│  │ WiFi      │─────────────────────────►│ External │        │
-│  │ Connection│                          │ 5V Fan   │        │
-│  └────┬──────┘                          └──────────┘        │
-│       │                                                     │
-│       │ MQTT                                                │
-│  ┌────▼────────────┐          ┌──────────────────┐          │
-│  │   Adafruit IO   │◄────────►│     Node-RED     │          │
-│  │  MQTT Broker    │   MQTT   │   ML Dashboard   │          │
-│  └─────────────────┘          │   & Testing      │          │
-│                               └──────────────────┘          │
-│       │                                                     │
-│       │ HTTP                      ┌──────────────────┐      │
-│  ┌────▼────────────┐              │   ThingSpeak     │      │
-│  │  Telegram Bot   │─────────────►│  Cloud Analytics │      │
-│  │  Notifications  │    HTTP      └──────────────────┘      │
-│  │  & Control      │                                        │
-│  └─────────────────┘                                        │
-│                                                             │
-│  ┌────────────────────┐                                     │
-│  │  HTTP (direct)     │                                     │
-│  │  from ESP32        │                                     │
-│  └────────────────────┘                                     │
-└─────────────────────────────────────────────────────────────┘
-```
+System architecture is shown on Figure below. 
+
+![System_architecture](drawio.png)
 
 ## Hardware Requirements
 
 ### **Main Components**
 | Component | Quantity | Purpose |
 |-----------|----------|---------|
-| ESP32 Dev Board | 1 | Main microcontroller |
-| DHT22 Sensor | 1 | Temperature & humidity |
-| MQ-135 Gas Sensor | 1 | Air quality monitoring |
-| HC-SR501 PIR Sensor | 1 | Motion detection |
-| OLED (0.96 inch) | 1 | Local display |
-| RGB LED (Common Cathode) | 1 | Visual status indicator |
-| 5V Relay Module | 1 | Fan control |
-| 5V Fan | 1 | Ventilation |
-| Active Buzzer | 1 | Audible alerts |
-| LEDs (Red, Yellow, Green) | 3 | Alert indicators |
-| Breadboards & Jumper Wires | - | Connections |
+| ESP32 DOIT DevKit V1 | 1 | Main microcontroller (dual-core, WiFi, Bluetooth) |
+| DHT22 | 1 | Temperature (-40 to 80°C) & humidity (0–100% RH) |
+| MQ-135 | 1 | Gas sensor (10–5000 ppm CO₂-equivalent) |
+| HC-SR501 PIR | 1 | Motion detection (3–7m range) |
+| 0.96" OLED (SSD1306) | 1 | Local display (128×64, I²C) |
+| RGB LED (Common Cathode) | 1 | Motion status indication (blinking blue) |
+| 5V 2-Channel Relay Module | 1 | Fan control (active LOW configuration) |
+| DC 5V Cooling Fan | 1 | Ventilation actuator |
+| Active Buzzer | 1 | Audible emergency alerts |
+| LED (Red) | 1 | Gas danger indicator (>1000 ppm) |
+| LED (Yellow) | 1 | Temperature alert (<10°C or >35°C) |
+| LED (Green) | 1 | Humidity alert (>90%) |
+| Power Bank / 5V USB | 1 | Power supply |
 
 ### **Power Requirements**
 - **Input**: 5V DC via USB or external power supply
-- **Current**: ~500mA (with all peripherals active)
+- **Current**: ~120mA (normal), ~160mA (Wi-Fi TX), ~145mA (relay active)
+- **Total cost**: 31.01 EUR (all components)
 
-## Wiring Diagram
+## Pin Assignment
 
 ### **ESP32 Pin Configuration**
 
