@@ -38,7 +38,7 @@ Unlike traditional gas detectors, Smart AirGuard implements a hybrid communicati
 
 The project was developed as a Master's thesis at the Polytechnic Institute of Beja, achieving 0% false positives and 0% false negatives across all experimental tests.
 
-![Project](project.png)
+![Project](prototype.png)
 
 ## Key Features
 
