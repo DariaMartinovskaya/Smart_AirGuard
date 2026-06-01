@@ -3,70 +3,86 @@
 <div align="center">
 
 ![Smart AirGuard System](https://img.shields.io/badge/Platform-ESP32-blue)
+![MQTT-Adafruit IO](https://img.shields.io/badge/MQTT-Adafruit_IO-orange)
+![Node-RED](https://img.shields.io/badge/Node--RED-Automation-red)
 ![Telegram Bot](https://img.shields.io/badge/Telegram-Bot-blue)
 ![ThingSpeak](https://img.shields.io/badge/Cloud-ThingSpeak-orange)
 
-*A comprehensive IoT-based air quality monitoring and alert system with real-time notifications*
+*An IoT-based gas monitoring and automated ventilation system for garages and workshops*
 
 </div>
 
 ## Table of Contents
 - [Overview](#overview)
-- [Features](#features)
+- [Key Features](#key-features)
 - [System Architecture](#system-architecture)
 - [Hardware Requirements](#hardware-requirements)
-- [Wiring Diagram](#wiring-diagram)
+- [Pin Assignment](#pin-assignment)
 - [Software Dependencies](#software-dependencies)
 - [Telegram Bot Commands](#-telegram-bot-commands)
 - [Cloud Platforms and Data Management](#cloud-platforms-and-data-management)
-  - [ThingSpeak Integration](#-thingspeak-integration)
-  - [Adafruit IO Integration](#-adafruit-io-integration)
-  - [Comparative Use of Adafruit IO and ThingSpeak](#comparative-use-of-adafruit-io-and-thingspeak)
-  - [Node-RED Integration and Research Layer](#node-red-integration-and-research-layer)
+  - [Adafruit IO (MQTT Broker)](#-adafruit-io-integration)
+  - [ThingSpeak (Data Logging)](#-thingspeak-integration)
+  - [Node-RED (Orchestration & ML)](#node-red-integration-and-research-layer)
+  - [Telegram Bot (User Interface)](#node-red-integration-and-research-layer)
 - [Alert System](#-alert-system)
-- [Local Display Information](#-local-display-information)
+- Testing & Validation
+- Cost Estimation
+- Wiring Diagram
 
 ## Overview
 
-Smart AirGuard is an IoT-based environmental monitoring and safety system designed for enclosed automotive and indoor environments. The system continuously monitors air quality, temperature, humidity, and motion using low-cost sensors, including an MQ-135 gas sensor, a DHT22 temperature and humidity sensor, and a PIR motion sensor. Local visual feedback is provided through RGB and status LEDs, while a compact OLED display presents real-time sensor readings directly on the device.
+Smart AirGuard is an IoT-based environmental monitoring and safety system designed specifically for enclosed automotive environments such as garages and workshops. The system continuously monitors air quality (CO₂-equivalent), temperature, humidity, and occupancy using low-cost sensors, providing real-time hazard detection and automated mitigation.
 
-The system implements an intelligent alert and automation mechanism to ensure user safety. When predefined thresholds are exceeded — such as elevated gas concentration (>400 ppm), abnormal temperature ranges, high humidity, or detected motion—Smart AirGuard generates immediate notifications via a Telegram bot. In critical gas scenarios, the system additionally activates an audible buzzer and automatically controls a ventilation fan to mitigate hazardous conditions.
+Unlike traditional gas detectors, Smart AirGuard implements a hybrid communication architecture that separates safety-critical functions (running on the ESP32) from advanced analytics and experimentation (running on Node-RED). This ensures that even during network outages, the system autonomously activates ventilation and audible alarms when dangerous gas levels are detected.
 
-At the core of the system is an ESP32 microcontroller, responsible for real-time data acquisition, local decision-making, and wireless communication. For cloud integration, Smart AirGuard adopts a multi-platform approach. Adafruit IO is used as the primary real-time communication layer, enabling low-latency data streaming and remote actuator control. ThingSpeak is employed for periodic data logging, long-term storage, and statistical analysis of environmental parameters.
-
-To support flexibility and experimentation, Node-RED is integrated as an intermediate automation and research layer. It enables data aggregation, custom visualization, and rapid prototyping of alternative alerting and control strategies without modifying the embedded firmware. This architecture allows Smart AirGuard to combine immediate safety responses with long-term data-driven analysis and experimental evaluation.
-
-Overall, Smart AirGuard represents a scalable and modular IoT solution that integrates real-time monitoring, automated risk mitigation, cloud-based analytics, and a research-oriented software layer to enhance air quality monitoring and system extensibility.
+The project was developed as a Master's thesis at the Polytechnic Institute of Beja, achieving 0% false positives and 0% false negatives across all experimental tests.
 
 ![Project](project.png)
 
-## Features
+## Key Features
 
 ### 📊 **Multi-Sensor Monitoring**
-- **Air Quality**: MQ-135 gas sensor for detecting harmful gases
-- **Temperature & Humidity**: DHT22 sensor for climate monitoring
-- **Motion Detection**: PIR sensor for presence detection
+- **Air Quality**: MQ-135 gas sensor for detecting harmful gases (10–5000 ppm CO₂-equivalent)
+- **Temperature & Humidity**: DHT22 sensor for climate monitoring (-40°C to 80°C, 0–100% RH)
+- **Occupancy Detection**: HC-SR501 PIR sensor (3–7m range)
 - **Visual Indicators**: RGB LED for motion, status LEDs for alerts
 
 ### 🔔 **Smart Alert System**
 - **Instant Telegram Notifications** for:
-  - Dangerous gas levels (>400 ppm)
+  - Dangerous gas levels 
   - Temperature extremes (<10°C or >35°C)
   - High humidity (>90%)
   - Motion detection
-- **Audible Alarms**: Buzzer for critical gas levels
-- **Automatic Ventilation**: Fan activation during high gas concentration
+- **Audible Alarms**: Active buzzer for critical gas levels (>1000 ppm)
+- **Visual indicators**: RGB LED (motion) + discrete LEDs (gas, temperature, humidity)
+
+### 🌬️ **Automated Ventilation**
+- **Relay-controlled fan** activates within **<1 second** of gas threshold exceedance
+- Manual override via Node-RED dashboard or Telegram commands
+- Automatic return to AUTO mode after 5 minutes of inactivity
+
+### 🧠 **Advanced Analytics (Node-RED)**
+- **Machine Learning predictions**: 15-minute and 30-minute gas forecasts
+- **Risk assessment** (0–100%) with preventive fan activation at >70% risk
+- **Model Validation** framework with MAE, RMSE, MAPE, and Accuracy metrics
+- **Ten simulated hazard scenarios** for systematic testing
 
 ### 🌐 **Cloud Integration**
 - **ThingSpeak Cloud**: Real-time data logging every 15 seconds
 - **Telegram Bot**: Two-way communication with the system
 - **Local Display**: 0.96 inch OLED for on-device monitoring
 
-### 🎮 **Control & Interaction**
-- Remote status checks via Telegram
-- Real-time sensor data requests
-- Alert configuration and monitoring
-- System health monitoring
+### ☁️ **Multi-Platform Cloud Architecture**
+- **Adafruit IO**: MQTT broker for real-time messaging
+- **ThingSpeak**: Long-term data logging with MATLAB analytics
+- **Node-RED**: Orchestration, ML, testing, and dashboard
+- **Telegram Bot**: User notifications and bidirectional control
+
+### 💰 **Low Cost**
+- **Total hardware cost**: ~31.01 EUR per unit
+- **Free cloud tiers** for academic prototyping
+- **Commercial deployment options** from 85–210 EUR/year
 
 ## System Architecture
 
