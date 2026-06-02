@@ -25,9 +25,8 @@
   - [Node-RED (Orchestration & ML)](#node-red-integration-and-research-layer)
   - [Telegram Bot](#-telegram-bot)
 - [Alert System](#-alert-system)
-- Testing & Validation
-- Cost Estimation
-- Wiring Diagram
+- Testing & Validation (#-testing-and-validation)
+- Cost Estimation (#-cost-estimation)
 
 ## Overview
 
