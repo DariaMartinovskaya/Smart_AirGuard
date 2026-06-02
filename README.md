@@ -280,13 +280,13 @@ Node-RED is used as an **integration, automation, and experimentation layer** wi
 
 ### Node-RED core functional modules:
 
-**1 - MQTT Input Flows**
+**1 MODULE - MQTT Input Flows**
 
 Function: Subscribe to Adafruit IO feeds
 
 Key features: Universal parser handles JSON, CSV, and numeric values; extracts sensor readings from MQTT payloads
 
-**2 - Data Processing**
+**2 MODULE - Data Processing**
 
 Function: Normalize, validate, transform data
 
@@ -294,7 +294,7 @@ Key features: Topic normalization (feed IDs → human-readable names), data vali
 
 Node-RED nodes for Modules 1 - MQTT Input Flows and 2 - Data Processing are shown on Figure below:
 
-**3 - Dashboard Visualization**
+**3 MODULE - Dashboard Visualization**
 
 Function: Real-time UI updates
 
@@ -318,7 +318,7 @@ Node-RED UI Interface for Modules 1-3 is shown below as well:
 
 ![Nodegraphs](nodegraphs.png)
 
-**4 - ML Prediction**
+**4 MODULE - ML Prediction**
 
 Function: Gas forecasting & risk assessment
 
@@ -334,7 +334,7 @@ UI of predictive module with buffer and forecasting logic:
 
 ![Nodeml](ml.png)
 
-**5 - Model Validation**
+**5 MODULE - Model Validation**
 
 Function: Prediction accuracy monitoring
 
@@ -363,7 +363,7 @@ UI:
 ![Nodemv](mvui.png)
 
 
-**6 - Testing Panel**
+**6 MODULE - Testing Panel**
 
 Function: Software-based validation
 
@@ -385,7 +385,7 @@ Test mode controller for scenario-based validation:
 
 When Test Mode is activated via the dashboard, the system ignores all incoming MQTT messages from the physical broker and accepts only internally generated test messages. This enables isolated software validation without physical sensor noise. The Auto Test Sequence cycles through all ten scenarios automatically (10 seconds each with 10-second intervals, total 100 seconds). The Direct Sensor Injector substitutes predefined sensor values directly. An auto-reset timer automatically disables Test Mode after 2 minutes of inactivity, reverting to normal operation. Dedicated injector nodes also allow manual testing of LEDs and the fan actuator for hardware-in-the-loop validation.
 
-**7 - Telegram Bridge**
+**7 MODULE - Telegram Bridge**
 
 Function: Bidirectional user messaging
 
@@ -415,7 +415,7 @@ The bot supports seven commands.
 
 /fan on, /fan off, and /fan auto provide remote fan control: the first two switch to manual mode, the third returns to automatic mode. Upon receiving any valid command, Node-RED immediately sends a "Command received" acknowledgment. Critical safety feature: /fan off is blocked during gas emergencies (gas > 1000 ppm), returning "Cannot turn fan OFF! Gas emergency is ACTIVE!"
 
-**8 - Fan Control**
+**8 MODULE - Fan Control**
 
 Function: Manual override
 
