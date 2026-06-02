@@ -20,7 +20,7 @@
 - [Pin Assignment](#pin-assignment)
 - [Software Dependencies](#software-dependencies)
 - [Telegram Bot Commands](#-telegram-bot-commands)
-- [Cloud Platforms and Data Management](#cloud-platforms-and-data-management)
+- [Cloud Platforms](#cloud-platforms)
   - [Adafruit IO (MQTT Broker)](#-adafruit-io-integration)
   - [ThingSpeak (Data Logging)](#-thingspeak-integration)
   - [Node-RED (Orchestration & ML)](#node-red-integration-and-research-layer)
@@ -199,20 +199,25 @@ The Telegram bot is bridged through Node-RED (ESP32 never directly calls Telegra
 | `/fan auto` | Return to automatic mode | `Fan switched to AUTO mode` |
 
 ### **TelegramBot layout**
-![TelegramBot](TelegramBot.png)
+![TelegramBot](tg.jpeg)
 
-### **Automatic Alerts**
+### **Automatic Push Notifications**
 The system automatically sends alerts for:
-- 🚨 **Gas**: Level > 400 ppm
-- 🌡️ **Temperature**: Outside 10-35°C range
-- 💧 **Humidity**: Above 90%
-- 🚶 **Motion**: When detected
+- 🚨 **Gas >1000 ppm**: GAS ALERT! Concentration: XXXX ppm, Fan ON forced
+- ✅ **Gas normal**: Gas normal. Current gas: XXX ppm
+- 🌡️ **Temp <10°C or >35°C**: Temperature out of range! Current: XX°C
+- 💧 **Humidity >90%**: High humidity detected! Current: XX%
+- 🚶 **Motion detected**: Motion detected in garage
+- 🔄 **Fan state change**: Fan turned ON/OFF/AUTO manually
 
-## Cloud Platforms and Data Management
+Cooldown: 30 seconds between identical alert types to prevent spam.
+
+## Cloud Platforms 
 
 Smart AirGuard employs a **multi-platform cloud architecture** to balance real-time system responsiveness with long-term environmental data analysis. 
 
 The system integrates **Adafruit IO**, **ThingSpeak**, and **Node-RED**, each addressing different functional and research requirements.
+
 
 ### 📊 ThingSpeak Integration
 
@@ -283,7 +288,7 @@ What It Does:
 
 ## 🤖 Adafruit IO Integration
 
-Adafruit IO is used as the **primary real-time communication layer** of the Smart AirGuard system. It provides low-latency, MQTT-based data exchange between the ESP32 device and external services.
+Adafruit IO is MQTT Broker used as the **primary real-time communication layer** of the Smart AirGuard system. It provides low-latency, MQTT-based data exchange between the ESP32 device and external services.
 
 In this project, Adafruit IO is responsible for:
 
@@ -297,25 +302,70 @@ In this project, Adafruit IO is responsible for:
 
 Due to its low latency and native MQTT support, Adafruit IO is well suited for **interactive monitoring and immediate response**, but it is not optimized for long-term analytical processing.
 
-## Comparative Use of Adafruit IO and ThingSpeak
-
-The simultaneous use of Adafruit IO and ThingSpeak is a deliberate architectural decision, as the platforms serve complementary purposes.
-
-| Aspect | Adafruit IO | ThingSpeak |
-|------|------------|------------|
-| Primary Function | Real-time messaging and control | Data logging and analytics |
-| Communication Model | MQTT (event-based) | HTTP (periodic uploads) |
-| Latency | Low | High |
-| Actuator Control | Supported | Not suitable |
-| Long-term Analysis | Limited | Extensive |
-
-By combining both platforms, Smart AirGuard achieves **fast safety responses** while preserving **rich historical datasets** for analytical evaluation.
 
 ## Node-RED Integration and Research Layer
 
 Node-RED is used as an **integration, automation, and experimentation layer** within the Smart AirGuard architecture. It subscribes to real-time MQTT data streams from Adafruit IO and enables flexible data processing without modifying the ESP32 firmware.
 
-Node-RED enables:
+### Node-RED core functional modules:
+
+**MQTT Input Flows**
+
+Function: Subscribe to Adafruit IO feeds
+
+Key features: Universal parser handles JSON, CSV, and numeric values; extracts sensor readings from MQTT payloads
+
+
+**Data Processing**
+
+Function: Normalize, validate, transform data
+
+Key features: Topic normalization (feed IDs → human-readable names), data validation (range checking), filters malformed readings
+
+
+**Dashboard Visualization**
+
+Function: Real-time UI updates
+
+Key features: Calibrated gauges with color-coded ranges, LED-style indicators, time-series charts, numerical displays
+
+
+**ML Prediction**
+
+Function: Gas forecasting & risk assessment
+
+Key features: 12-reading buffer (~1 hour), 15/30-min forecasts, risk level (0-100%), preventive fan activation at >70% risk
+
+
+**Model Validation**
+
+Function: Prediction accuracy monitoring
+
+Key features: Real-time MAE, RMSE, MAPE, Accuracy metrics; sliding window validation (6-sample offset)
+
+
+
+**Testing Panel**
+
+Function: Software-based validation
+
+Key features: 10 simulated hazard scenarios, auto-test sequence, direct sensor injection, test mode controller
+
+
+**Telegram Bridge**
+
+Function: Bidirectional user messaging
+
+Key features: Polls Telegram API (2s), forwards commands to MQTT, sends automatic alerts from events feed
+
+
+
+**Fan Control**
+
+Function: Manual override
+
+Key features: Dashboard toggle switch + Telegram commands, priority handling, auto-mode timeout (5 min)
+
 
 - Data aggregation and preprocessing
 
