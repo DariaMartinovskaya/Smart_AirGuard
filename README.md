@@ -460,30 +460,18 @@ Cooldown: 30 seconds between identical alert types to prevent spam.
 ## 🚨 Alert System
 
 ### **Priority Levels**
-1. **CRITICAL** (Red LED + Buzzer + Telegram + Fan)
-   - Gas level > 400 ppm
+1. **CRITICAL** (Red LED ON, Buzzer ON, Fan ON forced, Telegram alert, blocks manual OFF)
+   - Gas > 1000 ppm
    - Immediate fan activation
+  
+2. **MANUAL** (Fan follows user setting, auto-mode timeout after 5 min inactivity)
+   - User command
 
-2. **WARNING** (Yellow LED + Telegram)
-   - Temperature outside range
+3. **WARNING** (Yellow LED ON, Telegram notification)
+   - Temp <10°C or >35°C
    
-3. **NOTICE** (Green LED + Telegram)
-   - High humidity detected
+4. **NOTICE** (Green LED ON, Telegram notification)
+   - Humidity >90%
    
-4. **INFO** (RGB LED (Blue) + Telegram)
+5. **INFO** (RGB blue LED blinks (500ms), Telegram notification)
    - Motion detected/stopped
-
-### **Alert Cooldown Mechanism**
-- Each alert type has a 30-second cooldown
-- Prevents notification spam
-- Separate timers for gas, temperature, humidity
-- Motion alerts have no cooldown for immediate response
-
-## 🖥️ Local Display Information
-
-The OLED display shows:
-- Current sensor readings
-- Alert status indicators
-- Motion detection status
-- Blue LED state (motion)
-- Fan status
