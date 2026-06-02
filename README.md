@@ -328,7 +328,9 @@ Node-RED nodes for Module 4 - ML Prediction are shown on Figure below:
 
 ![PredictivemoduleMLtab](mlnodes.png)
 
-With predictive module with buffer and forecasting logic:
+Node-RED implements a predictive module that maintains a buffer of the last 12 sensor readings (approximately one hour of data). Based on current trends, temperature effects, humidity levels, and occupancy patterns, the system calculates 15-minute and 30-minute gas concentration forecasts. A normalized risk level (0-100%) is derived from these predictions. When the risk exceeds 70%, Node-RED automatically activates the ventilation fan preventively, before dangerous thresholds (1000 ppm) are reached. 
+
+UI of predictive module with buffer and forecasting logic:
 
 ![Nodeml](ml.png)
 
@@ -342,7 +344,21 @@ Node-RED nodes for Module 4 - Model Validation are shown on Figure below:
 
 ![Nodemv](mv.png)
 
-And UI:
+A sliding window validation framework continuously assesses prediction accuracy by comparing each new gas reading against the value predicted 6 samples earlier (approximately 30 seconds). 
+
+Four metrics are calculated in real time. 
+
+MAE (Mean Absolute Error) measures average prediction deviation in ppm (target <50 ppm). 
+
+RMSE (Root Mean Square Error) penalizes large errors more heavily (target <75 ppm). 
+
+MAPE (Mean Absolute Percentage Error) expresses error as a percentage (target <15%). 
+
+Accuracy is a derived metric showing prediction quality as a percentage (target >80%). 
+
+Under normal conditions, MAE stays below 15 ppm and Accuracy above 95%. During sudden gas spikes, errors temporarily increase but recover to baseline within 30-60 seconds.
+
+UI:
 
 ![Nodemv](mvui.png)
 
@@ -357,6 +373,8 @@ Node-RED nodes for 6 - Testing Panel are shown on Figure below:
 
 ![Systemtestingandvalidationtab](testingnodes.png)
 
+The Testing Panel includes ten scientifically-grounded scenarios that inject predefined sensor data directly into the processing pipeline, bypassing the physical MQTT broker. Scenarios cover normal conditions (22°C, 55% humidity, 450 ppm gas), exhaust gases at health-hazard (1200 ppm) and life-threatening (2500 ppm) levels, garage fire (85°C, 3000 ppm), mold formation risk (90% humidity at 18°C), metal corrosion risk (95% humidity at 15°C), heat stroke risk (42°C, 80% humidity), overcrowded office (1400 ppm CO₂ from respiration), barbecue/cooking (40°C, 90% humidity, 1100 ppm), and industrial gas leak (2800 ppm, no motion). Each scenario includes expected system states for automated verification.
+
 UI:
 
 ![Modes](testingmodes.png)
@@ -364,6 +382,8 @@ UI:
 Test mode controller for scenario-based validation:
 
 ![Testingscenarios](testingscenarios.png)
+
+When Test Mode is activated via the dashboard, the system ignores all incoming MQTT messages from the physical broker and accepts only internally generated test messages. This enables isolated software validation without physical sensor noise. The Auto Test Sequence cycles through all ten scenarios automatically (10 seconds each with 10-second intervals, total 100 seconds). The Direct Sensor Injector substitutes predefined sensor values directly. An auto-reset timer automatically disables Test Mode after 2 minutes of inactivity, reverting to normal operation. Dedicated injector nodes also allow manual testing of LEDs and the fan actuator for hardware-in-the-loop validation.
 
 **7 - Telegram Bridge**
 
@@ -374,6 +394,26 @@ Key features: Polls Telegram API (2s), forwards commands to MQTT, sends automati
 Node-RED nodes for 7 - Telegram Bridge are shown on Figure below:
 
 ![Tg](noderedtgnodes.png)
+
+The Telegram Bridge implements three independent pipelines, completely isolating the ESP32 from direct Telegram API communication. 
+
+Command Pipeline (User → ESP32): Node-RED polls the Telegram API every 2 seconds, parses incoming messages, and publishes parsed commands to the MQTT telegram_commands feed. The ESP32 subscribes to this feed and processes commands. 
+
+Response Pipeline (ESP32 → User): The ESP32 publishes responses to the telegram_response feed. Node-RED formats them with Markdown and forwards to Telegram API via HTTP POST. 
+
+Auto-Notification Pipeline (ESP32 → User): For critical events, the ESP32 publishes alerts to the events feed. Node-RED formats these with emoji indicators and automatically sends them to the user. 
+
+The first user to interact with the bot is automatically registered as the notification recipient, with the chat ID stored in Node-RED's flow context. The ESP32 never stores the bot token, handles TLS certificates, or parses Telegram JSON.
+
+The bot supports seven commands. 
+
+/start or /help display the available command list. 
+
+/status returns full system status: gas concentration with danger indicators, temperature with alert status, humidity, motion state, fan state, and current mode (MANUAL/AUTO). 
+
+/sensors outputs only current sensor readings. /alerts lists active hazard conditions (gas danger, temperature excursions, high humidity, motion). 
+
+/fan on, /fan off, and /fan auto provide remote fan control: the first two switch to manual mode, the third returns to automatic mode. Upon receiving any valid command, Node-RED immediately sends a "Command received" acknowledgment. Critical safety feature: /fan off is blocked during gas emergencies (gas > 1000 ppm), returning "Cannot turn fan OFF! Gas emergency is ACTIVE!"
 
 **8 - Fan Control**
 
