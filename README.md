@@ -383,11 +383,11 @@ Key features: Dashboard toggle switch + Telegram commands, priority handling, au
 
 Node-RED nodes for 8 - Fan Control are shown on Figure below:
 
-![Nodefancontrol](nodefancontrol.png)
+![Nodefancontrol](fannodes.png)
 
 UI:
 
-![Nodefancontrol](nodefancontrol.png)
+![Fancontrol](fan.png)
 
 ## 🤖 Telegram Bot
 
