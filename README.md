@@ -118,23 +118,29 @@ System architecture is shown on Figure below.
 
 ### **ESP32 Pin Configuration**
 
-| ESP32 Pin | Component | Signal | Notes |
+| ESP32 Pin | Component | Type | Function |
 |-----------|-----------|--------|-------|
-| GPIO 14 | DHT22 | Data | Temperature & Humidity |
-| GPIO 34 | MQ-135 | Analog | Gas Level (ADC) |
-| GPIO 32 | PIR | Digital | Motion Detection |
-| GPIO 23 | OLED | SDA | I2C Data |
-| GPIO 22 | OLED | SCL | I2C Clock |
-| GPIO 27 | RGB LED | Red | Common Cathode |
-| GPIO 25 | RGB LED | Green | Common Cathode |
-| GPIO 33 | RGB LED | Blue | Motion Indicator |
-| GPIO 13 | Buzzer | Signal | Active Buzzer |
-| GPIO 21 | LED | Red | Gas Alert |
-| GPIO 19 | LED | Yellow | Temp Alert |
-| GPIO 18 | LED | Green | Humidity Alert |
-| GPIO 26 | Relay | Control | Fan ON/OFF |
+| GPIO 14 | DHT22 | Digital I/O | Temperature & Humidity |
+| GPIO 34 | MQ-135 | Analog input | Gas concentration (12-bit ADC, 0–4095) |
+| GPIO 32 | HC-SR501 PIR | Digital input | Motion detection (HIGH when active) |
+| GPIO 23 | OLED (SDA) | I2C | I2C Data line |
+| GPIO 22 | OLED (SCL) | I2C | I2C Clock line |
+| GPIO 33 | RGB LED (Blue) | Digital Output | Motion status (blinking when detected) |
+| GPIO 13 | Active Buzzer | Digital Output | Emergency sound (1 kHz tone) |
+| GPIO 21 | Red LED | Digital Output | Gas danger (>1000 ppm) |
+| GPIO 19 | Yellow LED | Digital Output | Temperature alert (<10°C or >35°C) |
+| GPIO 18 | Green LED | Digital Output | Humidity alert (>90%) |
+| GPIO 26 | Relay Module | Digital Output | Fan control (active LOW: LOW=ON) |
 
 ![Scheme](AirGuard_scheme.png)
+
+**Note:**
+
+Relay module is active LOW: fan ON when pin = LOW, OFF when pin = HIGH (ensures fan remains off during ESP32 boot)
+RGB LED (red/green channels) not used in current firmware
+All LEDs use 220Ω current-limiting resistors
+DHT22 data line uses 10kΩ pull-up to 3.3V
+OLED I²C uses 4.7kΩ pull-ups, address 0x3C
 
 ### **Real physical board**
 ![Physics](physics.png)
@@ -155,30 +161,42 @@ System architecture is shown on Figure below.
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 #include <DHT.h>
-#include <UniversalTelegramBot.h>
-#include <ArduinoJson.h>
-#include <WiFiClientSecure.h>
+#include <Adafruit_MQTT.h>
+#include <Adafruit_MQTT_Client.h>
+#include <MQ135.h>
 ```
 
 ### **Library Installation**
 1. Open Arduino IDE
 2. Go to **Tools → Manage Libraries**
 3. Search and install:
-   - `Adafruit GFX Library`
-   - `Adafruit SSD1306`
-   - `DHT sensor library`
-   - `Universal Telegram Bot`
-   - `ArduinoJson`
+```
+[env:esp32dev]
+platform = espressif32
+board = esp32dev
+framework = arduino
+lib_deps = 
+    adafruit/Adafruit GFX Library@^1.11.5
+    adafruit/Adafruit SSD1306@^2.5.7
+    adafruit/DHT sensor library@^1.4.4
+    adafruit/Adafruit MQTT Library@^2.0.3
+    arduino-libraries/MQ135@^1.0.0
+```
+**Important**: The firmware does NOT include UniversalTelegramBot.h. All Telegram communication is handled indirectly via Node-RED and MQTT.
 
 ## 🤖 Telegram Bot Commands
 
+The Telegram bot is bridged through Node-RED (ESP32 never directly calls Telegram API). Supported commands:
+
 | Command | Description | Example Response |
 |---------|-------------|------------------|
-| `/start` or `/help` | Show help message | Command list and system info |
-| `/status` | Current system status | Uptime, WiFi, sensor states |
-| `/sensors` | Real-time sensor data | Temperature, humidity, gas levels |
-| `/alerts` | Active alerts | Gas, temperature, humidity alerts |
-| `/id` | Show your Chat ID | Unique identifier for notifications |
+| `/start` or `/help` | Show available commands | List of all commands with descriptions |
+| `/status` | Full system status | `Gas: 450ppm (NORMAL), Temp: 22.5°C, Humidity: 55%, Motion: NO, Fan: AUTO` |
+| `/sensors` | Real-time sensor data | `Temp: 22.5°C, Humidity: 55%, Gas: 450ppm, Motion: NO` |
+| `/alerts` | Active hazard conditions | `GAS: NORMAL, TEMP: NORMAL, HUMIDITY: NORMAL` |
+| `/fan on` | Manual fan activation | `Fan turned ON manually` |
+| `/fan off` | Manual fan deactivation | `Fan turned OFF manually` |
+| `/fan auto` | Return to automatic mode | `Fan switched to AUTO mode` |
 
 ### **TelegramBot layout**
 ![TelegramBot](TelegramBot.png)
