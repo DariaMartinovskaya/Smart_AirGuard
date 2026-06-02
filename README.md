@@ -19,12 +19,11 @@
 - [Hardware Requirements](#hardware-requirements)
 - [Pin Assignment](#pin-assignment)
 - [Software Dependencies](#software-dependencies)
-- [Telegram Bot Commands](#-telegram-bot-commands)
 - [Cloud Platforms](#cloud-platforms)
   - [Adafruit IO (MQTT Broker)](#-adafruit-io-integration)
   - [ThingSpeak (Data Logging)](#-thingspeak-integration)
   - [Node-RED (Orchestration & ML)](#node-red-integration-and-research-layer)
-  - [Telegram Bot (User Interface)](#node-red-integration-and-research-layer)
+  - [Telegram Bot](#-telegram-bot)
 - [Alert System](#-alert-system)
 - Testing & Validation
 - Cost Estimation
@@ -184,34 +183,6 @@ lib_deps =
 ```
 **Important**: The firmware does NOT include UniversalTelegramBot.h. All Telegram communication is handled indirectly via Node-RED and MQTT.
 
-## 🤖 Telegram Bot Commands
-
-The Telegram bot is bridged through Node-RED (ESP32 never directly calls Telegram API). Supported commands:
-
-| Command | Description | Example Response |
-|---------|-------------|------------------|
-| `/start` or `/help` | Show available commands | List of all commands with descriptions |
-| `/status` | Full system status | `Gas: 450ppm (NORMAL), Temp: 22.5°C, Humidity: 55%, Motion: NO, Fan: AUTO` |
-| `/sensors` | Real-time sensor data | `Temp: 22.5°C, Humidity: 55%, Gas: 450ppm, Motion: NO` |
-| `/alerts` | Active hazard conditions | `GAS: NORMAL, TEMP: NORMAL, HUMIDITY: NORMAL` |
-| `/fan on` | Manual fan activation | `Fan turned ON manually` |
-| `/fan off` | Manual fan deactivation | `Fan turned OFF manually` |
-| `/fan auto` | Return to automatic mode | `Fan switched to AUTO mode` |
-
-### **TelegramBot layout**
-![TelegramBot](tg.jpeg)
-
-### **Automatic Push Notifications**
-The system automatically sends alerts for:
-- 🚨 **Gas >1000 ppm**: GAS ALERT! Concentration: XXXX ppm, Fan ON forced
-- ✅ **Gas normal**: Gas normal. Current gas: XXX ppm
-- 🌡️ **Temp <10°C or >35°C**: Temperature out of range! Current: XX°C
-- 💧 **Humidity >90%**: High humidity detected! Current: XX%
-- 🚶 **Motion detected**: Motion detected in garage
-- 🔄 **Fan state change**: Fan turned ON/OFF/AUTO manually
-
-Cooldown: 30 seconds between identical alert types to prevent spam.
-
 ## Cloud Platforms 
 
 Smart AirGuard employs a **multi-platform cloud architecture** to balance real-time system responsiveness with long-term environmental data analysis. 
@@ -309,107 +280,143 @@ Node-RED is used as an **integration, automation, and experimentation layer** wi
 
 ### Node-RED core functional modules:
 
-**MQTT Input Flows**
+**1 - MQTT Input Flows**
 
 Function: Subscribe to Adafruit IO feeds
 
 Key features: Universal parser handles JSON, CSV, and numeric values; extracts sensor readings from MQTT payloads
 
-
-**Data Processing**
+**2 - Data Processing**
 
 Function: Normalize, validate, transform data
 
 Key features: Topic normalization (feed IDs → human-readable names), data validation (range checking), filters malformed readings
 
+Node-RED nodes for Modules 1 - MQTT Input Flows and 2 - Data Processing are shown on Figure below:
 
-**Dashboard Visualization**
+**3 - Dashboard Visualization**
 
 Function: Real-time UI updates
 
 Key features: Calibrated gauges with color-coded ranges, LED-style indicators, time-series charts, numerical displays
 
+Node-RED nodes for Modules 1 - MQTT Input Flows, 2 - Data Processing and 3 - Dashboard Visualisation are shown on Figure below:
 
-**ML Prediction**
+![noderedmqttdpnodes](noderedmqttdpnodes.png)
+
+Node-RED UI Interface for Modules 1-3 is shown below as well:
+
+- Common data:
+
+![Nodeinfo](nodeinfo.png)
+
+- LED status monitoring for gas, temperature, and humidity alerts:
+
+![Nodegauges](nodegauges.png)
+
+- And historical trends:
+
+![Nodegraphs](nodegraphs.png)
+
+**4 - ML Prediction**
 
 Function: Gas forecasting & risk assessment
 
 Key features: 12-reading buffer (~1 hour), 15/30-min forecasts, risk level (0-100%), preventive fan activation at >70% risk
 
+Node-RED nodes for Module 4 - ML Prediction are shown on Figure below:
 
-**Model Validation**
+![PredictivemoduleMLtab](mlnodes.png)
+
+With predictive module with buffer and forecasting logic:
+
+![Nodeml](ml.png)
+
+**5 - Model Validation**
 
 Function: Prediction accuracy monitoring
 
 Key features: Real-time MAE, RMSE, MAPE, Accuracy metrics; sliding window validation (6-sample offset)
 
+Node-RED nodes for Module 4 - Model Validation are shown on Figure below:
+
+![Nodemv](mv.png)
+
+And UI:
+
+![Nodemv](mvui.png)
 
 
-**Testing Panel**
+**6 - Testing Panel**
 
 Function: Software-based validation
 
 Key features: 10 simulated hazard scenarios, auto-test sequence, direct sensor injection, test mode controller
 
+Node-RED nodes for 6 - Testing Panel are shown on Figure below:
 
-**Telegram Bridge**
+![Systemtestingandvalidationtab](testingnodes.png)
+
+UI:
+
+![Modes](testingmodes.png)
+
+Test mode controller for scenario-based validation:
+
+![Testingscenarios](testingscenarios.png)
+
+**7 - Telegram Bridge**
 
 Function: Bidirectional user messaging
 
 Key features: Polls Telegram API (2s), forwards commands to MQTT, sends automatic alerts from events feed
 
+Node-RED nodes for 7 - Telegram Bridge are shown on Figure below:
 
+![Tg](noderedtgnodes.png)
 
-**Fan Control**
+**8 - Fan Control**
 
 Function: Manual override
 
 Key features: Dashboard toggle switch + Telegram commands, priority handling, auto-mode timeout (5 min)
 
-
-- Data aggregation and preprocessing
-
-- Custom dashboards for visualization and manual control
-
-- Rule-based automation and conditional logic
-
-- Rapid prototyping of alternative alert and control strategies
-
-Importantly, Node-RED is treated as a **research environment**, allowing experimental logic (e.g., threshold tuning, filtering techniques, sensor correlation analysis) to be evaluated independently of the embedded system.
-
-The Node-RED flow implements:
-
-- MQTT integration with Adafruit IO for sensor data
-
-- Data normalization and routing to dashboard elements
-
-![Smartairguarddatatab](Smartairguarddatatab.png)
-
-![Nodeinfo](nodeinfo.png)
-
-- Predictive module with buffer and forecasting logic
-
-![PredictivemoduleMLtab](PredictivemoduleMLtab.png)
-
-![Nodeml](nodeml.png)
-
-- Remote fan control
-
-![Fancontroltab](Fancontroltab.png)
+Node-RED nodes for 8 - Fan Control are shown on Figure below:
 
 ![Nodefancontrol](nodefancontrol.png)
 
-- Test mode controller for scenario-based validation
+UI:
 
-![Systemtestingandvalidationtab](Systemtestingandvalidationtab.png)
+![Nodefancontrol](nodefancontrol.png)
 
-![Nodetestpanel](nodetestpanel.png)
+## 🤖 Telegram Bot
 
-- LED status monitoring for gas, temperature, and humidity alerts
+The Telegram bot is bridged through Node-RED (ESP32 never directly calls Telegram API). Supported commands:
 
-![Nodegauges](nodegauges.png)
+| Command | Description | Example Response |
+|---------|-------------|------------------|
+| `/start` or `/help` | Show available commands | List of all commands with descriptions |
+| `/status` | Full system status | `Gas: 450ppm (NORMAL), Temp: 22.5°C, Humidity: 55%, Motion: NO, Fan: AUTO` |
+| `/sensors` | Real-time sensor data | `Temp: 22.5°C, Humidity: 55%, Gas: 450ppm, Motion: NO` |
+| `/alerts` | Active hazard conditions | `GAS: NORMAL, TEMP: NORMAL, HUMIDITY: NORMAL` |
+| `/fan on` | Manual fan activation | `Fan turned ON manually` |
+| `/fan off` | Manual fan deactivation | `Fan turned OFF manually` |
+| `/fan auto` | Return to automatic mode | `Fan switched to AUTO mode` |
 
-![Nodegraphs](nodegraphs.png)
+### **TelegramBot layout**
+![TelegramBot](tg.jpeg)
+
+### **Automatic Push Notifications**
+The system automatically sends alerts for:
+- 🚨 **Gas >1000 ppm**: GAS ALERT! Concentration: XXXX ppm, Fan ON forced
+- ✅ **Gas normal**: Gas normal. Current gas: XXX ppm
+- 🌡️ **Temp <10°C or >35°C**: Temperature out of range! Current: XX°C
+- 💧 **Humidity >90%**: High humidity detected! Current: XX%
+- 🚶 **Motion detected**: Motion detected in garage
+- 🔄 **Fan state change**: Fan turned ON/OFF/AUTO manually
+
+Cooldown: 30 seconds between identical alert types to prevent spam.
+
 
 ## 🚨 Alert System
 
