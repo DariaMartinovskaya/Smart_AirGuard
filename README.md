@@ -25,8 +25,9 @@
   - [Node-RED (Orchestration & ML)](#node-red-integration-and-research-layer)
   - [Telegram Bot](#-telegram-bot)
 - [Alert System](#-alert-system)
-- Testing & Validation (#-testing-and-validation)
+- Testing and Validation (#-testing)
 - Cost Estimation (#-cost-estimation)
+- Model Validation Framework (#-model-validation-framework)
 
 ## Overview
 
@@ -475,3 +476,81 @@ Cooldown: 30 seconds between identical alert types to prevent spam.
    
 5. **INFO** (RGB blue LED blinks (500ms), Telegram notification)
    - Motion detected/stopped
+
+## Testing 
+The Smart AirGuard system was validated through two types of experiments: controlled garage tests with real pollutant sources and extreme home stress tests. The following tables summarize all experimental outcomes.
+
+### Garage Tests (Real Environment)
+
+Seven tests were conducted in a real motorcycle and car workshop (4500 m³ volume) with varying ventilation conditions. Tests evaluated threshold sensitivity, false alarm prevention, and ventilation dependency.
+
+| Test | Source | Door Position | Peak Gas (ppm) | Fan Activated	Recovery |
+|-----------|----------|---------|------|---------|
+|Test 1	| Scooter (1.5m)	| Fully open|	911| ❌ No	—| 
+|Test 2	| Scooter (max)	| Fully open| 1008|	✅ Yes (<1s)	25s|
+|Test 3	| Lighter gas	| Fully open| 1687| ✅ Yes	7s|
+|Test 4	| Scooter	| Half open|1100| ✅ Yes	45s|
+|Test 5	| Scooter	| Fully closed|1350| ✅ Yes	5 min|
+|Test 6	| Aerosol spray	| Fully open| 405| ❌ No	—|
+|Test 7	| Motor oil vapours	| Fully open|410| ❌ No	—|
+
+
+### Home Stress Tests
+
+Three additional tests were performed under extreme conditions using household appliances (humidifier, freezer, hair dryer) to validate system robustness beyond normal operating ranges.
+
+| Test | Conditions | Key Findings |
+|-----------|----------|---------|
+|Test 8	| Humidity 100% + gas 1603 ppm	| Fan activated in <1s, humidity alert triggered, manual override functional |
+|Test 9	| Freezer (-5.5°C) + gas 1999 ppm	| All sensors operational at -5.5°C, highest recorded gas reading (1999 ppm) |
+|Test 10 |	Heat (42°C+) + gas 1076 ppm	| ⚠️ DHT22 failed at 42°C (requires power cycle), MQ-135 remained functional |
+
+## Cost Estimation
+
+The following tables break down all hardware and cloud service costs for both academic prototyping and commercial deployment scenarios.
+
+### Hardware (One-time)
+
+Total component cost per AirGuard unit is approximately **1.01 EUR**, making the system economically viable for garage and workshop deployment.
+
+| Component | Cost (EUR) | 
+|-----------|----------|
+|ESP32 Development Board	| 4.60 |
+|MQ-135 Gas Sensor	| 0.92 |
+| DHT22 Sensor	| 2.60 |
+| HC-SR501 PIR Sensor	| 2.50 |
+| 0.96" OLED Display	| 1.48 |
+| DC5V Cooling Fan |	1.00 |
+| 5V 2-Channel Relay Module	| 1.00 |
+|Custom PCB Prototype	| 4.00|
+|Micro-USB Cables (2)	| 2.80|
+|Active Buzzer	| 1.00|
+|LEDs (Red, Yellow, Green)	| 1.63|
+|RGB LED	| 1.48|
+|F-M DuPont Cables (24)	| 1.00|
+|Power Bank |	5.00|
+|**Total Hardware**	|**31.01 EUR**|
+
+### Cloud / Commercial Deployment (Annual)
+
+Three architectural options are available for commercial deployment, each offering different trade-offs between cost, complexity, and functionality.
+
+| Option | Architecture| Annual Cost |
+|-----------|----------|---------|
+|Option 1	|ThingSpeak only + Telegram	|210.24 EUR|
+|Option 2	|Node-RED + Adafruit IO+ + Telegram	|85.15 EUR|
+|Option 3	|Self-hosted Node-RED on VPS + Telegram	|96.00 EUR|
+|Academic	|Free tiers (Adafruit IO Basic + ThingSpeak)	|0 EUR|
+
+## Model Validation Framework
+
+The Model Validation framework continuously assesses prediction accuracy by comparing forecasted gas values against actual sensor readings. Four standard metrics are calculated in real time.
+
+| Metric | Target| Actual (Normal)| Actual (Gas Spike)|
+|-----------|----------|---------|---------|
+|MAE (Mean Absolute Error)	|<50 ppm	|<15 ppm	|40-80 ppm|
+|RMSE (Root Mean Square Error)	|<75 ppm	|<25 ppm	|65-120 ppm|
+|MAPE (Mean Absolute Percentage Error)	|<15%	|<5%	|5-12%|
+|Accuracy	|>80%	|>95%	|65-85%|
+
+**Recovery time after gas spike:** 30-60 seconds to baseline accuracy. Temporary prediction errors during sudden gas releases are expected and the model demonstrates robust recovery without systemic degradation.
