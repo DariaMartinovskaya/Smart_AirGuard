@@ -25,11 +25,11 @@
   - [Node-RED (Orchestration & ML)](#node-red-integration-and-research-layer)
   - [Telegram Bot](#-telegram-bot)
 - [Alert System](#-alert-system)
-- [Testing] (#-testing)
+- [Testing](#-testing)
   - [Garage Tests (Real Environment)](#-garage-tests-(real-environment))
   - [Home Stress Tests](#-home-stress-tests)
-- [Cost Estimation] (#-cost-estimation)
-- [Model Validation Framework] (#-model-validation-framework)
+- [Cost Estimation](#-cost-estimation)
+- [Model Validation Framework](#-model-validation-framework)
 
 ## Overview
 
