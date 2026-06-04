@@ -1,7 +1,9 @@
 # Smart AirGuard - IoT Monitoring System
 
 <div align="center">
-
+  
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+  
 ![Smart AirGuard System](https://img.shields.io/badge/Platform-ESP32-blue)
 ![MQTT-Adafruit IO](https://img.shields.io/badge/MQTT-Adafruit_IO-orange)
 ![Node-RED](https://img.shields.io/badge/Node--RED-Automation-red)
@@ -9,8 +11,6 @@
 ![ThingSpeak](https://img.shields.io/badge/Cloud-ThingSpeak-orange)
 
 *An IoT-based gas monitoring and automated ventilation system for garages and workshops*
-
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 </div>
 
