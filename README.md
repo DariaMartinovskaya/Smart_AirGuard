@@ -41,7 +41,7 @@ Unlike traditional gas detectors, Smart AirGuard implements a hybrid communicati
 
 The project was developed as a Master's thesis at the Polytechnic Institute of Beja, achieving 0% false positives and 0% false negatives across all experimental tests.
 
-![Project](prototype.png)
+![Project](Figures/prototype.png)
 
 ## Key Features
 
@@ -91,7 +91,7 @@ The project was developed as a Master's thesis at the Polytechnic Institute of B
 
 System architecture is shown on Figure below. 
 
-![System_architecture](drawio.png)
+![System_architecture](Figures/drawio.png)
 
 ## Hardware Requirements
 
@@ -135,7 +135,7 @@ System architecture is shown on Figure below.
 | GPIO 18 | Green LED | Digital Output | Humidity alert (>90%) |
 | GPIO 26 | Relay Module | Digital Output | Fan control (active LOW: LOW=ON) |
 
-![Scheme](AirGuard_scheme.png)
+![Scheme](Figures/AirGuard_scheme.png)
 
 **Note:**
 
@@ -146,7 +146,8 @@ DHT22 data line uses 10kΩ pull-up to 3.3V
 OLED I²C uses 4.7kΩ pull-ups, address 0x3C
 
 ### **Real physical board**
-![Physics](physics.png)
+
+![Physics](Figures/physics.png)
 
 ### **Power Connections**
 - **3.3V**: DHT22, OLED, PIR sensor
@@ -230,7 +231,7 @@ Widgets created in ThingSpeak to visualize:
 - Alert status indicators
 - Weekly Gas Level Analytics
 
-![ThingSpeak](ThingSpeak.png)
+![ThingSpeak](Figures/ThingSpeak.png)
 
 #### Weekly Gas Level Analytics
 This module analyzes gas concentration data collected by the Smart AirGuard system and stored on ThingSpeak.
@@ -241,7 +242,7 @@ What It Does:
 - Handles UTC → local (Portugal) timezone conversion
 - Processes data on a daily basis
 
-![Analytics](Analytics1.png)
+![Analytics](Figures/Analytics1.png)
   
 - Key Metrics
 
@@ -306,21 +307,21 @@ Key features: Calibrated gauges with color-coded ranges, LED-style indicators, t
 
 Node-RED nodes for Modules 1 - MQTT Input Flows, 2 - Data Processing and 3 - Dashboard Visualisation are shown on Figure below:
 
-![noderedmqttdpnodes](noderedmqttdpnodes.png)
+![noderedmqttdpnodes](Figures/noderedmqttdpnodes.png)
 
 Node-RED UI Interface for Modules 1-3 is shown below as well:
 
 - Common data:
 
-![Nodeinfo](nodeinfo.png)
+![Nodeinfo](Figures/nodeinfo.png)
 
 - LED status monitoring for gas, temperature, and humidity alerts:
 
-![Nodegauges](nodegauges.png)
+![Nodegauges](Figures/nodegauges.png)
 
 - And historical trends:
 
-![Nodegraphs](nodegraphs.png)
+![Nodegraphs](Figures/nodegraphs.png)
 
 **4 MODULE - ML Prediction**
 
@@ -330,13 +331,13 @@ Key features: 12-reading buffer (~1 hour), 15/30-min forecasts, risk level (0-10
 
 Node-RED nodes for Module 4 - ML Prediction are shown on Figure below:
 
-![PredictivemoduleMLtab](mlnodes.png)
+![PredictivemoduleMLtab](Figures/mlnodes.png)
 
 Node-RED implements a predictive module that maintains a buffer of the last 12 sensor readings (approximately one hour of data). Based on current trends, temperature effects, humidity levels, and occupancy patterns, the system calculates 15-minute and 30-minute gas concentration forecasts. A normalized risk level (0-100%) is derived from these predictions. When the risk exceeds 70%, Node-RED automatically activates the ventilation fan preventively, before dangerous thresholds (1000 ppm) are reached. 
 
 UI of predictive module with buffer and forecasting logic:
 
-![Nodeml](ml.png)
+![Nodeml](Figures/ml.png)
 
 **5 MODULE - Model Validation**
 
@@ -346,7 +347,7 @@ Key features: Real-time MAE, RMSE, MAPE, Accuracy metrics; sliding window valida
 
 Node-RED nodes for Module 4 - Model Validation are shown on Figure below:
 
-![Nodemv](mv.png)
+![Nodemv](Figures/mv.png)
 
 A sliding window validation framework continuously assesses prediction accuracy by comparing each new gas reading against the value predicted 6 samples earlier (approximately 30 seconds). 
 
@@ -364,7 +365,7 @@ Under normal conditions, MAE stays below 15 ppm and Accuracy above 95%. During s
 
 UI:
 
-![Nodemv](mvui.png)
+![Nodemv](Figures/mvui.png)
 
 
 **6 MODULE - Testing Panel**
@@ -375,17 +376,17 @@ Key features: 10 simulated hazard scenarios, auto-test sequence, direct sensor i
 
 Node-RED nodes for 6 - Testing Panel are shown on Figure below:
 
-![Systemtestingandvalidationtab](testingnodes.png)
+![Systemtestingandvalidationtab](Figures/testingnodes.png)
 
 The Testing Panel includes ten scientifically-grounded scenarios that inject predefined sensor data directly into the processing pipeline, bypassing the physical MQTT broker. Scenarios cover normal conditions (22°C, 55% humidity, 450 ppm gas), exhaust gases at health-hazard (1200 ppm) and life-threatening (2500 ppm) levels, garage fire (85°C, 3000 ppm), mold formation risk (90% humidity at 18°C), metal corrosion risk (95% humidity at 15°C), heat stroke risk (42°C, 80% humidity), overcrowded office (1400 ppm CO₂ from respiration), barbecue/cooking (40°C, 90% humidity, 1100 ppm), and industrial gas leak (2800 ppm, no motion). Each scenario includes expected system states for automated verification.
 
 UI:
 
-![Modes](testingmodes.png)
+![Modes](Figures/testingmodes.png)
 
 Test mode controller for scenario-based validation:
 
-![Testingscenarios](testingscenarios.png)
+![Testingscenarios](Figures/testingscenarios.png)
 
 When Test Mode is activated via the dashboard, the system ignores all incoming MQTT messages from the physical broker and accepts only internally generated test messages. This enables isolated software validation without physical sensor noise. The Auto Test Sequence cycles through all ten scenarios automatically (10 seconds each with 10-second intervals, total 100 seconds). The Direct Sensor Injector substitutes predefined sensor values directly. An auto-reset timer automatically disables Test Mode after 2 minutes of inactivity, reverting to normal operation. Dedicated injector nodes also allow manual testing of LEDs and the fan actuator for hardware-in-the-loop validation.
 
@@ -397,7 +398,7 @@ Key features: Polls Telegram API (2s), forwards commands to MQTT, sends automati
 
 Node-RED nodes for 7 - Telegram Bridge are shown on Figure below:
 
-![Tg](noderedtgnodes.png)
+![Tg](Figures/noderedtgnodes.png)
 
 The Telegram Bridge implements three independent pipelines, completely isolating the ESP32 from direct Telegram API communication. 
 
@@ -427,11 +428,11 @@ Key features: Dashboard toggle switch + Telegram commands, priority handling, au
 
 Node-RED nodes for 8 - Fan Control are shown on Figure below:
 
-![Nodefancontrol](fannodes.png)
+![Nodefancontrol](Figures/fannodes.png)
 
 UI:
 
-![Fancontrol](fan.png)
+![Fancontrol](Figures/fan.png)
 
 ## 🤖 Telegram Bot
 
@@ -448,7 +449,7 @@ The Telegram bot is bridged through Node-RED (ESP32 never directly calls Telegra
 | `/fan auto` | Return to automatic mode | `Fan switched to AUTO mode` |
 
 ### **TelegramBot layout**
-![TelegramBot](tg.jpeg)
+![TelegramBot](Figures/tg.jpeg)
 
 ### **Automatic Push Notifications**
 The system automatically sends alerts for:
