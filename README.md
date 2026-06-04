@@ -491,7 +491,12 @@ The Smart AirGuard system was validated through two types of experiments: contro
 
 ### Garage Tests (Real Environment)
 
-Seven tests were conducted in a real motorcycle and car workshop (4500 m³ volume) with varying ventilation conditions. Tests evaluated threshold sensitivity, false alarm prevention, and ventilation dependency.
+Seven tests were conducted in a real motorcycle and car workshop (4500 m³ volume) as shown on Figures below with varying ventilation conditions. 
+
+![Garage1](Figures/garage1.jpeg)
+![Garage2](Figures/garage2.jpeg)
+
+Tests evaluated threshold sensitivity, false alarm prevention, and ventilation dependency.
 
 | Test | Source | Door Position | Peak Gas (ppm) | Fan Activated	Recovery |
 |-----------|----------|---------|------|---------|
