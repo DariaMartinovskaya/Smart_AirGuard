@@ -278,6 +278,10 @@ In this project, Adafruit IO is responsible for:
 
 Due to its low latency and native MQTT support, Adafruit IO is well suited for **interactive monitoring and immediate response**, but it is not optimized for long-term analytical processing.
 
+AdafruitIO UI interface with feeds is shown on Figure below:
+
+![AdafruitIO](Figures/adafruitIO.png)
+
 
 ## Node-RED Integration and Research Layer
 
