@@ -10,16 +10,16 @@
 #include <MQ135.h>
 
 // ---------------- WIFI + THINGSPEAK -----------------
-const char *ssid = "Alex";
-const char *pass = "Sacha3232";
-String apiKey = "6QOIQZ7YFHAG6231";  
+const char *ssid = "";
+const char *pass = "";
+String apiKey = "";  
 const char* server = "api.thingspeak.com";
 
 // ---------------- ADAFRUIT IO (MQTT) -----------------
 #define AIO_SERVER   "io.adafruit.com"
 #define AIO_PORT     1883
-#define AIO_USERNAME "DaryaMartsinouskaya"
-#define AIO_KEY      "aio_DBBy73fmNk0xVVrV1foYz6qCFQmx"
+#define AIO_USERNAME ""
+#define AIO_KEY      ""
 
 // ---------------- OBJECTS -----------------
 WiFiClient mqttClient;           // For Adafruit IO (MQTT)
