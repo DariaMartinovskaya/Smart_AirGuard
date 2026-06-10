@@ -207,33 +207,6 @@
         "hidden": false
     },
     {
-        "id": "adafruit-broker",
-        "type": "mqtt-broker",
-        "name": "Adafruit IO",
-        "broker": "io.adafruit.com",
-        "port": "1883",
-        "clientid": "",
-        "autoConnect": true,
-        "usetls": false,
-        "protocolVersion": "4",
-        "keepalive": "60",
-        "cleansession": true,
-        "autoUnsubscribe": true,
-        "birthTopic": "",
-        "birthQos": "0",
-        "birthPayload": "",
-        "birthMsg": {},
-        "closeTopic": "",
-        "closePayload": "",
-        "closeMsg": {},
-        "willTopic": "",
-        "willQos": "0",
-        "willPayload": "",
-        "willMsg": {},
-        "userProps": "",
-        "sessionExpiry": ""
-    },
-    {
         "id": "sensors-group",
         "type": "ui_group",
         "name": "Sensors",
@@ -344,207 +317,6 @@
         "className": ""
     },
     {
-        "id": "adafruit-io-fixed",
-        "type": "mqtt-broker",
-        "name": "Adafruit IO Fixed",
-        "broker": "io.adafruit.com",
-        "port": "1883",
-        "clientid": "NodeRED_Darya_001",
-        "autoConnect": true,
-        "usetls": false,
-        "protocolVersion": "4",
-        "keepalive": "30",
-        "cleansession": true,
-        "autoUnsubscribe": true,
-        "birthTopic": "",
-        "birthQos": "0",
-        "birthRetain": "false",
-        "birthPayload": "",
-        "birthMsg": {},
-        "closeTopic": "",
-        "closeQos": "0",
-        "closeRetain": "false",
-        "closePayload": "",
-        "closeMsg": {},
-        "willTopic": "",
-        "willQos": "0",
-        "willRetain": "false",
-        "willPayload": "",
-        "willMsg": {},
-        "userProps": "",
-        "sessionExpiry": ""
-    },
-    {
-        "id": "853dd5ae1b5a59e6",
-        "type": "ui_tab",
-        "name": "Dashboard",
-        "icon": "dashboard",
-        "order": 1
-    },
-    {
-        "id": "88da9de14d2e4b51",
-        "type": "ui_tab",
-        "name": "Dashboard",
-        "icon": "dashboard",
-        "order": 1,
-        "disabled": false,
-        "hidden": false
-    },
-    {
-        "id": "7b33ccef8f7e83b7",
-        "type": "ui_tab",
-        "name": "Dashboard",
-        "icon": "dashboard",
-        "order": 1,
-        "disabled": false,
-        "hidden": false
-    },
-    {
-        "id": "d518b7692366d1e2",
-        "type": "ui_tab",
-        "name": "Smart AirGuard",
-        "icon": "dashboard",
-        "order": 1
-    },
-    {
-        "id": "76c1e908e35145de",
-        "type": "mqtt-broker",
-        "name": "Adafruit IO",
-        "broker": "io.adafruit.com",
-        "port": "1883",
-        "clientid": "",
-        "autoConnect": true,
-        "usetls": false,
-        "protocolVersion": "4",
-        "keepalive": "60",
-        "cleansession": true,
-        "autoUnsubscribe": true,
-        "birthQos": "0",
-        "willQos": "0",
-        "userProps": "",
-        "sessionExpiry": ""
-    },
-    {
-        "id": "c91e19265faf3db2",
-        "type": "ui_tab",
-        "name": "Dashboard",
-        "icon": "dashboard",
-        "order": 1
-    },
-    {
-        "id": "3736df61c635396d",
-        "type": "ui_tab",
-        "name": "Charts",
-        "icon": "timeline",
-        "order": 2
-    },
-    {
-        "id": "46bed0acebdf8a05",
-        "type": "ui_tab",
-        "name": "Data",
-        "icon": "table_chart",
-        "order": 3
-    },
-    {
-        "id": "36e0fd49ad356148",
-        "type": "ui_tab",
-        "name": "Control",
-        "icon": "settings",
-        "order": 4
-    },
-    {
-        "id": "53e93a6961e3b8d8",
-        "type": "ui_group",
-        "name": "Sensors",
-        "tab": "c91e19265faf3db2",
-        "order": 1,
-        "width": "6"
-    },
-    {
-        "id": "f8b42df5f75ab45d",
-        "type": "ui_group",
-        "name": "Status",
-        "tab": "c91e19265faf3db2",
-        "order": 2,
-        "width": "6"
-    },
-    {
-        "id": "92f424ca7e743c50",
-        "type": "ui_group",
-        "name": "Charts",
-        "tab": "3736df61c635396d",
-        "order": 1,
-        "width": "12"
-    },
-    {
-        "id": "458289ae2e8983ca",
-        "type": "ui_group",
-        "name": "Data",
-        "tab": "46bed0acebdf8a05",
-        "order": 1,
-        "width": "12"
-    },
-    {
-        "id": "4b3920176407188c",
-        "type": "ui_group",
-        "name": "Control",
-        "tab": "36e0fd49ad356148",
-        "order": 1,
-        "width": "12"
-    },
-    {
-        "id": "bc6edee112ebc258",
-        "type": "mqtt-broker",
-        "name": "Local MQTT",
-        "broker": "192.168.1.100",
-        "port": "1883",
-        "clientid": "",
-        "usetls": false,
-        "compatmode": true,
-        "keepalive": "60",
-        "cleansession": true,
-        "birthTopic": "",
-        "birthQos": "0",
-        "birthPayload": "",
-        "closeTopic": "",
-        "closeQos": "0",
-        "closePayload": "",
-        "willTopic": "",
-        "willQos": "0",
-        "willPayload": ""
-    },
-    {
-        "id": "7a56d5cfba66f54d",
-        "type": "ui_group",
-        "name": "Sensors",
-        "tab": "d518b7692366d1e2",
-        "order": 1,
-        "disp": true,
-        "width": "6",
-        "collapse": false
-    },
-    {
-        "id": "d19208514a2a6b67",
-        "type": "ui_group",
-        "name": "Environment Sensors",
-        "tab": "88da9de14d2e4b51",
-        "order": 1,
-        "disp": true,
-        "width": "6",
-        "collapse": false,
-        "className": ""
-    },
-    {
-        "id": "9c2c925cb92fe0ab",
-        "type": "ui_group",
-        "name": "Sensors",
-        "tab": "7b33ccef8f7e83b7",
-        "order": 1,
-        "disp": true,
-        "width": "6",
-        "collapse": false
-    },
-    {
         "id": "6e0da0868cc48152",
         "type": "ui_tab",
         "name": "ML Final System",
@@ -558,49 +330,6 @@
         "type": "ui_group",
         "name": "ML Final Dashboard",
         "tab": "6e0da0868cc48152",
-        "order": 1,
-        "disp": true,
-        "width": "12",
-        "collapse": false
-    },
-    {
-        "id": "f0525180bedc73e3",
-        "type": "ui_tab",
-        "name": "ML Final Dashboard",
-        "icon": "model_training",
-        "order": 5
-    },
-    {
-        "id": "8c0b60535e080beb",
-        "type": "ui_group",
-        "name": "ML Final Dashboard",
-        "tab": "f0525180bedc73e3",
-        "order": 1,
-        "disp": true,
-        "width": "12",
-        "collapse": false
-    },
-    {
-        "id": "7648cd879fd8c79b",
-        "type": "ui_group",
-        "name": "ML Final Dashboard",
-        "tab": "6e0da0868cc48152",
-        "order": 1,
-        "disp": true,
-        "width": "12"
-    },
-    {
-        "id": "260ff8fb5f077889",
-        "type": "ui_tab",
-        "name": "ML Final Dashboard",
-        "icon": "model_training",
-        "order": 5
-    },
-    {
-        "id": "48b2e580ab3b98e0",
-        "type": "ui_group",
-        "name": "ML Final Dashboard",
-        "tab": "260ff8fb5f077889",
         "order": 1,
         "disp": true,
         "width": "12",
@@ -627,16 +356,6 @@
         "info": "Научные метрики: сравнительный анализ моделей, эксперименты и результаты исследований"
     },
     {
-        "id": "c179db207ca03132",
-        "type": "ui_group",
-        "name": "ML Final Dashboard",
-        "tab": "6e0da0868cc48152",
-        "order": 1,
-        "disp": true,
-        "width": "12",
-        "collapse": false
-    },
-    {
         "id": "9f122fb16f71be3a",
         "type": "ui_group",
         "name": "Adaptive Model Monitoring",
@@ -652,58 +371,6 @@
         "type": "ui_group",
         "name": "Research Metrics",
         "tab": "da05527b0de8e772",
-        "order": 1,
-        "disp": true,
-        "width": "12",
-        "collapse": false,
-        "className": ""
-    },
-    {
-        "id": "de5e6040b0a6ad95",
-        "type": "ui_tab",
-        "name": "ML Monitoring",
-        "icon": "analytics",
-        "order": 7,
-        "disabled": false,
-        "hidden": false,
-        "info": "Адаптивная ML-модель: онлайн-обучение, мониторинг точности и анализ важности признаков"
-    },
-    {
-        "id": "23b357da654710e1",
-        "type": "ui_tab",
-        "name": "Research Metrics",
-        "icon": "science",
-        "order": 8,
-        "disabled": false,
-        "hidden": false,
-        "info": "Научные метрики: сравнительный анализ моделей, эксперименты и результаты исследований"
-    },
-    {
-        "id": "780fd58c36f80e1f",
-        "type": "ui_group",
-        "name": "ML Final Dashboard",
-        "tab": "6e0da0868cc48152",
-        "order": 1,
-        "disp": true,
-        "width": "12",
-        "collapse": false
-    },
-    {
-        "id": "c504949e8dfbe4cb",
-        "type": "ui_group",
-        "name": "Adaptive Model Monitoring",
-        "tab": "de5e6040b0a6ad95",
-        "order": 1,
-        "disp": true,
-        "width": "12",
-        "collapse": false,
-        "className": ""
-    },
-    {
-        "id": "4e68732e44fdaeb9",
-        "type": "ui_group",
-        "name": "Research Metrics",
-        "tab": "23b357da654710e1",
         "order": 1,
         "disp": true,
         "width": "12",
@@ -743,221 +410,10 @@
         "collapse": false
     },
     {
-        "id": "daf7b16b0ca99fa5",
-        "type": "ui_tab",
-        "name": "ML Prediction",
-        "icon": "insights",
-        "order": 5
-    },
-    {
-        "id": "07506cced54473a6",
-        "type": "ui_tab",
-        "name": "Testing Panel",
-        "icon": "play_arrow",
-        "order": 6,
-        "disabled": false,
-        "hidden": false,
-        "info": "Панель тестирования: запуск тестовых сценариев, инъекции данных и проверка всех компонентов системы"
-    },
-    {
-        "id": "4aba2a0bebcce771",
-        "type": "ui_group",
-        "name": "LED Indicators",
-        "tab": "c91e19265faf3db2",
-        "order": 3,
-        "disp": true,
-        "width": "6",
-        "collapse": false
-    },
-    {
-        "id": "ec8ae6aa06bfb510",
-        "type": "ui_group",
-        "name": "ML & Prediction",
-        "tab": "daf7b16b0ca99fa5",
-        "order": 1,
-        "disp": true,
-        "width": "12",
-        "collapse": false
-    },
-    {
-        "id": "8609c486e9acda69",
-        "type": "ui_group",
-        "name": "Test Scenarios",
-        "tab": "07506cced54473a6",
-        "order": 1,
-        "disp": true,
-        "width": "6",
-        "collapse": false
-    },
-    {
-        "id": "c4e0506ed29c0c2d",
-        "type": "ui_group",
-        "name": "Physical Device Testing",
-        "tab": "07506cced54473a6",
-        "order": 2,
-        "disp": true,
-        "width": "6",
-        "collapse": false
-    },
-    {
-        "id": "2788e8949a004ed9",
-        "type": "ui_group",
-        "name": "Test Results",
-        "tab": "07506cced54473a6",
-        "order": 3,
-        "disp": true,
-        "width": "12",
-        "collapse": false
-    },
-    {
-        "id": "d52e2d1b06d2ec50",
-        "type": "ui_group",
-        "name": "Test Mode Control",
-        "tab": "07506cced54473a6",
-        "order": 4,
-        "disp": true,
-        "width": "12",
-        "collapse": false
-    },
-    {
-        "id": "f241e839922f08ec",
-        "type": "ui_tab",
-        "name": "Testing Panel",
-        "icon": "play_arrow",
-        "order": 5,
-        "disabled": false,
-        "hidden": false,
-        "info": "Панель тестирования: запуск тестовых сценариев, инъекции данных и проверка всех компонентов системы"
-    },
-    {
-        "id": "c1917ec695c02e2e",
-        "type": "ui_tab",
-        "name": "ML Prediction",
-        "icon": "insights",
-        "order": 6,
-        "disabled": false,
-        "hidden": false
-    },
-    {
-        "id": "e33ad23c5da27a0e",
-        "type": "ui_group",
-        "name": "LED Indicators",
-        "tab": "c91e19265faf3db2",
-        "order": 3,
-        "width": "6"
-    },
-    {
-        "id": "53f900c76c5d0535",
-        "type": "ui_group",
-        "name": "ML & Prediction",
-        "tab": "c1917ec695c02e2e",
-        "order": 1,
-        "width": "12"
-    },
-    {
-        "id": "bd75f3fc2bddc66c",
-        "type": "ui_group",
-        "name": "Test Scenarios",
-        "tab": "f241e839922f08ec",
-        "order": 1,
-        "width": "6"
-    },
-    {
-        "id": "ee0328d95390f182",
-        "type": "ui_group",
-        "name": "Physical Device Testing",
-        "tab": "f241e839922f08ec",
-        "order": 2,
-        "width": "6"
-    },
-    {
-        "id": "a1731fe7761b7a70",
-        "type": "ui_group",
-        "name": "Test Results",
-        "tab": "f241e839922f08ec",
-        "order": 3,
-        "width": "12"
-    },
-    {
-        "id": "44eab6a41cc96a74",
-        "type": "ui_group",
-        "name": "Test Mode Control",
-        "tab": "f241e839922f08ec",
-        "order": 4,
-        "width": "12"
-    },
-    {
-        "id": "d84bc1d6ae5b8fe5",
-        "type": "ui_tab",
-        "name": "Testing Panel",
-        "icon": "play_arrow",
-        "order": 5,
-        "disabled": false,
-        "hidden": false,
-        "info": "Панель тестирования: запуск тестовых сценариев, инъекции данных и проверка всех компонентов системы"
-    },
-    {
-        "id": "5bb65280b7e33810",
-        "type": "ui_tab",
-        "name": "ML Prediction",
-        "icon": "insights",
-        "order": 6,
-        "disabled": false,
-        "hidden": false
-    },
-    {
-        "id": "6834a98cad68954e",
-        "type": "ui_group",
-        "name": "LED Indicators",
-        "tab": "c91e19265faf3db2",
-        "order": 3,
-        "width": "6"
-    },
-    {
-        "id": "e8c0e7c8feca11bb",
-        "type": "ui_group",
-        "name": "ML & Prediction",
-        "tab": "5bb65280b7e33810",
-        "order": 1,
-        "width": "12"
-    },
-    {
-        "id": "a736fc7d0f6607e8",
-        "type": "ui_group",
-        "name": "Test Scenarios",
-        "tab": "d84bc1d6ae5b8fe5",
-        "order": 1,
-        "width": "6"
-    },
-    {
-        "id": "24c848f4ead2d348",
-        "type": "ui_group",
-        "name": "Physical Device Testing",
-        "tab": "d84bc1d6ae5b8fe5",
-        "order": 2,
-        "width": "6"
-    },
-    {
-        "id": "da28412e24169581",
-        "type": "ui_group",
-        "name": "Test Results",
-        "tab": "d84bc1d6ae5b8fe5",
-        "order": 3,
-        "width": "12"
-    },
-    {
-        "id": "e06b5a8474e49331",
-        "type": "ui_group",
-        "name": "Test Mode Control",
-        "tab": "d84bc1d6ae5b8fe5",
-        "order": 4,
-        "width": "12"
-    },
-    {
         "id": "7ad731ba4d1bbfc4",
         "type": "ui_group",
         "name": "System Testing",
-        "tab": "36e0fd49ad356148",
+        "tab": "control-tab",
         "order": 2,
         "disp": true,
         "width": "12",
@@ -968,7 +424,7 @@
         "id": "2ea4ca455d1f40a7",
         "type": "ui_group",
         "name": "Device Testing",
-        "tab": "36e0fd49ad356148",
+        "tab": "control-tab",
         "order": 3,
         "disp": true,
         "width": "12",
@@ -1039,178 +495,7 @@
         "collapse": false
     },
     {
-        "id": "dfbc100a5aae3264",
-        "type": "ui_group",
-        "name": "📊 Key Metrics",
-        "tab": "6ef00cded6b390bf",
-        "order": 1,
-        "width": 12,
-        "collapse": false
-    },
-    {
-        "id": "d6bafc699fbba5fd",
-        "type": "ui_group",
-        "name": "📋 Summary Report",
-        "tab": "6ef00cded6b390bf",
-        "order": 2,
-        "width": 12,
-        "collapse": false
-    },
-    {
-        "id": "b291e4108b8f8599",
-        "type": "ui_group",
-        "name": "📈 Gauge View",
-        "tab": "6ef00cded6b390bf",
-        "order": 3,
-        "width": 12,
-        "collapse": false
-    },
-    {
-        "id": "bccc72d42336393e",
-        "type": "ui_group",
-        "name": "📉 Error History",
-        "tab": "6ef00cded6b390bf",
-        "order": 4,
-        "width": 12,
-        "collapse": false
-    },
-    {
-        "id": "6ef00cded6b390bf",
-        "type": "ui_tab",
-        "name": "Model Validation",
-        "icon": "analytics",
-        "order": 10,
-        "disabled": false,
-        "hidden": false
-    },
-    {
-        "id": "3440a176cb33c6e0",
-        "type": "ui_group",
-        "name": "Key Metrics",
-        "tab": "950c51e6089ac7c1",
-        "order": 1,
-        "width": 12,
-        "collapse": false
-    },
-    {
-        "id": "93842c7c8e9ffaea",
-        "type": "ui_group",
-        "name": "Summary Report",
-        "tab": "950c51e6089ac7c1",
-        "order": 2,
-        "width": 12,
-        "collapse": false
-    },
-    {
-        "id": "5da2b3715e714fa1",
-        "type": "ui_group",
-        "name": "Gauge View",
-        "tab": "950c51e6089ac7c1",
-        "order": 3,
-        "width": 12,
-        "collapse": false
-    },
-    {
-        "id": "11e203b5fd5632b5",
-        "type": "ui_group",
-        "name": "Error History",
-        "tab": "950c51e6089ac7c1",
-        "order": 4,
-        "width": 12,
-        "collapse": false
-    },
-    {
-        "id": "950c51e6089ac7c1",
-        "type": "ui_tab",
-        "name": "Model Validation",
-        "icon": "analytics",
-        "order": 10,
-        "disabled": false,
-        "hidden": false
-    },
-    {
-        "id": "89651545d62a2c1e",
-        "type": "ui_group",
-        "name": "Key Metrics",
-        "tab": "0702b7f11f38b104",
-        "order": 1,
-        "width": 12,
-        "collapse": false
-    },
-    {
-        "id": "ca6bb916dc15a055",
-        "type": "ui_group",
-        "name": "Summary Report",
-        "tab": "0702b7f11f38b104",
-        "order": 2,
-        "width": 12,
-        "collapse": false
-    },
-    {
-        "id": "554d533baa8a6dbe",
-        "type": "ui_group",
-        "name": "Gauge View",
-        "tab": "0702b7f11f38b104",
-        "order": 3,
-        "width": 12,
-        "collapse": false
-    },
-    {
-        "id": "ac8ac4ce0ceb2efe",
-        "type": "ui_group",
-        "name": "Error History",
-        "tab": "0702b7f11f38b104",
-        "order": 4,
-        "width": 12,
-        "collapse": false
-    },
-    {
-        "id": "0702b7f11f38b104",
-        "type": "ui_tab",
-        "name": "Model Validation",
-        "icon": "analytics",
-        "order": 10,
-        "disabled": false,
-        "hidden": false
-    },
-    {
-        "id": "0adf53b8326bb61b",
-        "type": "ui_group",
-        "name": "📊 Key Metrics",
-        "tab": "9e78a6df5c72074c",
-        "order": 1,
-        "width": 12,
-        "collapse": false
-    },
-    {
-        "id": "709a645b28a654ca",
-        "type": "ui_group",
-        "name": "📋 Summary Report",
-        "tab": "9e78a6df5c72074c",
-        "order": 2,
-        "width": 12,
-        "collapse": false
-    },
-    {
-        "id": "0f7fec146f843eb7",
-        "type": "ui_group",
-        "name": "📈 Gauge View",
-        "tab": "9e78a6df5c72074c",
-        "order": 3,
-        "width": 12,
-        "collapse": false
-    },
-    {
-        "id": "3b2d6d178abbab79",
-        "type": "ui_group",
-        "name": "📉 Error History",
-        "tab": "9e78a6df5c72074c",
-        "order": 4,
-        "width": 12,
-        "collapse": false
-    },
-    {
-        "id": "9e78a6df5c72074c",
+        "id": "6c21c5034cc8e8d2",
         "type": "ui_tab",
         "name": "Model Validation",
         "icon": "analytics",
@@ -1228,15 +513,6 @@
         "width": "3",
         "collapse": false,
         "className": ""
-    },
-    {
-        "id": "897ef7ed8096b7e8",
-        "type": "ui_group",
-        "name": "📋 Summary Report",
-        "tab": "6c21c5034cc8e8d2",
-        "order": 2,
-        "width": 12,
-        "collapse": false
     },
     {
         "id": "bd4ca68c391860b6",
@@ -1259,15 +535,6 @@
         "width": "9",
         "collapse": false,
         "className": ""
-    },
-    {
-        "id": "6c21c5034cc8e8d2",
-        "type": "ui_tab",
-        "name": "Model Validation",
-        "icon": "analytics",
-        "order": 10,
-        "disabled": false,
-        "hidden": false
     },
     {
         "id": "2659f6b4e5428618",
@@ -2535,7 +1802,7 @@
         "type": "function",
         "z": "7fe3eb7c02d1e040",
         "name": "Preventive Control",
-        "func": "// // Принимаем превентивные меры на основе прогноза\n// var prediction = msg.payload;\n// var controlAction = {\n//     timestamp: new Date().toISOString(),\n//     action: \"none\",\n//     reason: \"\",\n//     fan_command: \"OFF\"\n// };\n\n// // Логика превентивного управления\n// if (prediction.recommendation === \"preventive_fan_on\") {\n//     // Включаем вентилятор упреждающе\n//     controlAction.action = \"preventive_fan_on\";\n//     controlAction.reason = \"Прогноз превышения 800 ppm через 30 минут: \" + prediction.prediction_30min + \" ppm\";\n//     controlAction.fan_command = \"ON\";\n    \n//     // Отправляем команду на включение вентилятора\n//     node.send({\n//         topic: \"DaryaMartsinouskaya/feeds/fan_auto\",\n//         payload: \"ON\",\n//         control: controlAction\n//     });\n// } else if (prediction.recommendation === \"monitor_closely\" && prediction.current_gas < 400) {\n//     // Мониторинг без действий\n//     controlAction.action = \"monitoring\";\n//     controlAction.reason = \"Средний риск. Прогноз через 30 минут: \" + prediction.prediction_30min + \" ppm\";\n// } else if (prediction.recommendation === \"normal\" && prediction.current_gas < 300) {\n//     // Если газ низкий и прогноз хороший, можно выключить вентилятор\n//     controlAction.action = \"fan_off_safe\";\n//     controlAction.reason = \"Низкий уровень газа и благоприятный прогноз\";\n//     controlAction.fan_command = \"OFF\";\n    \n//     node.send({\n//         topic: \"DaryaMartsinouskaya/feeds/fan_auto\",\n//         payload: \"OFF\",\n//         control: controlAction\n//     });\n// }\n\n// // Для визуализации\n// msg.payload = controlAction;\n// msg.topic = \"preventive_control\";\n\n// return msg;\n\n// Принимаем превентивные меры на основе прогноза\nvar prediction = msg.payload;\nvar controlAction = {\n    timestamp: new Date().toISOString(),\n    action: \"none\",\n    reason: \"\",\n    fan_command: \"OFF\"\n};\n\n// Логика превентивного управления (обновленные пороги)\nif (prediction.recommendation === \"emergency_fan_on\") {\n    // Экстренное включение при критическом уровне\n    controlAction.action = \"emergency_fan_on\";\n    controlAction.reason = \"КРИТИЧЕСКИЙ УРОВЕНЬ! Прогноз через 30 минут: \" + prediction.prediction_30min + \" ppm\";\n    controlAction.fan_command = \"ON\";\n\n    node.send({\n        topic: \"DaryaMartsinouskaya/feeds/fan\",\n        payload: \"ON\",\n        control: controlAction\n    });\n}\nelse if (prediction.recommendation === \"preventive_fan_on\") {\n    // Превентивное включение при высоком риске\n    controlAction.action = \"preventive_fan_on\";\n    controlAction.reason = \"Высокий риск. Прогноз через 30 минут: \" + prediction.prediction_30min + \" ppm (норма <900)\";\n    controlAction.fan_command = \"ON\";\n\n    node.send({\n        topic: \"DaryaMartsinouskaya/feeds/fan\",\n        payload: \"ON\",\n        control: controlAction\n    });\n}\nelse if (prediction.recommendation === \"monitor_closely\") {\n    // Мониторинг без автоматических действий\n    controlAction.action = \"monitoring\";\n    controlAction.reason = \"Средний риск. Прогноз через 30 минут: \" + prediction.prediction_30min + \" ppm\";\n}\nelse if (prediction.recommendation === \"ventilate_recommended\") {\n    // Рекомендация проветрить (без автоматического включения)\n    controlAction.action = \"ventilate_recommended\";\n    controlAction.reason = \"Повышенный уровень CO2. Текущий: \" + prediction.current_gas + \" ppm. Рекомендуется проветривание\";\n    controlAction.fan_command = \"OFF\";\n}\nelse if (prediction.recommendation === \"normal\" && prediction.current_gas < 550) {\n    // Если газ в норме и прогноз хороший, выключаем вентилятор\n    if (prediction.current_gas < 500) {\n        controlAction.action = \"fan_off_safe\";\n        controlAction.reason = \"Нормальный уровень газа: \" + prediction.current_gas + \" ppm. Вентиляция не требуется\";\n        controlAction.fan_command = \"OFF\";\n\n        node.send({\n            topic: \"DaryaMartsinouskaya/feeds/fan\",\n            payload: \"OFF\",\n            control: controlAction\n        });\n    }\n}\n\n// Для визуализации\nmsg.payload = controlAction;\nmsg.topic = \"preventive_control\";\n\nreturn msg;",
+        "func": "// Принимаем превентивные меры на основе прогноза\nvar prediction = msg.payload;\nvar controlAction = {\n    timestamp: new Date().toISOString(),\n    action: \"none\",\n    reason: \"\",\n    fan_command: \"OFF\"\n};\n\n// Логика превентивного управления (обновленные пороги)\nif (prediction.recommendation === \"emergency_fan_on\") {\n    // Экстренное включение при критическом уровне\n    controlAction.action = \"emergency_fan_on\";\n    controlAction.reason = \"КРИТИЧЕСКИЙ УРОВЕНЬ! Прогноз через 30 минут: \" + prediction.prediction_30min + \" ppm\";\n    controlAction.fan_command = \"ON\";\n\n    node.send({\n        topic: \"DaryaMartsinouskaya/feeds/fan\",\n        payload: \"ON\",\n        control: controlAction\n    });\n}\nelse if (prediction.recommendation === \"preventive_fan_on\") {\n    // Превентивное включение при высоком риске\n    controlAction.action = \"preventive_fan_on\";\n    controlAction.reason = \"Высокий риск. Прогноз через 30 минут: \" + prediction.prediction_30min + \" ppm (норма <900)\";\n    controlAction.fan_command = \"ON\";\n\n    node.send({\n        topic: \"DaryaMartsinouskaya/feeds/fan\",\n        payload: \"ON\",\n        control: controlAction\n    });\n}\nelse if (prediction.recommendation === \"monitor_closely\") {\n    // Мониторинг без автоматических действий\n    controlAction.action = \"monitoring\";\n    controlAction.reason = \"Средний риск. Прогноз через 30 минут: \" + prediction.prediction_30min + \" ppm\";\n}\nelse if (prediction.recommendation === \"ventilate_recommended\") {\n    // Рекомендация проветрить (без автоматического включения)\n    controlAction.action = \"ventilate_recommended\";\n    controlAction.reason = \"Повышенный уровень CO2. Текущий: \" + prediction.current_gas + \" ppm. Рекомендуется проветривание\";\n    controlAction.fan_command = \"OFF\";\n}\nelse if (prediction.recommendation === \"normal\" && prediction.current_gas < 550) {\n    // Если газ в норме и прогноз хороший, выключаем вентилятор\n    if (prediction.current_gas < 500) {\n        controlAction.action = \"fan_off_safe\";\n        controlAction.reason = \"Нормальный уровень газа: \" + prediction.current_gas + \" ppm. Вентиляция не требуется\";\n        controlAction.fan_command = \"OFF\";\n\n        node.send({\n            topic: \"DaryaMartsinouskaya/feeds/fan\",\n            payload: \"OFF\",\n            control: controlAction\n        });\n    }\n}\n\n// Для визуализации\nmsg.payload = controlAction;\nmsg.topic = \"preventive_control\";\n\nreturn msg;",
         "outputs": 2,
         "timeout": "",
         "noerr": 0,
@@ -2608,7 +1875,7 @@
         "type": "function",
         "z": "7fe3eb7c02d1e040",
         "name": "Calculate Risk Level",
-        "func": "// // Конвертируем прогноз в уровень риска 0-100%\n// var prediction = msg.payload;\n// var riskLevel = 0;\n\n// if (prediction.prediction_30min > 1500) {\n//     riskLevel = 80 + Math.min(20, (prediction.prediction_30min - 1500) / 10);\n// } else if (prediction.prediction_30min > 1200) {\n//     riskLevel = 40 + Math.min(40, (prediction.prediction_30min - 1200) / 5);\n// } else {\n//     riskLevel = Math.min(40, prediction.prediction_30min / 30);\n// }\n\n// msg.payload = Math.min(100, Math.round(riskLevel));\n// return msg;\n\n// Конвертируем прогноз в уровень риска 0-100%\nvar prediction = msg.payload;\nvar riskLevel = 0;\n\n// Обновленные пороги в соответствии с Predictive Analysis\nif (prediction.prediction_30min > 1800) {\n    // Критический уровень\n    riskLevel = 90 + Math.min(10, (prediction.prediction_30min - 1800) / 20);\n} else if (prediction.prediction_30min > 1300) {\n    // Высокий уровень\n    riskLevel = 70 + Math.min(20, (prediction.prediction_30min - 1300) / 10);\n} else if (prediction.prediction_30min > 900) {\n    // Средний уровень\n    riskLevel = 40 + Math.min(30, (prediction.prediction_30min - 900) / 15);\n} else if (prediction.prediction_30min > 600) {\n    // Повышенный уровень\n    riskLevel = 20 + Math.min(20, (prediction.prediction_30min - 600) / 20);\n} else {\n    // Нормальный уровень\n    riskLevel = Math.min(20, prediction.prediction_30min / 30);\n}\n\nmsg.payload = Math.min(100, Math.round(riskLevel));\nreturn msg;",
+        "func": "// Конвертируем прогноз в уровень риска 0-100%\nvar prediction = msg.payload;\nvar riskLevel = 0;\n\n// Обновленные пороги в соответствии с Predictive Analysis\nif (prediction.prediction_30min > 1800) {\n    // Критический уровень\n    riskLevel = 90 + Math.min(10, (prediction.prediction_30min - 1800) / 20);\n} else if (prediction.prediction_30min > 1300) {\n    // Высокий уровень\n    riskLevel = 70 + Math.min(20, (prediction.prediction_30min - 1300) / 10);\n} else if (prediction.prediction_30min > 900) {\n    // Средний уровень\n    riskLevel = 40 + Math.min(30, (prediction.prediction_30min - 900) / 15);\n} else if (prediction.prediction_30min > 600) {\n    // Повышенный уровень\n    riskLevel = 20 + Math.min(20, (prediction.prediction_30min - 600) / 20);\n} else {\n    // Нормальный уровень\n    riskLevel = Math.min(20, prediction.prediction_30min / 30);\n}\n\nmsg.payload = Math.min(100, Math.round(riskLevel));\nreturn msg;",
         "outputs": 1,
         "timeout": "",
         "noerr": 0,
@@ -3852,7 +3119,7 @@
         "method": "GET",
         "ret": "obj",
         "paytoqs": "ignore",
-        "url": "https://api.telegram.org/bot8159417350:AAFVaCa_djh0A81HtL3QTT7Ww9rcLwBU4Yg/getUpdates",
+        "url": "https://api.telegram.org/bot[REDACTED_BOT_TOKEN]/getUpdates",
         "tls": "",
         "persist": false,
         "proxy": "",
@@ -3873,7 +3140,7 @@
         "type": "function",
         "z": "11a19020df5de0e5",
         "name": "Process Commands",
-        "func": "let lastUpdateId = flow.get(\"last_update_id\") || 0;\nlet updates = msg.payload.result;\n\nif (!updates || !Array.isArray(updates)) return null;\n\nlet results = [];\n\nfor (let i = 0; i < updates.length; i++) {\n    let update = updates[i];\n    let updateId = update.update_id;\n    let message = update.message;\n    \n    if (updateId > lastUpdateId && message && message.text) {\n        let text = message.text;\n        let chatId = message.chat.id;\n        \n        if (updateId > lastUpdateId) lastUpdateId = updateId;\n        \n        let command = \"\";\n        if (text === \"/status\") command = \"STATUS\";\n        else if (text === \"/sensors\") command = \"SENSORS\";\n        else if (text === \"/alerts\") command = \"ALERTS\";\n        else if (text === \"/help\") command = \"HELP\";\n        else if (text === \"/fan_on\") command = \"FAN_ON\";\n        else if (text === \"/fan_off\") command = \"FAN_OFF\";\n        else if (text === \"/fan_auto\") command = \"FAN_AUTO\";\n        else continue;\n        \n        if (command !== \"\") {\n            node.log(\"📤 Command: \" + command);\n            \n            flow.set(\"telegram_chat_id\", chatId);\n            \n            results.push([\n                {\n                    topic: \"DaryaMartsinouskaya/feeds/telegram_commands\",\n                    payload: command,\n                    qos: 1,\n                    retain: false\n                },\n                {\n                    payload: {\n                        chat_id: chatId,\n                        text: \"✅ Command received: \" + command\n                    },\n                    url: \"https://api.telegram.org/bot8159417350:AAFVaCa_djh0A81HtL3QTT7Ww9rcLwBU4Yg/sendMessage\"\n                }\n            ]);\n        }\n    }\n}\n\nflow.set(\"last_update_id\", lastUpdateId);\n\nif (results.length === 0) return null;\n\nreturn [].concat(...results);",
+        "func": "let lastUpdateId = flow.get(\"last_update_id\") || 0;\nlet updates = msg.payload.result;\n\nif (!updates || !Array.isArray(updates)) return null;\n\nlet results = [];\n\nfor (let i = 0; i < updates.length; i++) {\n    let update = updates[i];\n    let updateId = update.update_id;\n    let message = update.message;\n    \n    if (updateId > lastUpdateId && message && message.text) {\n        let text = message.text;\n        let chatId = message.chat.id;\n        \n        if (updateId > lastUpdateId) lastUpdateId = updateId;\n        \n        let command = \"\";\n        if (text === \"/status\") command = \"STATUS\";\n        else if (text === \"/sensors\") command = \"SENSORS\";\n        else if (text === \"/alerts\") command = \"ALERTS\";\n        else if (text === \"/help\") command = \"HELP\";\n        else if (text === \"/fan_on\") command = \"FAN_ON\";\n        else if (text === \"/fan_off\") command = \"FAN_OFF\";\n        else if (text === \"/fan_auto\") command = \"FAN_AUTO\";\n        else continue;\n        \n        if (command !== \"\") {\n            node.log(\"📤 Command: \" + command);\n            \n            flow.set(\"telegram_chat_id\", chatId);\n            \n            results.push([\n                {\n                    topic: \"DaryaMartsinouskaya/feeds/telegram_commands\",\n                    payload: command,\n                    qos: 1,\n                    retain: false\n                },\n                {\n                    payload: {\n                        chat_id: chatId,\n                        text: \"✅ Command received: \" + command\n                    },\n                    url: \"https://api.telegram.org/bot[REDACTED_BOT_TOKEN]/sendMessage\"\n                }\n            ]);\n        }\n    }\n}\n\nflow.set(\"last_update_id\", lastUpdateId);\n\nif (results.length === 0) return null;\n\nreturn [].concat(...results);",
         "outputs": 2,
         "timeout": "",
         "noerr": 0,
@@ -3975,7 +3242,7 @@
         "type": "function",
         "z": "11a19020df5de0e5",
         "name": "Format Response",
-        "func": "let chatId = flow.get(\"telegram_chat_id\") || \"360267276\";\nlet responseText = String(msg.payload);\n\nreturn {\n    payload: {\n        chat_id: chatId,\n        text: responseText,\n        parse_mode: \"Markdown\"\n    }\n};",
+        "func": "let chatId = flow.get(\"telegram_chat_id\") || \"[REDACTED_CHAT_ID]\";\nlet responseText = String(msg.payload);\n\nreturn {\n    payload: {\n        chat_id: chatId,\n        text: responseText,\n        parse_mode: \"Markdown\"\n    }\n};",
         "outputs": 1,
         "timeout": "",
         "noerr": 0,
@@ -3998,7 +3265,7 @@
         "method": "POST",
         "ret": "obj",
         "paytoqs": "ignore",
-        "url": "https://api.telegram.org/bot8159417350:AAFVaCa_djh0A81HtL3QTT7Ww9rcLwBU4Yg/sendMessage",
+        "url": "https://api.telegram.org/bot[REDACTED_BOT_TOKEN]/sendMessage",
         "tls": "",
         "persist": false,
         "proxy": "",
@@ -4066,7 +3333,7 @@
         "type": "function",
         "z": "11a19020df5de0e5",
         "name": "Format Auto Alert",
-        "func": "let payload = msg.payload;\nlet message = \"\";\nlet chatId = flow.get(\"telegram_chat_id\") || \"360267276\";\n\nif (typeof payload === 'string') {\n    if (payload.startsWith(\"GAS_ALERT:\")) {\n        let gasValue = payload.split(\":\")[1];\n        message = \"🚨 *GAS ALERT!* 🚨\\n\\n\" +\n                 \"⚠️ Dangerous gas concentration!\\n\" +\n                 \"📊 Gas level: *\" + gasValue + \" ppm*\\n\" +\n                 \"🌀 Fan: *ON (forced)*\\n\\n\" +\n                 \"📍 Smart AirGuard System\";\n    }\n    else if (payload.startsWith(\"GAS_NORMAL:\")) {\n        let gasValue = payload.split(\":\")[1];\n        message = \"✅ *Gas normal*\\n\\n\" +\n                 \"📊 Current gas: *\" + gasValue + \" ppm*\\n\" +\n                 \"🌀 Fan: *OFF*\\n\\n\" +\n                 \"📍 Smart AirGuard System\";\n    }\n    else if (payload.startsWith(\"TEMP_ALERT:\")) {\n        let temp = payload.split(\":\")[1];\n        message = \"🌡️ *Temperature Alert!*\\n\\n\" +\n                 \"⚠️ Temperature out of range!\\n\" +\n                 \"📊 Current: *\" + temp + \"°C*\\n\" +\n                 \"📏 Range: 10-35°C\\n\\n\" +\n                 \"📍 Smart AirGuard System\";\n    }\n    else if (payload.startsWith(\"TEMP_NORMAL:\")) {\n        let temp = payload.split(\":\")[1];\n        message = \"✅ *Temperature normal*\\n\\n\" +\n                 \"📊 Current: *\" + temp + \"°C*\\n\\n\" +\n                 \"📍 Smart AirGuard System\";\n    }\n    else if (payload.startsWith(\"HUMIDITY_ALERT:\")) {\n        let humidity = payload.split(\":\")[1];\n        message = \"💧 *High Humidity Alert!*\\n\\n\" +\n                 \"⚠️ Humidity is too high!\\n\" +\n                 \"📊 Current: *\" + humidity + \"%*\\n\" +\n                 \"📏 Threshold: 90%\\n\\n\" +\n                 \"📍 Smart AirGuard System\";\n    }\n    else if (payload.startsWith(\"HUMIDITY_NORMAL:\")) {\n        let humidity = payload.split(\":\")[1];\n        message = \"✅ *Humidity normal*\\n\\n\" +\n                 \"📊 Current: *\" + humidity + \"%*\\n\\n\" +\n                 \"📍 Smart AirGuard System\";\n    }\n    else if (payload === \"MOTION_DETECTED\") {\n        message = \"🚶 *Motion detected!*\\n\\n\" +\n                 \"📍 Smart AirGuard System\";\n    }\n    else if (payload === \"MOTION_STOPPED\") {\n        message = \"✅ *Motion stopped*\\n\\n\" +\n                 \"📍 Smart AirGuard System\";\n    }\n    else if (payload === \"FAN_MANUAL_ON\") {\n        message = \"🌀 *Fan turned ON manually*\\n\\n📍 Smart AirGuard System\";\n    }\n    else if (payload === \"FAN_MANUAL_OFF\") {\n        message = \"⭕ *Fan turned OFF manually*\\n\\n📍 Smart AirGuard System\";\n    }\n    else if (payload === \"FAN_AUTO_MODE\") {\n        message = \"⚙️ *Fan switched to AUTO mode*\\n\\n📍 Smart AirGuard System\";\n    }\n}\n\nif (message === \"\") return null;\n\nreturn {\n    payload: {\n        chat_id: chatId,\n        text: message,\n        parse_mode: \"Markdown\"\n    }\n};",
+        "func": "let payload = msg.payload;\nlet message = \"\";\nlet chatId = flow.get(\"telegram_chat_id\") || \"[REDACTED_CHAT_ID]\";\n\nif (typeof payload === 'string') {\n    if (payload.startsWith(\"GAS_ALERT:\")) {\n        let gasValue = payload.split(\":\")[1];\n        message = \"🚨 *GAS ALERT!* 🚨\\n\\n\" +\n                 \"⚠️ Dangerous gas concentration!\\n\" +\n                 \"📊 Gas level: *\" + gasValue + \" ppm*\\n\" +\n                 \"🌀 Fan: *ON (forced)*\\n\\n\" +\n                 \"📍 Smart AirGuard System\";\n    }\n    else if (payload.startsWith(\"GAS_NORMAL:\")) {\n        let gasValue = payload.split(\":\")[1];\n        message = \"✅ *Gas normal*\\n\\n\" +\n                 \"📊 Current gas: *\" + gasValue + \" ppm*\\n\" +\n                 \"🌀 Fan: *OFF*\\n\\n\" +\n                 \"📍 Smart AirGuard System\";\n    }\n    else if (payload.startsWith(\"TEMP_ALERT:\")) {\n        let temp = payload.split(\":\")[1];\n        message = \"🌡️ *Temperature Alert!*\\n\\n\" +\n                 \"⚠️ Temperature out of range!\\n\" +\n                 \"📊 Current: *\" + temp + \"°C*\\n\" +\n                 \"📏 Range: 10-35°C\\n\\n\" +\n                 \"📍 Smart AirGuard System\";\n    }\n    else if (payload.startsWith(\"TEMP_NORMAL:\")) {\n        let temp = payload.split(\":\")[1];\n        message = \"✅ *Temperature normal*\\n\\n\" +\n                 \"📊 Current: *\" + temp + \"°C*\\n\\n\" +\n                 \"📍 Smart AirGuard System\";\n    }\n    else if (payload.startsWith(\"HUMIDITY_ALERT:\")) {\n        let humidity = payload.split(\":\")[1];\n        message = \"💧 *High Humidity Alert!*\\n\\n\" +\n                 \"⚠️ Humidity is too high!\\n\" +\n                 \"📊 Current: *\" + humidity + \"%*\\n\" +\n                 \"📏 Threshold: 90%\\n\\n\" +\n                 \"📍 Smart AirGuard System\";\n    }\n    else if (payload.startsWith(\"HUMIDITY_NORMAL:\")) {\n        let humidity = payload.split(\":\")[1];\n        message = \"✅ *Humidity normal*\\n\\n\" +\n                 \"📊 Current: *\" + humidity + \"%*\\n\\n\" +\n                 \"📍 Smart AirGuard System\";\n    }\n    else if (payload === \"MOTION_DETECTED\") {\n        message = \"🚶 *Motion detected!*\\n\\n\" +\n                 \"📍 Smart AirGuard System\";\n    }\n    else if (payload === \"MOTION_STOPPED\") {\n        message = \"✅ *Motion stopped*\\n\\n\" +\n                 \"📍 Smart AirGuard System\";\n    }\n    else if (payload === \"FAN_MANUAL_ON\") {\n        message = \"🌀 *Fan turned ON manually*\\n\\n📍 Smart AirGuard System\";\n    }\n    else if (payload === \"FAN_MANUAL_OFF\") {\n        message = \"⭕ *Fan turned OFF manually*\\n\\n📍 Smart AirGuard System\";\n    }\n    else if (payload === \"FAN_AUTO_MODE\") {\n        message = \"⚙️ *Fan switched to AUTO mode*\\n\\n📍 Smart AirGuard System\";\n    }\n}\n\nif (message === \"\") return null;\n\nreturn {\n    payload: {\n        chat_id: chatId,\n        text: message,\n        parse_mode: \"Markdown\"\n    }\n};",
         "outputs": 1,
         "timeout": "",
         "noerr": 0,
@@ -4089,7 +3356,7 @@
         "method": "POST",
         "ret": "obj",
         "paytoqs": "ignore",
-        "url": "https://api.telegram.org/bot8159417350:AAFVaCa_djh0A81HtL3QTT7Ww9rcLwBU4Yg/sendMessage",
+        "url": "https://api.telegram.org/bot[REDACTED_BOT_TOKEN]/sendMessage",
         "tls": "",
         "persist": false,
         "proxy": "",
