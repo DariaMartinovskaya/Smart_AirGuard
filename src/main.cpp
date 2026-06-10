@@ -8,6 +8,7 @@
 #include "Adafruit_MQTT.h"
 #include "Adafruit_MQTT_Client.h"
 #include <MQ135.h>
+#include "secrets.h"
 
 // ---------------- WIFI + THINGSPEAK -----------------
 const char *ssid = "";
