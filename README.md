@@ -16,6 +16,7 @@
 
 ## Table of Contents
 - [Overview](#overview)
+- [Publication](#publication)
 - [Key Features](#key-features)
 - [System Architecture](#system-architecture)
 - [Hardware Requirements](#hardware-requirements)
@@ -42,6 +43,16 @@ Unlike traditional gas detectors, Smart AirGuard implements a hybrid communicati
 The project was developed as a Master's thesis at the Polytechnic Institute of Beja, achieving 0% false positives and 0% false negatives across all experimental tests.
 
 ![Project](Figures/prototype.png)
+
+## 📄 Publication
+
+A work in progress research paper describing the Smart AirGuard system architecture has been submitted to the 31st IEEE International Conference on Emerging Technologies and Factory Automation (ETFA 2026). ![Read the WIP paper](#) 
+
+🌐 Conference official website: https://etfa2026.ieee-ies.org
+
+**CURRENT STATUS**: Work in progress paper — under review
+
+
 
 ## Key Features
 
