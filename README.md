@@ -44,7 +44,7 @@ The project was developed as a Master's thesis at the Polytechnic Institute of B
 
 ![Project](Figures/prototype.png)
 
-## 📄 Publication
+## Publication
 
 A work in progress (WiP) research paper describing the Smart AirGuard system architecture has been submitted to the 31st IEEE International Conference on Emerging Technologies and Factory Automation (ETFA 2026). 
 
