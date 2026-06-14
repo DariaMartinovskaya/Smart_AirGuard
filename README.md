@@ -48,13 +48,11 @@ The project was developed as a Master's thesis at the Polytechnic Institute of B
 
 A work in progress (WiP) research paper describing the Smart AirGuard system architecture has been submitted to the 31st IEEE International Conference on Emerging Technologies and Factory Automation (ETFA 2026). 
 
-Read WiP: [![Paper](https://img.shields.io/badge/Paper-WiP_IEEE_ETFA_2026-aa8080)](https://drive.google.com/file/d/1L5SWLa0mq0atjumKCSd4mvILbltNQJhp/view?usp=sharing)
+**CURRENT STATUS**: *Under review*
+
+Read WiP: [![Paper](https://img.shields.io/badge/Paper-WiP_IEEE_ETFA_2026-aa8080)](https://drive.google.com/file/d/1L5SWLa0mq0atjumKCSd4mvILbltNQJhp/view?usp=sharing) 
 
 🌐 Conference official website: https://etfa2026.ieee-ies.org
-
-**CURRENT STATUS**: Work in progress paper — under review
-
-
 
 ## Key Features
 
