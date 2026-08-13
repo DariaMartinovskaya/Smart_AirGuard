@@ -46,13 +46,14 @@ The project was developed as a Master's thesis at the Polytechnic Institute of B
 
 ## Publication
 
-A work in progress (WiP) research paper describing the Smart AirGuard system architecture has been submitted to the 31st IEEE International Conference on Emerging Technologies and Factory Automation (ETFA 2026). 
+Research paper "Smart AirGuard: A Low-Cost Edge-Cloud IIoT Prototype for Gas Monitoring in Automotive Workspaces - Lessons and Limitations” has been accepted as a full paper for oral/poster/online presentation by the conference committee of the International Conference on Electrical and
+Computer Engineering Researches (ICECER 2026). The event will take place in Istanbul, Türkiye on 3-5 December 2026 online and physically.
 
-**CURRENT STATUS**: *Under review*
+**CURRENT STATUS**: Accepted as a full paper for oral/poster/online presentation.
 
-Read WiP: [![Paper](https://img.shields.io/badge/Paper-WiP_IEEE_ETFA_2026-aa8080)](https://drive.google.com/file/d/1L5SWLa0mq0atjumKCSd4mvILbltNQJhp/view?usp=sharing) 
+Read paper: will be updated soon. 
 
-🌐 Conference official website: https://etfa2026.ieee-ies.org
+🌐 Conference official website: https://www.icecer.com.
 
 ## Key Features
 
